@@ -1,0 +1,133 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>StayPlanet</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="card-background-page">
+
+  <ion-card>
+    <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}" />
+    <div class="card-title">{{ city?.name }}</div>
+  </ion-card>
+
+  <div class="card-checkInOut">
+    <ion-row>
+      <ion-col>
+        <ion-item (click)="openCheckInOutModal()">
+          <ion-label>
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> {{ checkInDate }}</ion-label>
+          <ion-input type="text" disabled></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item (click)="openCheckInOutModal()">
+          <ion-label>
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> {{ checkOutDate }}</ion-label>
+          <ion-input type="text" disabled></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>Guests</ion-label>
+          <ion-select [(ngModel)]="guests" interface="action-sheet">
+            <ion-option value="1">1 guest</ion-option>
+            <ion-option value="2">2 guests</ion-option>
+            <ion-option value="3">3 guests</ion-option>
+            <ion-option value="4">4 guests</ion-option>
+            <ion-option value="5">5 guests</ion-option>
+            <ion-option value="6">6 guests</ion-option>
+            <ion-option value="7">7 guests</ion-option>
+            <ion-option value="8">8 guests</ion-option>
+            <ion-option value="9">9 guests</ion-option>
+            <ion-option value="10">+10 guests</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Room Type</ion-label>
+          <ion-select [(ngModel)]="roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
+            <ion-option *ngFor="let roomType of roomTypes" [value]="roomType">{{ roomType }}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="moreFilters">
+      <ion-col>
+        <ion-item>
+          <ion-label>Property Type</ion-label>
+          <ion-select [(ngModel)]="roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
+            <ion-option *ngFor="let roomType of roomTypes" [value]="roomType">{{ roomType }}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="moreFilters">
+      <ion-col>
+        <ion-item>
+          <ion-label>Amenities</ion-label>
+          <ion-select [(ngModel)]="roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
+            <ion-option *ngFor="let roomType of roomTypes" [value]="roomType">{{ roomType }}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="moreFilters">
+      <ion-col>
+        <ion-item>
+          <ion-label>Extras</ion-label>
+          <ion-select [(ngModel)]="roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
+            <ion-option *ngFor="let roomType of roomTypes" [value]="roomType">{{ roomType }}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="moreFilters">
+      <ion-col>
+        <ion-item>
+          <ion-label>Special Features</ion-label>
+          <ion-select [(ngModel)]="roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
+            <ion-option *ngFor="let roomType of roomTypes" [value]="roomType">{{ roomType }}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Price: {{ price.lower }} - {{ price.upper }}</ion-label>
+          <ion-range min="0" max="1000" step="10" pin="true" dualKnobs="true" [(ngModel)]="price">
+            <ion-icon range-left name="remove"></ion-icon>
+            <ion-icon range-right name="add"></ion-icon>
+          </ion-range>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <button *ngIf="!moreFilters" ion-button clear icon-end (click)="changeMoreFilters()">More Filters<ion-icon name="arrow-dropdown-circle"></ion-icon></button>
+        <button *ngIf="moreFilters" ion-button clear icon-end (click)="changeMoreFilters()">Less Filters<ion-icon name="arrow-dropup-circle"></ion-icon></button>
+      </ion-col>
+      <ion-col>
+        <button ion-button icon-end>Show Listins<ion-icon name="search"></ion-icon></button>
+      </ion-col>
+    </ion-row>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,41 @@
+cityPage {
+
+    ion-card {
+        position: relative;
+        text-align: center;
+    }
+    .card-md{
+        margin: 0; 
+        width: 100%; 
+    }
+        
+    .card-title{
+        position: absolute;
+        top: 0;
+        font-size: 2.75em;
+        width: 100%;
+        font-weight: bold;
+        color: #fff;
+        background-color: rgba(128, 128, 128, 0.5);
+        -webkit-text-stroke: 2px black;
+    }
+        
+    .card-subtitle {
+        font-size: 1.5em;
+        position: absolute;
+        top: 52%;
+        width: 100%;
+        color: #fff;
+    }
+    .range-md{
+        padding: 0;
+    }
+    .range-md.range-has-pin {
+        padding-top: 0;
+    }
+    .select-md {
+        padding: 13px 8px 13px 0px;
+    }
+
+
+}

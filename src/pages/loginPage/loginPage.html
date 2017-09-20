@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>StayPlanet</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="login-box">
+    <h2>Login</h2>
+    <form #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="email" placeholder="Your email" name="userEmail" #email required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="password" placeholder="Your password" name="userPassword" #password required></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="signup-col">
+          <button color="secondary" ion-button class="submit-btn" full type="submit" (click)="login(email, password)">Login</button>
+        </ion-col>
+      </ion-row>
+    </form>
+
+    <ion-row>
+      <h5>Or login with:</h5>
+    </ion-row>
+
+    <ion-row>
+      <ion-col><ion-icon name="logo-facebook" class="socialNetworkIcons"></ion-icon></ion-col>
+      <ion-col><ion-icon name="logo-googleplus" class="socialNetworkIcons"></ion-icon></ion-col>
+      <ion-col><ion-icon name="logo-twitter" class="socialNetworkIcons"></ion-icon></ion-col>
+    </ion-row>
+
+    <ion-row>
+        <h6>Don't have an account? <a (click)="goToSignup()">Create Account</a></h6>
+      </ion-row>
+
+
+  </div>
+</ion-content>

@@ -3,9 +3,9 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import firebase from 'firebase';
+//import firebase from 'firebase';
 
-import { HomePage } from '../pages/home/homePage';
+import { HomePage, LoginPage, SignupPage } from '../pages/pages';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,12 +14,14 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = HomePage;
+  user: any;
 
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen) {
 
+    /*
     firebase.initializeApp({
       apiKey: "AIzaSyBSnwmbXM4CsbkObaSJmz4sETdjWcULnSw",
       authDomain: "stayplanet-943d2.firebaseapp.com",
@@ -29,6 +31,7 @@ export class MyApp {
       messagingSenderId: "286617130799"
     });
     this.initializeApp();
+    */
     
   }
 
@@ -42,4 +45,12 @@ export class MyApp {
   openPage(page) {
     this.nav.setRoot(page.component);
   }
+
+  loginTapped(){
+    this.nav.push(LoginPage);
+  }
+  signupTapped(){
+    this.nav.push(SignupPage);
+  }
+
 }

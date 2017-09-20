@@ -4,7 +4,9 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/homePage';
+import { HomePage, LoginPage, SignupPage, CityPage, CheckInOutModal} from '../pages/pages';
+import { DatabaseService } from '../services/databaseService';
+import { UserService } from '../services/userService';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -12,7 +14,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    LoginPage,
+    SignupPage,
+    CityPage,
+    CheckInOutModal
   ],
   imports: [
     BrowserModule,
@@ -22,11 +28,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    LoginPage,
+    SignupPage,
+    CityPage,
+    CheckInOutModal
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    DatabaseService,
+    UserService,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

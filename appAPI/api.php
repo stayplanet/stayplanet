@@ -8,60 +8,50 @@ class API extends Database {
         header('Access-Control-Allow-Origin: *');
         ob_Start();
         
-        $hostname="localhost";	
-        $username="stay_francisco";
-        $password="@20Francisco17";
-        $db_name="stay_francisco";	
-        $connect=mysql_connect($hostname,$username,$password);
-        mysql_select_db($db_name,$connect);
+        $hostname = "localhost";
+        $username = "stay_francisco";
+        $password = "@20Francisco17";
+        $db_name = "stay_francisco";	
+        $connect = mysql_connect($hostname, $username, $password);
+        mysql_select_db($db_name, $connect);
     }
     
     public $data = "";
 
     /*Public method for access api. * This method dynmically call the method based on the query string*/
     public function processApi(){
-        $func = strtolower(trim(str_replace("/","",$_REQUEST['rquest'])));
-        if((int)method_exists($this, $func) > 0){
+        $func = strtolower(trim(str_replace("/", "", $_REQUEST['rquest'])));
+        if(method_exists($this, $func)){
             $this->$func();
         }else{
             echo "me echa";
-            $this->response('',404); // If the method not exist with in this class, response would be "Page not found".
+            $this->response('', 404); // If the method not exist with in this class, response would be "Page not found".
         }
     }
         
     /* register API Login must be POST method email : <USER EMAIL> pwd : <USER PASSWORD> */
     private function login(){  
-        ob_Start();
         
-        $hostname="localhost";	
-        $username="stay_spdb";
-        $password="538mhs8MNT930mG";
-        $db_name="stay_spdb";	
-        $connect=mysql_connect($hostname,$username,$password);
-        mysql_select_db($db_name,$connect);
-        
-        if($_REQUEST['email']=="" ){
+        if($_REQUEST['email'] == "" ){
             $responseJSON = array("Status" => "false","Message" => "Please enter valid email");
-            //header("content-type:application/json");
             $response = json_encode($responseJSON);
             echo $response;	
         
-        }elseif($_REQUEST['password']=="" ){
+        }elseif($_REQUEST['password'] == "" ){
             $responseJSON = array("Status" => "false","Message" => "Please enter your password");
-            //header("content-type:application/json");
             $response = json_encode($responseJSON);
             echo $response;	
         }else{
-            $email=$_REQUEST['email'];
+            $email = $_REQUEST['email'];
         }
     
-        $password=$_REQUEST['password'];
-        $new=md5($password);
-        $query=mysql_query("SELECT * FROM fc_users where password='$new' AND email='$email'");
-        $total=mysql_num_rows($query);
-        while($result=mysql_fetch_array($query)){
-            $key=$result['api_key'];
-            $token_key=$result['token_id'];	
+        $password = $_REQUEST['password'];
+        $new = md5($password);
+        $query = mysql_query("SELECT * FROM fc_users where password='$new' AND email='$email'");
+        $total = mysql_num_rows($query);
+        while($result = mysql_fetch_array($query)){
+            $key = $result['api_key'];
+            $token_key = $result['token_id'];	
         }
 
         if($total>0){
@@ -247,50 +237,66 @@ class API extends Database {
     }
     
     private function getCities(){
-        $query = mysql_query("SELECT * FROM fc_city");
-        $numRows = mysql_num_rows($query);
-        $cities = array();
-        while($result = mysql_fetch_assoc($query)){
-            array_push($cities, $result);
-            break;
+        try{
+            $query = mysql_query("SELECT id, name, top_destination, country_name, citythumb FROM fc_city");
+            if($query){
+                $cities = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($cities, $result);
+                }
+                print_r(json_encode($cities));
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
         }
-        print_r(json_encode($cities));
     }
 
-    private function createCity(){
-        //$name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        //$country_name = filter_var($_REQUEST['country_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        $name = "Telde";
-        $country_name = "Spain";
-        // Attempt to run PDO prepared statement
+    private function getCity(){
+        $id = filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+
         try {
-            //$query = "INSERT INTO fc_city (name, country_name) VALUES ('" .$name. "', '" .$country_name. "');";
-            $query = "INSERT INTO fc_city (name, country_name) VALUES ('Telde', 'Spain')";
+            $query = mysql_query("SELECT * FROM fc_city WHERE id = " .$id);
+            if($query){
+                $city = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($city, $result);
+                }
+                print_r(json_encode($city));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
+/*
+    private function createCity(){
+        $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $country_name = filter_var($_REQUEST['country_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+
+        try {
+            $query = "INSERT INTO fc_city (name, country_name) VALUES ('" .$name. "', '" .$country_name. "');";
             echo $query;
             $qry = mysql_query($query);
             echo $qry;
             if($qry){
                 $responseJSON = array("Status" => "true","Message" => "Record added successfully");
                 $response = json_encode($responseJSON);
-                echo '<pre>'.$response;	
+                echo $response;	
             }else{
                 $responseJSON = array("Status" => "false","Message" => "Error occurred while adding data");
                 $response = json_encode($responseJSON);
-                echo '<pre>'.$response;	
+                echo $response;	
             }
 
-        }
-        // Catch any errors in running the prepared statement
-        catch(PDOException $e)
-        {
+        }catch(PDOException $e){
            echo $e->getMessage();
         }
     }
-
+*/
 }
     // Initiiate Library
     $api = new API;
     $api->processApi();
 
 ?>
-
