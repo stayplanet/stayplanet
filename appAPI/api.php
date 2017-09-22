@@ -269,6 +269,55 @@ class API extends Database {
            echo $e->getMessage();
         }
     }
+
+    private function searchCityProperties(){
+        $city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query(
+                "SELECT p.id, p.seller_product_id, p.created, p.product_name, p.product_title, p.price,
+                        p.price_range, p.price_perweek, p.price_permonth, p.image, p.home_type, p.room_type,
+                        p.accommodates, p.bedrooms,p.beds, p.bed_type, p.bathrooms, p.listings, p.datefrom, p.dateto, p.minimum_stay
+                FROM fc_product as p INNER JOIN fc_product_address_new ON p.id = fc_product_address_new.productId
+                WHERE fc_product_address_new.city = '" .$city. "';");
+            if($query){
+                $properties = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($properties, $result);
+                }
+                print_r(json_encode($properties));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
+    private function getMinMaxPrice(){
+        $city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query(
+                "SELECT MIN(nueva.price) as minPrice, MAX(nueva.price) as maxPrice
+                FROM 
+                    (SELECT p.price
+                    FROM fc_product as p INNER JOIN fc_product_address_new ON p.id = fc_product_address_new.productId
+                    WHERE fc_product_address_new.city = '" .$city. "')
+                as nueva");
+
+            if($query){
+                $properties = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($properties, $result);
+                }
+                print_r(json_encode($properties));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

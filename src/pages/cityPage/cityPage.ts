@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ModalController, Platform, ViewController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ModalController, Platform, ViewController } from 'ionic-angular';
+
+import { PropertiesPage } from '../../pages/pages'
 
 import { DatabaseService } from '../../services/databaseService';
 
@@ -11,16 +13,26 @@ export class CityPage {
 
   idCity: number;
   city: any;
-  checkInDate: string = "Check In";
-  checkOutDate: string = "Check Out";
   guests: number = 1;
-  roomTypes: any[] = ["Private Room", "Common Room", "Shared Room"];
-  price: any = {
-    upper: 1000,
-    lower: 0
+  price: any = {};
+  filters: any = {
+    "checkInDate": "Check In",
+    "checkOutDate": "Check Out",
+    "roomTypes": [ 
+      {"key" : "privateRoom", "name": "Private Room", "value": true }, 
+      {"key" : "commonRoom", "name": "Coomon Room", "value": true }, 
+      {"key" : "sharedRoom",  "name": "Shared Room", "value": true }
+    ],
+    "propertyType": [{}],
+    "amenities": [{}],
+    "extras": [{}],
+    "specialFeatures": [{}],
+    "priceFilter": {},
   }
   roomTypesSelected: any[];
   moreFilters: boolean = false;
+  map: any = {};
+
 
   constructor(
     public navCtrl: NavController,
@@ -40,7 +52,20 @@ export class CityPage {
     loader.present().then(() => {
       this.databaseService.getCity(this.idCity).subscribe(city => {
         this.city = city;
-        loader.dismiss();
+        this.map = {
+					lati: parseFloat(this.city.latitude),
+					long: parseFloat(this.city.longitude),
+					zoom: 10,
+        };
+        console.log("map: ", this.map)
+        this.databaseService.getMinMaxPrice(this.city.name).subscribe(minMaxPrice => {
+          this.price = {
+            upper: minMaxPrice.maxPrice,
+            lower: minMaxPrice.minPrice
+          }
+          this.filters.priceFilter = this.price;
+          loader.dismiss();
+        });
       });
     });
   }
@@ -53,8 +78,12 @@ export class CityPage {
     checkInModal.present();
   }
 
-  changeMoreFilters(){
+  changeMoreFilters() {
     this.moreFilters = !this.moreFilters;
+  }
+
+  searchProperties() {
+    this.navCtrl.push(PropertiesPage, {"city": this.city.name, "filters": this.filters});
   }
 
   goHome() {
@@ -62,6 +91,8 @@ export class CityPage {
   }
 
 }
+
+
 @Component({
   template: `
   <ion-header>
@@ -94,3 +125,4 @@ export class CheckInOutModal {
     this.viewCtrl.dismiss(data);
   }
 }
+

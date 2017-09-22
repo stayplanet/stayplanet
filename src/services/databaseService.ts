@@ -20,9 +20,7 @@ export class DatabaseService {
     }
 
     getCity(idCity): Observable<any> {
-        let body: string = "id=" + idCity;
         let url: string = 'http://francisco.stayplanet.ie/api/getCity?id='+idCity;
-
         return this.http.get(url)
             .map((data) => {
                 if (data.status === 200) {
@@ -31,7 +29,31 @@ export class DatabaseService {
                     console.log("Something went wrong!");
                 }
             });
-    
-
     }
+
+    getMinMaxPrice(city): Observable<any> {
+        let url: string = 'http://francisco.stayplanet.ie/api/getMinMaxPrice?city='+city;
+        return this.http.get(url)
+            .map((data) => {
+                if (data.status === 200) {
+                    return JSON.parse(data["_body"])[0];
+                }else {
+                    console.log("Something went wrong!");
+                }
+            });
+    }
+
+    searchCityProperties(city): Observable<any> {
+        let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city='+city;
+        return this.http.get(url)
+            .map((data) => {
+                if (data.status === 200) {
+                    return JSON.parse(data["_body"]);
+                }else {
+                    console.log("Something went wrong!");
+                }
+            });
+    }
+
+
 }

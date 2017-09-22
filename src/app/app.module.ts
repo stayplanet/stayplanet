@@ -2,9 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
+import { AgmCoreModule } from '@agm/core';
 
 import { MyApp } from './app.component';
-import { HomePage, LoginPage, SignupPage, CityPage, CheckInOutModal} from '../pages/pages';
+import { HomePage, LoginPage, SignupPage, CityPage, CheckInOutModal, PropertiesPage} from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
 
@@ -18,21 +19,24 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     LoginPage,
     SignupPage,
     CityPage,
-    CheckInOutModal
+    CheckInOutModal,
+    PropertiesPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    AgmCoreModule.forRoot(), //API KEY DE GOOGLE MAPS AQUI ;)
     IonicModule.forRoot(MyApp)
   ],
-  bootstrap: [IonicApp],
+  bootstrap: [IonicApp], 
   entryComponents: [
     MyApp,
     HomePage,
     LoginPage,
     SignupPage,
     CityPage,
-    CheckInOutModal
+    CheckInOutModal,
+    PropertiesPage
   ],
   providers: [
     StatusBar,
