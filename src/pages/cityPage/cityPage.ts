@@ -14,19 +14,9 @@ export class CityPage {
   idCity: number;
   city: any;
   guests: number = 1;
-  price: any = {};
   filters: any = {
     "checkInDate": "Check In",
     "checkOutDate": "Check Out",
-    "roomTypes": [ 
-      {"key" : "privateRoom", "name": "Private Room", "value": true }, 
-      {"key" : "commonRoom", "name": "Coomon Room", "value": true }, 
-      {"key" : "sharedRoom",  "name": "Shared Room", "value": true }
-    ],
-    "propertyType": [{}],
-    "amenities": [{}],
-    "extras": [{}],
-    "specialFeatures": [{}],
     "priceFilter": {},
   }
   roomTypesSelected: any[];
@@ -53,19 +43,11 @@ export class CityPage {
       this.databaseService.getCity(this.idCity).subscribe(city => {
         this.city = city;
         this.map = {
-					lati: parseFloat(this.city.latitude),
-					long: parseFloat(this.city.longitude),
-					zoom: 10,
+          lati: parseFloat(this.city.latitude),
+          long: parseFloat(this.city.longitude),
+          zoom: 10,
         };
-        console.log("map: ", this.map)
-        this.databaseService.getMinMaxPrice(this.city.name).subscribe(minMaxPrice => {
-          this.price = {
-            upper: minMaxPrice.maxPrice,
-            lower: minMaxPrice.minPrice
-          }
-          this.filters.priceFilter = this.price;
-          loader.dismiss();
-        });
+        loader.dismiss();
       });
     });
   }
@@ -78,12 +60,8 @@ export class CityPage {
     checkInModal.present();
   }
 
-  changeMoreFilters() {
-    this.moreFilters = !this.moreFilters;
-  }
-
   searchProperties() {
-    this.navCtrl.push(PropertiesPage, {"city": this.city.name, "filters": this.filters});
+    this.navCtrl.push(PropertiesPage, { "city": this.city.name, "filters": this.filters });
   }
 
   goHome() {

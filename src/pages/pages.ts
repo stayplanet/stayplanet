@@ -3,3 +3,4 @@ export * from './loginPage/loginPage';
 export * from './signupPage/signupPage';
 export * from './cityPage/cityPage';
 export * from './propertiesPage/propertiesPage';
+export * from './propertyPage/propertyPage';

@@ -11,30 +11,43 @@
 
 <ion-content>
 
-  <ion-row>{{ properties?.length }} properties found in {{ city }}</ion-row>
+  <ion-row>
+    <ion-col>{{ properties?.length }} properties found in {{ city }}</ion-col>
+  </ion-row>
 
   <ion-row>
-    <ion-col>
-      <ion-label>Order by:</ion-label>
-      <button ion-button outline icon-right (click)="orderByPrice(priceArrowIcon)">
-            Price <ion-icon [name]="arrowPriceIcon"></ion-icon>
-          </button>
+    <ion-col col-12>
+      <ion-item (click)="openFiltersModal()">
+        <ion-label>Filter By:</ion-label>
+        <ion-input type="text"></ion-input>
+      </ion-item>
     </ion-col>
   </ion-row>
 
   <ion-row>
-    <ion-col id="propertieColumn" col-6 *ngFor="let propertie of properties">
+    <ion-col col-12>
+      <ion-item>
+        <ion-label>Order By:</ion-label>
+        <ion-select [(ngModel)]="orderByOption" [selectOptions]="orderSelectOptions" (ionChange)="orderBy()" okText="Ok" cancelText="Cancel"
+          interface="action-sheet">
+          <ion-option value="lowestPrice">Lowest Price</ion-option>
+          <ion-option value="highestPrice">Highest Price</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col id="propertieColumn" col-6 *ngFor="let property of properties" (click)="goToProperty(property)">
       <ion-card>
         <ion-item>
           <ion-avatar item-start><img src="https://www.templateplazza.com/templates/nutp/images/man.png"></ion-avatar>
           <h2>Marty McFly</h2>
-          <h2>{{ propertie.price | currency:'EUR':true:'1.2-2' }}</h2>
+          <h2>{{ property.price | currency:'EUR':true:'1.2-2' }}</h2>
         </ion-item>
-
-        <img src = {{propertie.mainImage}} style="height:120px">
-
+        <img src={{property.mainImage}} style="height:120px">
         <ion-card-content id="propertieContent">
-          <p>{{ propertie.product_name }}</p>
+          <p>{{ property.product_name }}</p>
         </ion-card-content>
       </ion-card>
     </ion-col>

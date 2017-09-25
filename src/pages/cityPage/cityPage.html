@@ -19,6 +19,7 @@
   <div class="card-checkInOut">
 
     <ion-row>
+      
       <ion-col>
         <ion-item (click)="openCheckInOutModal()">
           <ion-label>
@@ -26,6 +27,7 @@
           <ion-input type="text" disabled></ion-input>
         </ion-item>
       </ion-col>
+
       <ion-col>
         <ion-item (click)="openCheckInOutModal()">
           <ion-label>
@@ -33,6 +35,7 @@
           <ion-input type="text" disabled></ion-input>
         </ion-item>
       </ion-col>
+
       <ion-col>
         <ion-item>
           <ion-label>Guests</ion-label>
@@ -50,84 +53,12 @@
           </ion-select>
         </ion-item>
       </ion-col>
+
     </ion-row>
 
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-label>Room Type</ion-label>
-          <ion-select [(ngModel)]="filters.roomTypes" multiple="true" okText="Okay" cancelText="Cancel">
-            <ion-option *ngFor="let roomType of filters.roomTypes" [selected]="roomType.value">{{ roomType.value }}</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngIf="moreFilters">
-      <ion-col>
-        <ion-item>
-          <ion-label>Property Type</ion-label>
-          <ion-select [(ngModel)]="filters.propertyType" multiple="true" okText="Okay" cancelText="Cancel">
-            <ion-option *ngFor="let propertyType of filters.propertyType" [value]="propertyType">{{ propertyType }}</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngIf="moreFilters">
-      <ion-col>
-        <ion-item>
-          <ion-label>Amenities</ion-label>
-          <ion-select [(ngModel)]="filters.amenities" multiple="true" okText="Okay" cancelText="Cancel">
-            <ion-option *ngFor="let amenitie of filters.amenities" [value]="amenitie">{{ amenitie }}</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngIf="moreFilters">
-      <ion-col>
-        <ion-item>
-          <ion-label>Extras</ion-label>
-          <ion-select [(ngModel)]="filters.extras" multiple="true" okText="Okay" cancelText="Cancel">
-            <ion-option *ngFor="let extra of filters.extras" [value]="extra">{{ extra }}</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngIf="moreFilters">
-      <ion-col>
-        <ion-item>
-          <ion-label>Special Features</ion-label>
-          <ion-select [(ngModel)]="filters.specialFeatures" multiple="true" okText="Okay" cancelText="Cancel">
-            <ion-option *ngFor="let specialFeature of filters.specialFeatures" [value]="specialFeature">{{ specialFeature }}</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label>Price: {{ filters.priceFilter.lower }} - {{ filters.priceFilter.upper }}</ion-label>
-          <ion-range [min]="price.lower" [max]="price.upper" step="1" pin="true" dualKnobs="true" [(ngModel)]="filters.priceFilter">
-            <ion-icon range-left name="remove"></ion-icon>
-            <ion-icon range-right name="add"></ion-icon>
-          </ion-range>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <button *ngIf="!moreFilters" ion-button clear icon-end (click)="changeMoreFilters()">More Filters<ion-icon name="arrow-dropdown-circle"></ion-icon></button>
-        <button *ngIf="moreFilters" ion-button clear icon-end (click)="changeMoreFilters()">Less Filters<ion-icon name="arrow-dropup-circle"></ion-icon></button>
-      </ion-col>
-      <ion-col>
-        <button ion-button icon-end (click)="searchProperties()">
-          Show Listins<ion-icon name="search"></ion-icon>
-        </button>
+        <button ion-button icon-end (click)="searchProperties()">Show Listins<ion-icon name="search"></ion-icon></button>
       </ion-col>
     </ion-row>
 
