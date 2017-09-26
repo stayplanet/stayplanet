@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, ModalController, NavParams, Slides, Platform, ViewController } from 'ionic-angular';
+
 
 @Component({
   selector: 'propertyPage',
@@ -7,15 +8,82 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class PropertyPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  property: any = {}
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private modalCtrl: ModalController
+  ) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad PropertyPage');
+    this.property = this.navParams.data;
+    console.log(this.property);
   }
 
-  goHome(){
+  openImagesModal() {
+    let imagesModal = this.modalCtrl.create(ImagesModal, { images: this.property.image });
+    imagesModal.present();
+  }
+
+
+  goHome() {
     this.navCtrl.popToRoot();
+  }
+
+}
+
+@Component({
+  selector: 'imagesModal',
+  template: `
+  <ion-header>
+    <ion-toolbar>
+        <ion-title> <ion-icon name="images"></ion-icon> Images</ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()">
+            <span ion-text color="primary" showWhen="ios">Cancel</span>
+            <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <ion-slides>
+      <ion-slide *ngFor="let image of images">
+        <ion-icon id="backSlideArrowIcon" name="ios-arrow-dropleft" (click)="goPreviousSlide()"></ion-icon>
+        <img [src]="image">
+        <ion-icon id="forwardSlideArrowIcon" name="ios-arrow-dropright" (click)="goNextSlide()"></ion-icon>
+      </ion-slide>
+    </ion-slides>
+
+  </ion-content>
+  `
+})
+
+export class ImagesModal {
+
+  images: any[];
+  @ViewChild(Slides) slides: Slides;
+
+  constructor(
+    public platform: Platform,
+    public params: NavParams,
+    public viewCtrl: ViewController) {
+    this.images = this.params.data.images;
+  }
+
+  goPreviousSlide(){
+    this.slides.slidePrev();
+  }
+  goNextSlide(){
+    this.slides.slideNext();
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
 }

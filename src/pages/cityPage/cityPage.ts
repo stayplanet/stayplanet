@@ -20,10 +20,8 @@ export class CityPage {
     "priceFilter": {},
   }
   roomTypesSelected: any[];
-  moreFilters: boolean = false;
   map: any = {};
-
-
+  
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

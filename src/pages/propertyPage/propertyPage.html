@@ -9,6 +9,17 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="card-background-page">
+
+  <ion-card>
+    <ion-icon name="eye" id="eyeIcon" (click)="openImagesModal()"></ion-icon>
+    <img [src]="property.mainImage">
+  </ion-card>
+  <ion-row>
+    <ion-col>
+      <h2>{{ property.product_name }}</h2>
+    </ion-col>
+  </ion-row>
+
 
 </ion-content>

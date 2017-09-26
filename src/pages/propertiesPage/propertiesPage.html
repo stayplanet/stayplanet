@@ -11,15 +11,15 @@
 
 <ion-content>
 
-  <ion-row>
-    <ion-col>{{ properties?.length }} properties found in {{ city }}</ion-col>
+  <ion-row *ngIf="propertiesToShow?.length">
+    <ion-col>{{ propertiesToShow.length }} properties found in {{ city }}</ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col col-12>
       <ion-item (click)="openFiltersModal()">
         <ion-label>Filter By:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" disabled></ion-input>
       </ion-item>
     </ion-col>
   </ion-row>
@@ -38,12 +38,12 @@
   </ion-row>
 
   <ion-row>
-    <ion-col id="propertieColumn" col-6 *ngFor="let property of properties" (click)="goToProperty(property)">
+    <ion-col id="propertieColumn" col-6 *ngFor="let property of propertiesToShow" (click)="goToProperty(property)">
       <ion-card>
         <ion-item>
           <ion-avatar item-start><img src="https://www.templateplazza.com/templates/nutp/images/man.png"></ion-avatar>
           <h2>Marty McFly</h2>
-          <h2>{{ property.price | currency:'EUR':true:'1.2-2' }}</h2>
+          <h2>{{ property?.price | currency:'EUR':true:'1.2-2' }}</h2>
         </ion-item>
         <img src={{property.mainImage}} style="height:120px">
         <ion-card-content id="propertieContent">

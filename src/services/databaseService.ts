@@ -140,7 +140,7 @@ propertyFeatures: any = {
     "extras": [
         { "key": "airConditioning", "name": "Air Conditioning", "value": false },
         { "key": "freeParkingOnPremises", "name": "Free Parking on Premises", "value": false },
-        { "key": "shampoo", "name": "Shampooo", "value": false }
+        { "key": "shampoo", "name": "Shampoo", "value": false }
     ],
     "specialFeatures": [
         { "key": "petsAllowed", "name": "Pets Allowed", "value": false },
