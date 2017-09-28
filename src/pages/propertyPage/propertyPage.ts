@@ -51,7 +51,7 @@ export class PropertyPage {
 
   <ion-content>
 
-    <ion-slides>
+    <ion-slides loop="true" pager="true" zoom="true" paginationType="progress">
       <ion-slide *ngFor="let image of images">
         <ion-icon id="backSlideArrowIcon" name="ios-arrow-dropleft" (click)="goPreviousSlide()"></ion-icon>
         <img [src]="image">

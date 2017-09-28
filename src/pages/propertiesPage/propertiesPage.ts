@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, Platform, ViewController, ModalController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, LoadingController, Platform, ViewController, ModalController, Select } from 'ionic-angular';
 
 import * as _ from 'lodash';
 
@@ -22,6 +22,7 @@ export class PropertiesPage {
   propertiesToShow: any[];
   images: any[];
   orderByOption: string = "lowestPrice";
+  @ViewChild('orderSelect') orderSelect: Select;
 
   constructor(
     public navCtrl: NavController,
@@ -85,10 +86,20 @@ export class PropertiesPage {
           return p;
         }
       });
+      console.log(this.filters.propertyFeatures.propertyTypes);
+      this.propertiesToShow = _.filter(this.propertiesToShow, p => {
+        console.log(p);
+        if(_.find(this.filters.propertyFeatures.propertyTypes, {name: p.room_type, value: true})){
+          return p;
+        }
+      });
     });
     filtersModal.present();
   }
 
+  openOrderSelect(){
+    this.orderSelect.open();
+  }
 
   goToProperty(property) {
     this.navCtrl.push(PropertyPage, property);

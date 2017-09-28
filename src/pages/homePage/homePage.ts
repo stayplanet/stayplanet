@@ -14,10 +14,13 @@ import * as _ from 'lodash';
 
 export class HomePage {
 
+  splash: boolean = true;
   cities: any = [];
   TDcities: any = [];
   TDcitiesToShow: any;
   begin: boolean = true;
+  logoPath: string = "assets/logo.png";
+  loadedImages: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -26,23 +29,34 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    let loader = this.loadingController.create({
+    setTimeout(() => {
+      this.splash = false;
+    }, 7500);
+    /*let loader = this.loadingController.create({
       content: 'Please wait...',
       spinner: 'bubbles',
       cssClass: 'loadingController'
+    });*/
+    //loader.present().then(() => {
+    this.databaseService.getCities().subscribe(cities => {
+      this.cities = cities;
+      this.getTopDestinationCities();
+
+      //loader.dismiss();
     });
-    loader.present().then(() => {
-      this.databaseService.getCities().subscribe(cities => {
-        this.cities = cities;
-        this.getTopDestinationCities();
-        loader.dismiss();
-      });
-    });
+    //});
   }
 
   ionViewWillEnter() {
     if (!this.begin) {
       this.getTopDestinationCities();
+    }
+  }
+
+  imageLoaded() {
+    this.loadedImages++;
+    if (this.loadedImages = this.getTopDestinationCities.length) {
+      this.splash = false;
     }
   }
 
@@ -57,7 +71,7 @@ export class HomePage {
     }
   }
 
-  goToCity(idCity){
+  goToCity(idCity) {
     this.navCtrl.push(CityPage, idCity);
   }
 

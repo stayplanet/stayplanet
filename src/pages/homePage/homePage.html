@@ -1,7 +1,15 @@
+<div id="custom-overlay" [style.display]="splash ? 'flex': 'none'">
+  <div class="flb">
+    <div class="Aligner-item Aligner-item--top"></div>
+    <img id="logoSplashScreen" src="assets/logo.png">
+    <div class="Aligner-item Aligner-item--bottom"></div>
+  </div>
+</div>
+
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-    <ion-title>StayPlanet</ion-title>
+    <ion-title><img src="assets/logo.png" alt="StayPlanet" class="logoHeader"></ion-title>
     <ion-buttons end>
       <button ion-button icon-only><ion-icon name="home"></ion-icon></button>
     </ion-buttons>
@@ -13,7 +21,7 @@
   <ion-list>
     <ion-item *ngFor="let city of TDcitiesToShow" (click)="goToCity(city.id)">
       <ion-thumbnail item-start>
-        <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}">
+        <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}" (load)="imageLoaded()">
       </ion-thumbnail>
       <h2>{{ city?.name }}</h2>
       <h3>{{ city?.country_name }}</h3>

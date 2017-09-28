@@ -1,13 +1,12 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-    <ion-title>StayPlanet</ion-title>
+    <ion-title><img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()"></ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="goHome()"><ion-icon name="home"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-
 
 <ion-content>
 
@@ -16,25 +15,18 @@
   </ion-row>
 
   <ion-row>
-    <ion-col col-12>
-      <ion-item (click)="openFiltersModal()">
-        <ion-label>Filter By:</ion-label>
-        <ion-input type="text" disabled></ion-input>
-      </ion-item>
+    <ion-col col-1></ion-col>
+    <ion-col col-5>
+      <button ion-button icon-end (click)="openFiltersModal()">Filters<ion-icon name="options"></ion-icon></button>
     </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col col-12>
-      <ion-item>
-        <ion-label>Order By:</ion-label>
-        <ion-select [(ngModel)]="orderByOption" [selectOptions]="orderSelectOptions" (ionChange)="orderBy()" okText="Ok" cancelText="Cancel"
-          interface="action-sheet">
-          <ion-option value="lowestPrice">Lowest Price</ion-option>
-          <ion-option value="highestPrice">Highest Price</ion-option>
-        </ion-select>
-      </ion-item>
+    <ion-col col-5>
+      <button ion-button icon-end (click)="openOrderSelect()">Order<ion-icon ios="ios-switch" md="md-switch"></ion-icon></button>
+      <ion-select #orderSelect [(ngModel)]="orderByOption" [selectOptions]="orderSelectOptions" (ionChange)="orderBy()" okText="Ok" cancelText="Cancel" interface="action-sheet" style="display:none">
+        <ion-option value="lowestPrice">Lowest Price</ion-option>
+        <ion-option value="highestPrice">Highest Price</ion-option>
+      </ion-select>
     </ion-col>
+    <ion-col col-1></ion-col>
   </ion-row>
 
   <ion-row>

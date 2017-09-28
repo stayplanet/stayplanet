@@ -11,6 +11,7 @@ import { DatabaseService } from '../../services/databaseService';
 })
 export class CityPage {
 
+  logoPath: string = "gs://stayplanet-943d2.appspot.com/logo.png";
   idCity: number;
   city: any;
   guests: number = 1;
@@ -21,7 +22,7 @@ export class CityPage {
   }
   roomTypesSelected: any[];
   map: any = {};
-  
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
