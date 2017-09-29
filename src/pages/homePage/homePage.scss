@@ -10,11 +10,11 @@ homePage{
     left: 0;
     z-index: 100000;
     width:100%;
-    background-color: #002a3e;
+    background-color: #EC2377;
     }
     
 .flb {
-    background-color: #C5EDFF;
+    background-color: snow;
     height:100%;
     width:100%;
     animation: pulse 1s linear forwards;
@@ -33,6 +33,7 @@ align-self: flex-end;
 }
 #custom-overlay img {
 display: block;
+margin-bottom: 10%;
 margin: 0 auto;
 width: 85%;
 height: auto;

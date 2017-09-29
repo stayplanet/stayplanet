@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import { CityPage } from '../../pages/pages';
 
@@ -14,7 +15,8 @@ import * as _ from 'lodash';
 
 export class HomePage {
 
-  splash: boolean = true;
+  user: any = {};
+  splash: boolean = false;
   cities: any = [];
   TDcities: any = [];
   TDcitiesToShow: any;
@@ -25,10 +27,15 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private loadingController: LoadingController,
-    private databaseService: DatabaseService) {
+    private databaseService: DatabaseService,
+    private nativeStorage: NativeStorage
+  ) {
   }
 
   ionViewDidLoad() {
+    this.nativeStorage.getItem('user').then(user => {
+      this.user = user;
+    });
     setTimeout(() => {
       this.splash = false;
     }, 7500);

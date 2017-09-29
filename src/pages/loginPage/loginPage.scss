@@ -1,7 +1,15 @@
 loginPage {
 
     .socialNetworkIcons{
-        font-size: 50px;
+        font-size: 45px;
     }
+
+    .socialLogin{
+        margin-top: inherit;
+    }
+
+    ion-col h5{
+        padding-bottom: 0;
+    } 
 
 }

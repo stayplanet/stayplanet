@@ -17,7 +17,7 @@
 </ion-header>
 
 <ion-content padding>
-
+  <h1 *ngIf="user.length">{{user.email}}</h1>
   <ion-list>
     <ion-item *ngFor="let city of TDcitiesToShow" (click)="goToCity(city.id)">
       <ion-thumbnail item-start>

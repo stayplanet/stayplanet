@@ -36,7 +36,6 @@ class API extends Database {
             $responseJSON = array("Status" => "false","Message" => "Please enter valid email");
             $response = json_encode($responseJSON);
             echo $response;	
-        
         }elseif($_REQUEST['password'] == "" ){
             $responseJSON = array("Status" => "false","Message" => "Please enter your password");
             $response = json_encode($responseJSON);
@@ -46,8 +45,8 @@ class API extends Database {
         }
     
         $password = $_REQUEST['password'];
-        $new = md5($password);
-        $query = mysql_query("SELECT * FROM fc_users where password='$new' AND email='$email'");
+        $md5Password = md5($password);
+        $query = mysql_query("SELECT * FROM fc_users where email='$email' AND password='$md5Password' ");
         $total = mysql_num_rows($query);
         while($result = mysql_fetch_array($query)){
             $key = $result['api_key'];
@@ -63,7 +62,6 @@ class API extends Database {
             //header("content-type:application/json");
             $response = json_encode($responseJSON);
             echo $response;	
-        
         }
     }
     
@@ -235,6 +233,8 @@ class API extends Database {
             echo '<pre>'.$response;	
         }
     }
+
+    /********************** APP API **********************/
     
     private function getCities(){
         try{
@@ -253,7 +253,6 @@ class API extends Database {
 
     private function getCity(){
         $id = filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-
         try {
             $query = mysql_query("SELECT * FROM fc_city WHERE id = " .$id);
             if($query){
@@ -318,6 +317,26 @@ class API extends Database {
         }
     }
 
+    private function appLogin(){
+        $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $password = md5($password);
+        try {
+            $query = mysql_query("SELECT * FROM fc_users WHERE email = '" .$email. "' AND password = '" .$password. "'");
+            if($query){
+                $user = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($user, $result);
+                }
+                print_r(json_encode($user[0]));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+         }
+    }
+
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
@@ -343,6 +362,7 @@ class API extends Database {
         }
     }
 */
+    /********************** APP API **********************/
 }
     // Initiiate Library
     $api = new API;
