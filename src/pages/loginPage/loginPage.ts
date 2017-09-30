@@ -25,8 +25,6 @@ export class LoginPage {
   }
 
   login(email, password) {
-    console.log(email);
-    console.log(password);
     email = 'fran.mss74@gmail.com';
     password = 'messi719';
     var regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -50,7 +48,7 @@ export class LoginPage {
     }
 
     this.userService.login(email, password).subscribe(user => {
-      this.user = user;
+      this.user = user; //pa que??
       this.navCtrl.popToRoot();
     });
 

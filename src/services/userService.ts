@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -11,21 +12,23 @@ import { Md5 } from 'ts-md5/dist/md5';
 
 export class UserService {
 
+    api_url: string = 'http://francisco.stayplanet.ie/api';
     constructor(
         private http: Http,
-        private nativeStorage: NativeStorage
+        private nativeStorage: NativeStorage,
+        private events: Events,
     ) {
     }
 
     login(email, password): Observable<any> {
-        console.log(email);
-        console.log(password);
-        let url: string = 'http://francisco.stayplanet.ie/api/appLogin?email=' + email + '&password=' + password;
+        let url: string = this.api_url + '/appLogin?email=' + email + '&password=' + password;
         return this.http.get(url)
             .map((data) => {
                 if (data.status === 200) {
                     let user = JSON.parse(data["_body"]);
-                    this.nativeStorage.setItem("user", user);
+                    this.nativeStorage.setItem("user", user).then(() => {
+                        this.events.publish('user:changed');
+                    });
                     return user;
                 } else {
                     console.log("Something went wrong!");

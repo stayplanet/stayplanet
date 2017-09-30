@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 
 import { CityPage } from '../../pages/pages';
@@ -26,37 +26,30 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    private loadingController: LoadingController,
     private databaseService: DatabaseService,
-    private nativeStorage: NativeStorage
+    private nativeStorage: NativeStorage,
+    private platform: Platform
   ) {
   }
 
   ionViewDidLoad() {
-    this.nativeStorage.getItem('user').then(user => {
-      this.user = user;
-    });
     setTimeout(() => {
       this.splash = false;
     }, 7500);
-    /*let loader = this.loadingController.create({
-      content: 'Please wait...',
-      spinner: 'bubbles',
-      cssClass: 'loadingController'
-    });*/
-    //loader.present().then(() => {
     this.databaseService.getCities().subscribe(cities => {
       this.cities = cities;
       this.getTopDestinationCities();
-
-      //loader.dismiss();
     });
-    //});
   }
 
   ionViewWillEnter() {
     if (!this.begin) {
       this.getTopDestinationCities();
+    }
+    if (this.platform.is('cordova')) {
+      this.nativeStorage.getItem('user').then(user => {
+        this.user = user; //pa que?
+      });
     }
   }
 
