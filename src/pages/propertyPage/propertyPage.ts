@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, NavParams, Slides, Platform, ViewController } from 'ionic-angular';
+import { NavController, ModalController, NavParams, Slides, ViewController } from 'ionic-angular';
 
 
 @Component({
@@ -69,7 +69,6 @@ export class ImagesModal {
   @ViewChild(Slides) slides: Slides;
 
   constructor(
-    public platform: Platform,
     public params: NavParams,
     public viewCtrl: ViewController) {
     this.images = this.params.data.images;

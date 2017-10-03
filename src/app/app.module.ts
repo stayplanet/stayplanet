@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
 
 import { MyApp } from './app.component';
-import { HomePage, LoginPage, SignupPage, CityPage, CheckInOutModal, PropertiesPage, FiltersModal, PropertyPage, ImagesModal } from '../pages/pages';
+import { HomePage, LoginPage, SignupPage, TermsAndConditions, PrivacyPolicy, CityPage, CheckInOutModal, PropertiesPage, FiltersModal, PropertyPage, ImagesModal } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
 
@@ -19,6 +19,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     LoginPage,
     SignupPage,
+    TermsAndConditions,
+    PrivacyPolicy,
     CityPage,
     CheckInOutModal,
     PropertiesPage,
@@ -38,6 +40,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     LoginPage,
     SignupPage,
+    TermsAndConditions,
+    PrivacyPolicy,
     CityPage,
     CheckInOutModal,
     PropertiesPage,

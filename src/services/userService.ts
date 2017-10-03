@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Events } from 'ionic-angular';
+import { Events, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs';
 import 'rxjs/add/operator/map'
 import * as _ from 'lodash';
-import { Md5 } from 'ts-md5/dist/md5';
 
 @Injectable()
 
@@ -17,6 +16,7 @@ export class UserService {
         private http: Http,
         private nativeStorage: NativeStorage,
         private events: Events,
+        private platform: Platform
     ) {
     }
 
@@ -26,9 +26,11 @@ export class UserService {
             .map((data) => {
                 if (data.status === 200) {
                     let user = JSON.parse(data["_body"]);
-                    this.nativeStorage.setItem("user", user).then(() => {
-                        this.events.publish('user:changed');
-                    });
+                    if (this.platform.is('cordova')) {
+                        this.nativeStorage.setItem("user", user).then(() => {
+                            this.events.publish('user:changed');
+                        });
+                    }
                     return user;
                 } else {
                     console.log("Something went wrong!");

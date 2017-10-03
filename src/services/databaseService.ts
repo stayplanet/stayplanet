@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map'
 
 export class DatabaseService {
 
+    api_url: string = 'http://francisco.stayplanet.ie/api';
     propertyFeatures: any = {
         "roomTypes": [
             { "key": "privateRoom", "name": "Private Room", "value": false },
@@ -79,6 +80,14 @@ export class DatabaseService {
     }
 
     constructor(private http: Http) {
+    }
+
+    getCountries() {
+        let url: string = this.api_url + '/getCountries';
+        return this.http.get(url)
+            .map(res => {
+                return res.json();
+            });
     }
 
     getCities(): Observable<any> {

@@ -27,7 +27,7 @@ export class CityPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingController: LoadingController,
-    private modalCtrl: ModalController,
+    private modalController: ModalController,
     private databaseService: DatabaseService) {
     this.idCity = this.navParams.data;
   }
@@ -52,7 +52,7 @@ export class CityPage {
   }
 
   openCheckInOutModal() {
-    let checkInModal = this.modalCtrl.create(CheckInOutModal);
+    let checkInModal = this.modalController.create(CheckInOutModal);
     checkInModal.onDidDismiss(data => {
       console.log(data);
     });
@@ -77,9 +77,9 @@ export class CityPage {
         <ion-title>Check In-Out Dates</ion-title>
         <ion-buttons start>
             <button ion-button (click)="dismiss(1)">
-            <span ion-text color="primary" showWhen="ios">Cancel</span>
-            <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
-          </button>
+              <span ion-text color="primary" showWhen="ios">Cancel</span>
+              <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+            </button>
         </ion-buttons>
     </ion-toolbar>
   </ion-header>

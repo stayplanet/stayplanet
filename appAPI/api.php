@@ -320,7 +320,7 @@ class API extends Database {
     private function appLogin(){
         $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        $password = md5($password);
+        //$password = md5($password);
         try {
             $query = mysql_query("SELECT * FROM fc_users WHERE email = '" .$email. "' AND password = '" .$password. "'");
             if($query){
@@ -337,6 +337,20 @@ class API extends Database {
          }
     }
 
+    private function getCountries(){
+        try{
+            $query = mysql_query("SELECT id, name FROM countries");
+            if($query){
+                $countries = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($countries, $result);
+                }
+                print_r(json_encode($countries));
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

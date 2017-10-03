@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, LoadingController, Platform, ViewController, ModalController, Select } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ViewController, ModalController, Select } from 'ionic-angular';
 
 import * as _ from 'lodash';
 
@@ -213,7 +213,6 @@ export class FiltersModal {
   priceRange: any = {};
 
   constructor(
-    public platform: Platform,
     public params: NavParams,
     public viewCtrl: ViewController) {
     this.filters = this.params.data.filters;
