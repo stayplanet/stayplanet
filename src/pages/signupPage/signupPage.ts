@@ -1,7 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides, ToastController, ModalController, ViewController } from 'ionic-angular';
+import { NavController, NavParams, Slides, ToastController, ModalController, ViewController, LoadingController } from 'ionic-angular';
+
+import {Md5} from 'ts-md5/dist/md5';
 
 import { DatabaseService } from '../../services/databaseService';
+import { UserService } from '../../services/userService';
 
 @Component({
 	selector: 'signupPage',
@@ -18,10 +21,14 @@ export class SignupPage {
 	confirmPassword: string = '';
 
 	membershipType: string;
-	address: string;
-	country: string;
 	countries: any[];
+	country: string;
+	regions: any[];
+	region: string;
+	cities: any[];
+	city: string;
 	postCode: string = '';
+	address: string = '';
 	captchaCode: string = '';
 	userCaptchaCode: string = '';
 	informAboutLatestNews: boolean = true;
@@ -29,9 +36,11 @@ export class SignupPage {
 	constructor(
 		public navCtrl: NavController,
 		public navParams: NavParams,
+		private loadingController: LoadingController,
 		private toastController: ToastController,
 		private modalController: ModalController,
-		private databaseService: DatabaseService
+		private databaseService: DatabaseService,
+		private userService: UserService
 	) {
 	}
 
@@ -107,16 +116,34 @@ export class SignupPage {
 			toast.present();
 			return false;
 		}
-		this.captchaCode =  '';
+		this.captchaCode = '';
 		this.userCaptchaCode = '';
 		let font = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		for (var i = 0; i < 5; i++){
-			this.captchaCode += font.charAt(Math.floor(Math.random()*font.length));
-		} 
+		for (var i = 0; i < 5; i++) {
+			this.captchaCode += font.charAt(Math.floor(Math.random() * font.length));
+		}
 
-		this.slides.lockSwipes(false);
-		this.slides.slideNext();
-		this.slides.lockSwipes(true);
+		this.userService.compareEmail(this.email).subscribe(exist => {
+			if(!exist){
+				this.slides.lockSwipes(false);
+				this.slides.slideNext();
+				this.slides.lockSwipes(true);
+			}else{
+				let toast = this.toastController.create({
+					message: 'Email already in use',
+					duration: 1500,
+					position: 'bottom'
+				});
+				toast.present();
+				return false;
+			}
+		});
+	}
+
+	getCountryRegions() {
+		this.databaseService.getCountryRegions(this.country).subscribe(regions => {
+			this.regions = regions;
+		});
 	}
 
 	openTaCModel() {
@@ -128,17 +155,101 @@ export class SignupPage {
 		checkInModal.present();
 	}
 
-	goBack(){
+	goBack() {
 		this.slides.lockSwipes(false);
 		this.slides.slidePrev();
 		this.slides.lockSwipes(true);
 	}
 
 	signUp() {
-		console.log(this.country);
-		if(this.captchaCode == this.userCaptchaCode){
-			console.log(this.userCaptchaCode);
+		if (!this.country) {
+			let toast = this.toastController.create({
+				message: 'Please select your country',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
 		}
+		if (!this.region) {
+			let toast = this.toastController.create({
+				message: 'Please select your region',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+		if (!this.city) {
+			let toast = this.toastController.create({
+				message: 'Please provide your city',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+
+		if (this.postCode == '') {
+			let toast = this.toastController.create({
+				message: 'Please provide a post code',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+
+		if (this.address == '') {
+			let toast = this.toastController.create({
+				message: 'Please provide an address',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+
+		if (this.captchaCode != this.userCaptchaCode) {
+			let toast = this.toastController.create({
+				message: 'Wrong code',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+
+		let loader = this.loadingController.create({
+			content: 'Please wait...',
+			spinner: 'bubbles',
+			cssClass: 'loadingController'
+		});
+
+		loader.present().then(() => {
+			this.databaseService.compareCityName(this.city, this.region).subscribe(data => {
+				loader.dismiss();
+				if (data.exist) {
+					this.userService.signup(
+						this.name,this.surname, this.email, Md5.hashStr(this.password),
+						this.membershipType, this.country, this.region, this.city, this.postCode, this.address, this.informAboutLatestNews
+					).subscribe(data => {
+						if(data){
+							this.navCtrl.popToRoot();
+						}						
+					});
+				} else {
+					let toast = this.toastController.create({
+						message: 'Not a valid city...',
+						duration: 1500,
+						position: 'bottom'
+					});
+					toast.present();
+					return false;
+				}
+			});
+		});
+
 	}
 
 	goHome() {

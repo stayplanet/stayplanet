@@ -351,6 +351,84 @@ class API extends Database {
             echo $e->getMessage();
         }
     }
+
+    private function getCountryRegions(){
+        $country_id = filter_var($_REQUEST['country_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try{
+            $query = mysql_query("SELECT id, name FROM regions WHERE country_id = " .$country_id. " AND name != ''");
+            if($query){
+                $regions = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($regions, $result);
+                }
+                print_r(json_encode($regions));
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
+    private function compareEmail(){
+        $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try{
+            $query = mysql_query("SELECT id, email, user_name FROM fc_users WHERE email = '" .$email. "'");
+            if($query){
+                $user = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($user, $result);
+                }
+                print_r(json_encode($user));
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+    private function compareCityName(){
+        $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $region_id = filter_var($_REQUEST['region_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try{
+            $query = mysql_query("SELECT id, name FROM cities WHERE name = '" .$name. "' AND region_id = " .$region_id);
+            if($query){
+                $city = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($city, $result);
+                }
+                print_r(json_encode($city));
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
+    private function appSignUp(){
+        $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $membershipType = filter_var($_REQUEST['membershipType'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if($membershipType == 'Guest'){
+            $membershipType = 'User';
+        }else if($membershipType == 'Host'){
+            $membershipType = 'Seller';
+        }
+        $country = filter_var($_REQUEST['country'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        //$region = filter_var($_REQUEST['region'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $postCode = filter_var($_REQUEST['postCode'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $address = filter_var($_REQUEST['address'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        //$informAboutLatestNews = filter_var($_REQUEST['informAboutLatestNews'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query("INSERT INTO fc_users (user_name, firstname, lastname, email, `password`, `group`, country, city, postal_code, address) VALUES ('$name', '$name', '$surname', '$email', '$password', '$membershipType', '$country', '$city', '$postCode', '$address')");
+            if($query){
+                print_r(json_encode($city));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
+
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

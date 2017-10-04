@@ -26,22 +26,41 @@
           </ion-slide>
 
           <ion-slide>
+
               <ion-item>
                   <ion-label>Membership Type</ion-label>
                   <ion-select><ion-option selected>Guest</ion-option><ion-option>Host</ion-option></ion-select>
               </ion-item>
               
               <ion-item>
-                  <ion-label>Country</ion-label>
-                  <ion-select [(ngModel)]="country">
-                    <ion-option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</ion-option>
-                  </ion-select>
+                <ion-label>Country</ion-label>
+                <ion-select [(ngModel)]="country" (ionChange)="getCountryRegions()">
+                  <ion-option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</ion-option>
+                </ion-select>
               </ion-item>
-              <ion-item><ion-input type="text" placeholder="Post Code"></ion-input></ion-item>
-              <ion-item><ion-input type="text" placeholder="Full address"></ion-input></ion-item>
-              <ion-item><ion-label color="danger" stacked>Code: {{ captchaCode }}</ion-label><ion-input type="text" placeholder="Enter Code"></ion-input></ion-item>
-              <ion-item><ion-label>Inform me about Latest news</ion-label><ion-checkbox  [checked]="informAboutLatestNews"></ion-checkbox></ion-item>
+
+              <ion-item *ngIf="regions">
+                <ion-label>Region</ion-label>
+                <ion-select [(ngModel)]="region">
+                  <ion-option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</ion-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item *ngIf="region"><ion-input type="text" [(ngModel)]="city" placeholder="City"></ion-input></ion-item>
+
+              <ion-item><ion-input type="text" placeholder="Post Code" [(ngModel)]="postCode"></ion-input></ion-item>
+
+              <ion-item><ion-input type="text" placeholder="Full address" [(ngModel)]="address"></ion-input></ion-item>
+
+              <ion-item>
+                <ion-label color="danger" stacked>Captcha Code: {{ captchaCode }}</ion-label>
+                <ion-input type="text" placeholder="Enter Code" [(ngModel)]="userCaptchaCode"></ion-input>
+              </ion-item>
+
+              <ion-item><ion-label>Inform me about Latest news</ion-label><ion-checkbox  [checked]="informAboutLatestNews" [(ngModel)]="informAboutLatestNews"></ion-checkbox></ion-item>
+
               <h6>By Signing up, you confirm that you accept our <a (click)="openTaCModel()">Terms and Conditions</a> and our <a (click)="openPPModel()">Privacy Policy</a></h6>
+
               <ion-row>
                 <ion-col col-4>
                   <button ion-button icon-only (click)="goBack()"><ion-icon ios="ios-undo" md="md-undo"></ion-icon></button>
@@ -50,10 +69,11 @@
                   <button color="secondary" ion-button full (click)="signUp()" icon-end>Sing Up <ion-icon name="md-done-all"></ion-icon></button>
                 </ion-col>
               </ion-row>
+
           </ion-slide>
       </ion-slides>
     </div>
-    
+<!--
     <div class="socialLogin">
       <ion-row>
         <ion-col col-12 style="padding-bottom:0">
@@ -68,7 +88,6 @@
         <ion-col col-3><ion-icon name="logo-twitter" class="socialNetworkIcons"></ion-icon></ion-col>
         <ion-col col-1></ion-col>
       </ion-row>
-  
     </div>
-  
+  -->
   </ion-content>

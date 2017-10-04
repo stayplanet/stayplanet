@@ -98,9 +98,9 @@ export class DatabaseService {
     }
 
     getCity(idCity): Observable<any> {
-        let url: string = 'http://francisco.stayplanet.ie/api/getCity?id=' + idCity;
+        let url: string = this.api_url + '/getCity?id=' + idCity;
         return this.http.get(url)
-            .map((data) => {
+            .map(data => {
                 if (data.status === 200) {
                     return JSON.parse(data["_body"])[0];
                 } else {
@@ -112,7 +112,7 @@ export class DatabaseService {
     getMinMaxPrice(city): Observable<any> {
         let url: string = 'http://francisco.stayplanet.ie/api/getMinMaxPrice?city=' + city;
         return this.http.get(url)
-            .map((data) => {
+            .map(data => {
                 if (data.status === 200) {
                     return JSON.parse(data["_body"])[0];
                 } else {
@@ -124,7 +124,7 @@ export class DatabaseService {
     searchCityProperties(city): Observable<any> {
         let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city;
         return this.http.get(url)
-            .map((data) => {
+            .map(data => {
                 if (data.status === 200) {
                     return JSON.parse(data["_body"]);
                 } else {
@@ -135,6 +135,32 @@ export class DatabaseService {
 
     getPropertyFeatures() {
         return this.propertyFeatures;
+    }
+
+    getCountryRegions(country_id) {
+        let url: string = this.api_url + '/getCountryRegions?country_id=' + country_id;
+        return this.http.get(url)
+            .map(res => {
+                return res.json();
+            });
+    }
+
+    compareCityName(name, region_id) {
+        let url: string = this.api_url + '/compareCityName?name=' + name + '&region_id=' + region_id;
+        return this.http.get(url)
+            .map(res => {
+                if (res.json().length > 0){
+                    return ({
+                        "exist": true,
+                        "city": res.json()[0]
+                    });
+                } else {
+                    return ({
+                        "exist": false,
+                        "city": "No city"
+                    });
+                }
+            });
     }
 
 
