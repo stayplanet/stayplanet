@@ -160,7 +160,6 @@ export class SignupPage {
 		this.slides.slidePrev();
 		this.slides.lockSwipes(true);
 	}
-
 	signUp() {
 		if (!this.country) {
 			let toast = this.toastController.create({

@@ -81,23 +81,24 @@ export class PropertiesPage {
     let filtersModal = this.modalCtrl.create(FiltersModal, { filters: this.filters, priceRange: this.priceRange });
     filtersModal.onDidDismiss(filters => {
       this.filters = filters;
-      this.propertiesToShow = _.filter(this.properties, p => {
-        if(this.filters.priceFilter.upper >= p.price && p.price >= this.filters.priceFilter.lower){
-          return p;
-        }
-      });
-      console.log(this.filters.propertyFeatures.propertyTypes);
-      this.propertiesToShow = _.filter(this.propertiesToShow, p => {
-        console.log(p);
-        if(_.find(this.filters.propertyFeatures.propertyTypes, {name: p.room_type, value: true})){
-          return p;
+      this.propertiesToShow = [];
+      _.forEach(this.properties, p => {
+        if (this.filters.priceFilter.upper >= p.price && p.price >= this.filters.priceFilter.lower) {
+
+          if (_.find(this.filters.propertyFeatures.propertyTypes, { value: true })){
+            if (_.find(this.filters.propertyFeatures.propertyTypes, { name: p.room_type, value: true })) {
+              this.propertiesToShow.push(p);
+            }
+          }else{
+            this.propertiesToShow.push(p);
+          }
         }
       });
     });
     filtersModal.present();
   }
 
-  openOrderSelect(){
+  openOrderSelect() {
     this.orderSelect.open();
   }
 
@@ -228,15 +229,6 @@ export class FiltersModal {
       }
     });
   }
-
-  /*
-  plusOne(){
-    this.filters.priceFilter.upper += 1;
-  }
-  lessOne(){
-    this.filters.priceFilter.lower -= 1;
-  }
-*/
 
   dismiss() {
     this.viewCtrl.dismiss(this.filters);

@@ -9,11 +9,17 @@
     <ion-list>
       <ion-list-header class="sideMenuHeader">User</ion-list-header>
       <button menuClose ion-item (click)="loginTapped()" *ngIf="!user"><ion-icon item-left name="log-in"></ion-icon> Login</button>
-      <button menuClose ion-item (click)="logoutTapped()" *ngIf="user"><ion-icon item-left name="log-out"></ion-icon> Logout</button>
-      <button menuClose ion-item (click)="userTapped()" *ngIf="user"><ion-icon item-left name="contact"></ion-icon> Profile</button>
       <button menuClose ion-item (click)="signupTapped()" *ngIf="!user"><ion-icon item-left name="person-add"></ion-icon> Sign Up</button>
-    </ion-list>
 
+      <button menuClose ion-item (click)="userTapped()" *ngIf="user"><ion-icon item-left name="contact"></ion-icon> Profile</button>
+      <button menuClose ion-item (click)="dashboardTapped()" *ngIf="user"><ion-icon item-left name="clipboard"></ion-icon> Dashboard</button>
+      <button menuClose ion-item (click)="accountTapped()" *ngIf="user"><ion-icon item-left name="settings"></ion-icon> Account</button>
+      <button menuClose ion-item (click)="inboxTapped()" *ngIf="user"><ion-icon item-left name="mail"></ion-icon> Inbox</button>
+      <button menuClose ion-item (click)="listingsTapped()" *ngIf="user"><ion-icon item-left name="list-box"></ion-icon> Listings</button>
+      <button menuClose ion-item (click)="tripsTapped()" *ngIf="user"><ion-icon item-left name="planet"></ion-icon> Trips</button>
+      <button menuClose ion-item (click)="partnersTapped()" *ngIf="user"><ion-icon item-left name="people"></ion-icon> Partners</button>
+      <button menuClose ion-item (click)="logoutTapped()" *ngIf="user"><ion-icon item-left name="log-out"></ion-icon> Logout</button>
+    </ion-list>
   </ion-content>
 
 </ion-menu>

@@ -418,7 +418,8 @@ class API extends Database {
         $address = filter_var($_REQUEST['address'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         //$informAboutLatestNews = filter_var($_REQUEST['informAboutLatestNews'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         try {
-            $query = mysql_query("INSERT INTO fc_users (user_name, firstname, lastname, email, `password`, `group`, country, city, postal_code, address) VALUES ('$name', '$name', '$surname', '$email', '$password', '$membershipType', '$country', '$city', '$postCode', '$address')");
+            $query = mysql_query("INSERT INTO fc_users (user_name, firstname, lastname, email, `password`, `group`, country, city, postal_code, address)
+                                  VALUES ('$name', '$name', '$surname', '$email', '$password', '$membershipType', '$country', '$city', '$postCode', '$address')");
             if($query){
                 print_r(json_encode($city));
             }else{

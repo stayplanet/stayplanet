@@ -47,8 +47,17 @@ export class LoginPage {
     }
 
     this.userService.login(email, Md5.hashStr(password)).subscribe(user => {
-      this.user = user; //pa que??
-      this.navCtrl.popToRoot();
+      if(user){
+        this.navCtrl.popToRoot();
+      }else if (!user){
+        let toast = this.toastController.create({
+          message: 'Invalid email or wrong password',
+          duration: 1500,
+          position: 'bottom'
+        });
+        toast.present();
+        return false;
+      }
     });
 
   }
