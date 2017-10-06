@@ -4,6 +4,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
+import { DatePicker } from '../Component/date-picker';
 
 import { MyApp } from './app.component';
 import {
@@ -20,6 +21,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     HomePage,
+    DatePicker,
     LoginPage,
     SignupPage,
     AccountPage,
@@ -48,6 +50,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     HomePage,
+    DatePicker,
     LoginPage,
     SignupPage,
     AccountPage,

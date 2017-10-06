@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
-
-import { CityPage } from '../../pages/pages';
+import { CityPage, CheckInOutModal } from '../../pages/pages';
 
 import { DatabaseService } from '../../services/databaseService';
 
 import * as _ from 'lodash';
+import { DatePicker } from '../../Component/date-picker';
 
 @Component({
   selector: 'homePage',
-  templateUrl: 'homePage.html'
+  templateUrl: 'homePage.html',
+  providers: [ DatePicker ]
 })
 
 export class HomePage {
@@ -20,15 +21,27 @@ export class HomePage {
   cities: any = [];
   TDcities: any = [];
   TDcitiesToShow: any;
+  cityName: string;
+  searchedCities: any = [];
   begin: boolean = true;
   logoPath: string = "assets/logo.png";
   loadedImages: number = 0;
+  guests: number = 1;
+  filters: any = {
+    "checkInDate": "Check In",
+    "checkOutDate": "Check Out",
+  }
+  searchbarOptions = {
+    placeholder: "Where do you want to go?",
+    autocomplete: "on"
+  }
 
   constructor(
     public navCtrl: NavController,
     private databaseService: DatabaseService,
     private nativeStorage: NativeStorage,
-    private platform: Platform
+    private platform: Platform,
+    private datePicker: DatePicker
   ) {
   }
 
@@ -69,6 +82,42 @@ export class HomePage {
       let random = Math.floor(Math.random() * aux.length);
       this.TDcitiesToShow.push(aux.splice(random, 1)[0]);
     }
+  }
+
+  searchCities(searchBar) {
+    let pattern = searchBar.value;
+
+    if (pattern) {
+      if (pattern.length >= 3) {
+        this.searchedCities = _.filter(this.cities, city => {
+          let cityNameLower = city.name.toLowerCase();
+          if (cityNameLower.includes(pattern.toLowerCase())) {
+            return city;
+          }
+        });
+      } else {
+        this.searchedCities = [];
+      }
+    } else {
+      this.searchedCities = [];
+    }
+  }
+  cityTapped(city, searchBar){
+    this.cityName = city.name;
+    searchBar.value = city.name;
+    this.searchedCities = [];
+  }
+
+  showCalendar(){
+    this.datePicker.showCalendar();
+    this.datePicker.onDateSelected.subscribe((date) => {
+      console.log(date);
+    });
+  }
+  openCheckInOutModal() {
+  }
+
+  searchProperties() {
   }
 
   goToCity(idCity) {
