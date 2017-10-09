@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { CityPage, CheckInOutModal } from '../../pages/pages';
+import { CityPage } from '../../pages/pages';
 
 import { DatabaseService } from '../../services/databaseService';
 
@@ -28,8 +28,8 @@ export class HomePage {
   loadedImages: number = 0;
   guests: number = 1;
   filters: any = {
-    "checkInDate": "Check In",
-    "checkOutDate": "Check Out",
+    checkInDate: undefined,
+    checkOutDate: undefined
   }
   searchbarOptions = {
     placeholder: "Where do you want to go?",
@@ -108,10 +108,15 @@ export class HomePage {
     this.searchedCities = [];
   }
 
-  showCalendar(){
-    this.datePicker.showCalendar();
-    this.datePicker.onDateSelected.subscribe((date) => {
-      console.log(date);
+  showCalendar(inout){
+    this.datePicker.showCalendar(this.filters.checkInDate);
+    this.datePicker.onDateSelected.subscribe(date => {
+      if(!this.filters.checkInDate || (this.filters.checkInDate && inout == 'IN')){
+        this.filters.checkInDate = date;
+      }else if(inout == 'OUT'){
+        this.filters.checkOutDate = date;
+      }
+      inout = '';
     });
   }
   openCheckInOutModal() {
