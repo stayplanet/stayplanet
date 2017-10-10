@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="month-year">{{currentMoment.format('MMMM YYYY')}}</div>
-    <div class="calendar-item-container">
+    <div class="calendar-item-container" (swipe)="swipeEvent($event)">
       <div class="layout-row day-item-header">
         <div class="day-item-header-item">S</div>
         <div class="day-item-header-item">M</div>
@@ -28,7 +28,8 @@
         <div class="day-item-header-item">S</div>
       </div>
       <div class="layout-row day-container" *ngFor="let week of daysGroupedByWeek;">
-        <div class="day-item" [ngClass]="{'day-selected': day.isSelected, 'day-disabled': !day.isEnabled}" *ngFor="let day of week;" (click)="selectDate(day)">{{day.momentDate.date()}}</div>
+        <div class="day-item" [ngClass]="{'day-selected': day.isSelected, 'day-disabled': !day.isEnabled}" *ngFor="let day of week;"
+          (click)="selectDate(day)">{{day.momentDate.date()}}</div>
       </div>
     </div>
     <div class="layout-row action-container">

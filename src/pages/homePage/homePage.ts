@@ -11,7 +11,7 @@ import { DatePicker } from '../../Component/date-picker';
 @Component({
   selector: 'homePage',
   templateUrl: 'homePage.html',
-  providers: [ DatePicker ]
+  providers: [DatePicker]
 })
 
 export class HomePage {
@@ -87,39 +87,37 @@ export class HomePage {
   searchCities(searchBar) {
     let pattern = searchBar.value;
 
-    if (pattern) {
-      if (pattern.length >= 3) {
-        this.searchedCities = _.filter(this.cities, city => {
-          let cityNameLower = city.name.toLowerCase();
-          if (cityNameLower.includes(pattern.toLowerCase())) {
-            return city;
-          }
-        });
-      } else {
-        this.searchedCities = [];
-      }
+    if (pattern && pattern.length >= 3) {
+      this.searchedCities = _.filter(this.cities, city => {
+        let cityNameLower = city.name.toLowerCase();
+        if (cityNameLower.includes(pattern.toLowerCase())) {
+          return city;
+        }
+      });
     } else {
       this.searchedCities = [];
     }
   }
-  cityTapped(city, searchBar){
+
+  cityTapped(city, searchBar) {
     this.cityName = city.name;
     searchBar.value = city.name;
     this.searchedCities = [];
   }
 
-  showCalendar(inout){
-    this.datePicker.showCalendar(this.filters.checkInDate);
+  showCalendar(inout) {
+    if(!this.filters.checkInDate && inout == 'OUT'){
+      inout = 'IN';
+    }
+    this.datePicker.showCalendar( {checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout} );
     this.datePicker.onDateSelected.subscribe(date => {
-      if(!this.filters.checkInDate || (this.filters.checkInDate && inout == 'IN')){
+      if (!this.filters.checkInDate || (this.filters.checkInDate && inout == 'IN')) {
         this.filters.checkInDate = date;
-      }else if(inout == 'OUT'){
+      } else if (inout == 'OUT') {
         this.filters.checkOutDate = date;
       }
       inout = '';
     });
-  }
-  openCheckInOutModal() {
   }
 
   searchProperties() {
