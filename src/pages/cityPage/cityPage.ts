@@ -5,9 +5,12 @@ import { PropertiesPage } from '../../pages/pages'
 
 import { DatabaseService } from '../../services/databaseService';
 
+import { DatePicker } from '../../Component/date-picker';
+
 @Component({
   selector: 'cityPage',
   templateUrl: 'cityPage.html',
+  providers: [DatePicker]
 })
 export class CityPage {
 
@@ -16,8 +19,8 @@ export class CityPage {
   city: any;
   guests: number = 1;
   filters: any = {
-    "checkInDate": "Check In",
-    "checkOutDate": "Check Out",
+    checkInDate: undefined,
+    checkOutDate: undefined,
     "priceFilter": {},
   }
   roomTypesSelected: any[];
@@ -28,7 +31,9 @@ export class CityPage {
     public navParams: NavParams,
     private loadingController: LoadingController,
     private modalController: ModalController,
-    private databaseService: DatabaseService) {
+    private datePicker: DatePicker,
+    private databaseService: DatabaseService
+  ) {
     this.idCity = this.navParams.data;
   }
 
@@ -51,12 +56,16 @@ export class CityPage {
     });
   }
 
-  openCheckInOutModal() {
-    let checkInModal = this.modalController.create(CheckInOutModal);
-    checkInModal.onDidDismiss(data => {
-      console.log(data);
+  showCalendar(inout) {
+    if(!this.filters.checkInDate && inout == 'OUT'){
+      inout = 'IN';
+    }
+    this.datePicker.showCalendar( {checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout} );
+    this.datePicker.onDateSelected.subscribe(data => {
+      this.filters.checkInDate = data.checkInDate;
+      this.filters.checkOutDate = data.checkOutDate;
+      inout = '';
     });
-    checkInModal.present();
   }
 
   searchProperties() {
@@ -68,38 +77,3 @@ export class CityPage {
   }
 
 }
-
-
-@Component({
-  template: `
-  <ion-header>
-    <ion-toolbar>
-        <ion-title>Check In-Out Dates</ion-title>
-        <ion-buttons start>
-            <button ion-button (click)="dismiss(1)">
-              <span ion-text color="primary" showWhen="ios">Cancel</span>
-              <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content>
-    Pepito de los Palotes
-  </ion-content>
-  `
-})
-export class CheckInOutModal {
-
-  constructor(
-    public platform: Platform,
-    public params: NavParams,
-    public viewCtrl: ViewController) {
-
-  }
-
-  dismiss(data) {
-    this.viewCtrl.dismiss(data);
-  }
-}
-

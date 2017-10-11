@@ -9,7 +9,7 @@ import { DatePicker } from '../Component/date-picker';
 import { MyApp } from './app.component';
 import {
   HomePage, LoginPage, SignupPage, AccountPage, DashboardPage, InboxPage, ListingsPage, PartnersPage, TripsPage, TermsAndConditions, PrivacyPolicy,
-  CityPage, CheckInOutModal, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, UserPage
+  CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, UserPage
 } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
@@ -33,7 +33,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TermsAndConditions,
     PrivacyPolicy,
     CityPage,
-    CheckInOutModal,
     PropertiesPage,
     FiltersModal,
     PropertyPage,
@@ -62,7 +61,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TermsAndConditions,
     PrivacyPolicy,
     CityPage,
-    CheckInOutModal,
     PropertiesPage,
     FiltersModal,
     PropertyPage,

@@ -51,7 +51,6 @@ export class PropertiesPage {
           p.image = _.filter(images, i => {
             if (/http*/.test(i)) { return i }
           });
-          //p["mainImage"] = p.image[Math.floor(Math.random() * p.image.length)];
           p["mainImage"] = p.image[0];
           p.price = parseFloat(p.price);
         });

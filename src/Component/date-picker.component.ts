@@ -24,8 +24,8 @@ export class DatePicker {
   private checkInDate: any = {};
   private checkOutDate: any = {};
   private currentMoment: moment.Moment;
-  private minLimit: moment.Moment = {};
-  private maxLimit: moment.Moment = {};
+  private minLimit: moment.Moment;
+  private maxLimit: moment.Moment;
   private daysGroupedByWeek = [];
   private selectedDateItem: DateItem;
   private daysOfMonth: DateItem[];
@@ -39,67 +39,56 @@ export class DatePicker {
   ) {
 
     let date = new Date();
-    let today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    let today = moment(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
 
     this.checkInDate = this.params.data.checkInDate;
     if (this.checkInDate) {
-      this.checkInDay = new Date(this.checkInDate.year, this.checkInDate.month, this.checkInDate.day);
+      this.checkInDay = moment(new Date(this.checkInDate.year, this.checkInDate.month, this.checkInDate.day));
     }
     this.checkOutDate = this.params.data.checkOutDate;
     if (this.checkOutDate) {
-      this.checkOutDay = new Date(this.checkOutDate.year, this.checkOutDate.month, this.checkOutDate.day);
+      this.checkOutDay = moment(new Date(this.checkOutDate.year, this.checkOutDate.month, this.checkOutDate.day));
     }
 
     this.inout = this.params.data.inout;
 
     if (this.inout == 'IN' && this.checkInDate && !this.checkOutDate) { //caso2
       this.case = 2;
-      this.currentMoment = moment(this.checkInDay);
-      this.minLimit["momentDate"] = moment(today);
+      this.currentMoment = this.checkInDay.clone();
+      this.minLimit = today.clone();
     } else if (this.inout == 'OUT' && !this.checkOutDate) { //caso3
       this.case = 3;
-      this.currentMoment = moment(this.checkInDay).add(1, 'day');
-      this.minLimit["momentDate"] = moment(this.checkInDay).add(1, 'day');
+      this.currentMoment = this.checkInDay.clone().add(1, 'day');
+      this.minLimit = this.checkInDay.clone().add(1, 'day');
     } else if (this.inout == 'OUT' && this.checkOutDate) { //caso4
       this.case = 4;
-      this.currentMoment = moment(this.checkOutDay);
-      this.minLimit["momentDate"] = moment(this.checkInDay).add(1, 'day');
+      this.currentMoment = this.checkOutDay.clone();
+      this.minLimit = this.checkInDay.clone().add(1, 'day');
     } else if (this.inout == 'IN' && this.checkOutDate) { //caso5
       this.case = 5;
-      this.currentMoment = moment(this.checkInDay);
-      this.minLimit["momentDate"] = moment(today);
-      this.maxLimit["momentDate"] = moment(this.checkOutDay).subtract(1, 'day');
-      this.maxLimit["isEnabled"] = true;
-      this.maxLimit["isSelected"] = false;
+      this.currentMoment = this.checkInDay.clone();
+      this.minLimit = today.clone();
     } else { //caso1
       this.case = 1;
-      this.currentMoment = moment(today);
-      this.minLimit["momentDate"] = moment(today);
+      this.currentMoment = today.clone();
+      this.minLimit = today.clone();
     }
 
-    this.minLimit["isEnabled"] = true;
-    this.minLimit["isSelected"] = false;
-
-    if (this.case != 5) {
-      this.maxLimit["momentDate"] = moment(today).add(2, "year");
-      this.maxLimit["isEnabled"] = true;
-      this.maxLimit["isSelected"] = false;
-    }
-
+    this.maxLimit = today.clone().add(2, "year");
     this.renderCalender();
   }
 
   private renderCalender() {
     this.daysOfMonth = this.generateDaysOfMonth(this.currentMoment.year(), this.currentMoment.month() + 1, this.currentMoment.date());
     this.daysGroupedByWeek = this.groupByWeek(this.daysOfMonth);
-    let date = new Date(this.currentMoment.get('year'), this.currentMoment.get('month'), this.currentMoment.get('date'));
 
     if (this.case == 5) {
-      this.setSelectedDate(moment(this.checkOutDay));
+      this.setSelectedDate(this.checkOutDay);
     } else if (this.case == 3 || this.case == 4) {
-      this.setSelectedDate(moment(this.checkInDay));
+      this.setSelectedDate(this.checkInDay);
     }
-    this.setSelectedDate(moment(date));
+
+    this.setSelectedDate(this.currentMoment);
   }
 
   private generateDaysOfMonth(year: number, month: number, day: number) {
@@ -118,7 +107,7 @@ export class DatePicker {
       let dateItem: DateItem = {
         isSelected: false,
         momentDate: momentDate,
-        isEnabled: (this.isBelongToThisMonth(immunableStartOfMonth, month) && momentDate.isBetween(this.minLimit.momentDate, this.maxLimit.momentDate, null, '[]') ? true : false)
+        isEnabled: (this.isBelongToThisMonth(immunableStartOfMonth, month) && momentDate.isBetween(this.minLimit, this.maxLimit, null, '[]') ? true : false)
       };
       calendarDays.push(dateItem);
     }
@@ -138,7 +127,7 @@ export class DatePicker {
 
   private selectDate(day: DateItem) {
     if (!day.isEnabled) {
-      if (day.momentDate.isBefore(this.minLimit.momentDate)) {
+      if (day.momentDate.isBefore(this.minLimit)) {
         let toast = this.toastController.create({
           message: 'Sorry, we don\'t provide time travels yet',
           duration: 2500,
@@ -146,7 +135,7 @@ export class DatePicker {
         });
         toast.present();
       }
-      if (day.momentDate.isAfter(this.maxLimit.momentDate)) {
+      if (day.momentDate.isAfter(this.maxLimit)) {
         let toast = this.toastController.create({
           message: 'That date is tooooo far away, isn\'t it?',
           duration: 2500,
@@ -156,8 +145,18 @@ export class DatePicker {
       }
       return false;
     }
+
     if (this.selectedDateItem && this.selectedDateItem.isSelected) {
       this.selectedDateItem.isSelected = false;
+    }
+
+    if (this.case == 5 && day.momentDate.isSameOrAfter(this.checkOutDay)) {
+        this.unSetSelectedDate(this.checkOutDay);
+        this.checkOutDay = day.momentDate.clone().add(1, 'days');
+        this.checkOutDate.year = this.checkOutDay.get('year');
+        this.checkOutDate.month = this.checkOutDay.get('month');
+        this.checkOutDate.day = this.checkOutDay.get('date');
+        this.setSelectedDate(this.checkOutDay);
     }
 
     day.isSelected = true;
@@ -167,13 +166,25 @@ export class DatePicker {
 
   private setSelectedDate(day) {
     let foundDates = this.daysOfMonth.filter((item: DateItem) => {
-      if (day.get("date") == item.momentDate.get("date") && day.get("month") == item.momentDate.get("month") && day.get("year") == item.momentDate.get("year")) {
+      if (day.isSame(item.momentDate)) {
         return item;
       }
     });
     if (foundDates && foundDates.length > 0) {
       this.selectedDateItem = foundDates[0];
       this.selectedDateItem.isSelected = true;
+    }
+  }
+
+  private unSetSelectedDate(day) {
+    let foundDates = this.daysOfMonth.filter((item: DateItem) => {
+      if (day.isSame(item.momentDate)) {
+        return item;
+      }
+    });
+    if (foundDates && foundDates.length > 0) {
+      this.selectedDateItem = foundDates[0];
+      this.selectedDateItem.isSelected = false;
     }
   }
 
@@ -191,43 +202,55 @@ export class DatePicker {
 
   private setMonthBack() {
     this.currentMoment.subtract(1, "month");
-    if (moment(this.currentMoment).isBefore(this.minLimit.momentDate)) {
-      this.selectDate(this.minLimit);
+    if (this.currentMoment.isBefore(this.minLimit)) {
+      this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.minLimit} );
     }
     this.renderCalender();
   }
 
   private setMonthForward() {
     this.currentMoment.add(1, "month");
-    if (this.currentMoment.isAfter(this.maxLimit.momentDate)) {
-      this.selectDate(this.maxLimit);
+    if (this.currentMoment.isAfter(this.maxLimit)) {
+      this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.maxLimit} );
     }
     this.renderCalender();
   }
 
   private setYearBack() {
     this.currentMoment.subtract(1, "year");
-    if (this.currentMoment.isBefore(this.minLimit.momentDate)) {
-      this.selectDate(this.minLimit);
+    if (this.currentMoment.isBefore(this.minLimit)) {
+      this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.minLimit} );
     }
     this.renderCalender();
   }
 
   private setYearForward() {
     this.currentMoment.add(1, "year");
-    if (this.currentMoment.isAfter(this.maxLimit.momentDate)) {
-      this.selectDate(this.maxLimit);
+    if (this.currentMoment.isAfter(this.maxLimit)) {
+      this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.maxLimit} );
     }
     this.renderCalender();
   }
 
   private confirmDateSelection() {
+    let data = {};
     let date = {
       day: this.selectedDateItem.momentDate.get('date'),
       month: this.selectedDateItem.momentDate.get('month'),
       year: this.selectedDateItem.momentDate.get('year'),
     }
-    this.viewCtrl.dismiss(date);
+    if (this.case == 3 || this.case == 4) {
+      data = {
+        "checkInDate": this.checkInDate,
+        "checkOutDate": date
+      }
+    } else {
+      data = {
+        "checkInDate": date,
+        "checkOutDate": this.checkOutDate
+      }
+    }
+    this.viewCtrl.dismiss(data);
   }
 
   private cancel() {

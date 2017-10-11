@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, Platform, ToastController } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { CityPage } from '../../pages/pages';
 
@@ -16,7 +16,6 @@ import { DatePicker } from '../../Component/date-picker';
 
 export class HomePage {
 
-  user: any = {};
   splash: boolean = false;
   cities: any = [];
   TDcities: any = [];
@@ -38,6 +37,7 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
+    private toastController: ToastController,
     private databaseService: DatabaseService,
     private nativeStorage: NativeStorage,
     private platform: Platform,
@@ -46,23 +46,18 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    setTimeout(() => {
-      this.splash = false;
-    }, 7500);
     this.databaseService.getCities().subscribe(cities => {
       this.cities = cities;
       this.getTopDestinationCities();
     });
+    setTimeout(() => {
+      this.splash = false;
+    }, 7500);
   }
 
   ionViewWillEnter() {
     if (!this.begin) {
       this.getTopDestinationCities();
-    }
-    if (this.platform.is('cordova')) {
-      this.nativeStorage.getItem('user').then(user => {
-        this.user = user; //pa que?
-      });
     }
   }
 
@@ -87,7 +82,7 @@ export class HomePage {
   searchCities(searchBar) {
     let pattern = searchBar.value;
 
-    if (pattern && pattern.length >= 3) {
+    if (pattern && pattern.length > 3) {
       this.searchedCities = _.filter(this.cities, city => {
         let cityNameLower = city.name.toLowerCase();
         if (cityNameLower.includes(pattern.toLowerCase())) {
@@ -110,17 +105,42 @@ export class HomePage {
       inout = 'IN';
     }
     this.datePicker.showCalendar( {checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout} );
-    this.datePicker.onDateSelected.subscribe(date => {
-      if (!this.filters.checkInDate || (this.filters.checkInDate && inout == 'IN')) {
-        this.filters.checkInDate = date;
-      } else if (inout == 'OUT') {
-        this.filters.checkOutDate = date;
-      }
+    this.datePicker.onDateSelected.subscribe(data => {
+      this.filters.checkInDate = data.checkInDate;
+      this.filters.checkOutDate = data.checkOutDate;
       inout = '';
     });
   }
 
   searchProperties() {
+    if (!this.cityName || this.cityName == ''){
+      let toast = this.toastController.create({
+        message: 'You must select a city',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    if (!this.filters.checkInDate){
+      let toast = this.toastController.create({
+        message: 'You must select a Check In date',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    if (!this.filters.checkOutDate){
+      let toast = this.toastController.create({
+        message: 'You must select a Check Out date',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    console.log("explore");
   }
 
   goToCity(idCity) {
