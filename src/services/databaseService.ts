@@ -121,8 +121,11 @@ export class DatabaseService {
             });
     }
 
-    searchCityProperties(city): Observable<any> {
-        let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city;
+    searchCityProperties(city, filters, guests): Observable<any> {
+        //let checkInDate = filters.checkInDate;
+        //let checkOutDate = filters.checkOutDate;
+        //let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city + '&checkInDate=' + checkInDate + '&checkOutDate=' + checkOutDate + '&guest=' + guests;
+        let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city + '&guests=' + guests;
         return this.http.get(url)
             .map(data => {
                 if (data.status === 200) {

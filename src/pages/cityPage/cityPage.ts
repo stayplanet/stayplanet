@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ModalController, Platform, ViewController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ModalController, Platform, ViewController, ToastController } from 'ionic-angular';
 
 import { PropertiesPage } from '../../pages/pages'
 
@@ -30,6 +30,7 @@ export class CityPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingController: LoadingController,
+    private toastController: ToastController,
     private modalController: ModalController,
     private datePicker: DatePicker,
     private databaseService: DatabaseService
@@ -57,10 +58,10 @@ export class CityPage {
   }
 
   showCalendar(inout) {
-    if(!this.filters.checkInDate && inout == 'OUT'){
+    if (!this.filters.checkInDate && inout == 'OUT') {
       inout = 'IN';
     }
-    this.datePicker.showCalendar( {checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout} );
+    this.datePicker.showCalendar({ checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout });
     this.datePicker.onDateSelected.subscribe(data => {
       this.filters.checkInDate = data.checkInDate;
       this.filters.checkOutDate = data.checkOutDate;
@@ -69,7 +70,34 @@ export class CityPage {
   }
 
   searchProperties() {
-    this.navCtrl.push(PropertiesPage, { "city": this.city.name, "filters": this.filters });
+    if (!this.city.name || this.city.name == '') {
+      let toast = this.toastController.create({
+        message: 'You must select a city',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    if (!this.filters.checkInDate) {
+      let toast = this.toastController.create({
+        message: 'You must select a Check In date',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    if (!this.filters.checkOutDate) {
+      let toast = this.toastController.create({
+        message: 'You must select a Check Out date',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    }
+    this.navCtrl.push(PropertiesPage, { "city": this.city.name, "filters": this.filters, "guests": this.guests });
   }
 
   goHome() {

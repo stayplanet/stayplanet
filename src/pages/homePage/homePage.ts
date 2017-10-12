@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, ToastController } from 'ionic-angular';
-import { NativeStorage } from '@ionic-native/native-storage';
-import { CityPage } from '../../pages/pages';
+import { NavController, ToastController } from 'ionic-angular';
+
+import { CityPage, PropertiesPage } from '../../pages/pages';
 
 import { DatabaseService } from '../../services/databaseService';
 
@@ -39,8 +39,6 @@ export class HomePage {
     public navCtrl: NavController,
     private toastController: ToastController,
     private databaseService: DatabaseService,
-    private nativeStorage: NativeStorage,
-    private platform: Platform,
     private datePicker: DatePicker
   ) {
   }
@@ -140,7 +138,7 @@ export class HomePage {
       toast.present();
       return false;
     }
-    console.log("explore");
+    this.navCtrl.push(PropertiesPage, { "city": this.cityName, "filters": this.filters, "guests": this.guests });
   }
 
   goToCity(idCity) {

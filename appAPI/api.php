@@ -271,13 +271,15 @@ class API extends Database {
 
     private function searchCityProperties(){
         $city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $guests = filter_var($_REQUEST['guests'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+
         try {
             $query = mysql_query(
                 "SELECT p.id, p.seller_product_id, p.created, p.product_name, p.product_title, p.price,
                         p.price_range, p.price_perweek, p.price_permonth, p.image, p.home_type, p.room_type,
                         p.accommodates, p.bedrooms,p.beds, p.bed_type, p.bathrooms, p.listings, p.datefrom, p.dateto, p.minimum_stay
-                FROM fc_product as p INNER JOIN fc_product_address_new ON p.id = fc_product_address_new.productId
-                WHERE fc_product_address_new.city = '" .$city. "';");
+                FROM fc_product as p INNER JOIN fc_product_address_new as pan ON p.id = pan.productId
+                WHERE pan.city = '" .$city. "' AND p.accommodates >= " .$guests. ";");
             if($query){
                 $properties = array();
                 while($result = mysql_fetch_assoc($query)){

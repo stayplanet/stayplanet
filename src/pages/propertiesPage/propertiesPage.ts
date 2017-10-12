@@ -12,9 +12,10 @@ import { DatabaseService } from '../../services/databaseService';
   templateUrl: 'propertiesPage.html',
 })
 export class PropertiesPage {
-
+  //npm install -g ionic@3.12.0
   city: string;
   priceRange: any = {};
+  guests: number;
   filters: any = {};
   orderSelectOptions = { title: 'Order By' };
   filterSelectOptions = { title: 'Filter By' };
@@ -32,6 +33,7 @@ export class PropertiesPage {
     private dataBaseService: DatabaseService) {
     this.city = this.navParams.data.city;
     this.filters = this.navParams.data.filters;
+    this.guests = this.navParams.data.guests;
   }
 
   ionViewDidLoad() {
@@ -44,7 +46,7 @@ export class PropertiesPage {
     loader.present().then(() => {
       this.filters.propertyFeatures = this.dataBaseService.getPropertyFeatures();
 
-      this.dataBaseService.searchCityProperties(this.city).subscribe(properties => {
+      this.dataBaseService.searchCityProperties(this.city, this.filters, this.guests).subscribe(properties => {
         this.properties = properties;
         this.properties = _.forEach(this.properties, p => {
           let images = _.split(p.image, '"');
@@ -84,11 +86,11 @@ export class PropertiesPage {
       _.forEach(this.properties, p => {
         if (this.filters.priceFilter.upper >= p.price && p.price >= this.filters.priceFilter.lower) {
 
-          if (_.find(this.filters.propertyFeatures.propertyTypes, { value: true })){
+          if (_.find(this.filters.propertyFeatures.propertyTypes, { value: true })) {
             if (_.find(this.filters.propertyFeatures.propertyTypes, { name: p.room_type, value: true })) {
               this.propertiesToShow.push(p);
             }
-          }else{
+          } else {
             this.propertiesToShow.push(p);
           }
         }
