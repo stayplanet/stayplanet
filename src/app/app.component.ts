@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeStorage } from '@ionic-native/native-storage';
 
-import { HomePage, LoginPage, SignupPage, UserPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage } from '../pages/pages';
+import { HomePage, LoginPage, SignupPage, SettingsPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage } from '../pages/pages';
 
 @Component({
   templateUrl: 'app.html'
@@ -42,17 +42,16 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
-    this.refreshUser();
-    this.events.subscribe('user:changed', () => this.refreshUser());
+    this.refreshUser(null);
+    this.events.subscribe('user:changed', user => this.refreshUser(user));
   }
 
   openPage(page) {
     this.nav.setRoot(page.component);
   }
 
-  refreshUser() {
+  refreshUser(user) {
     if (this.platform.is('cordova')) {
-      console.log("hasta aqui");
       this.nativeStorage.getItem("user").then(user => {
         this.user = user;
       }).catch(error => {
@@ -60,6 +59,8 @@ export class MyApp {
           this.user = void 0;
         }
       });
+    }else{
+      this.user = user;
     }
   }
 
@@ -92,10 +93,10 @@ export class MyApp {
     this.nav.push(SignupPage);
   }
   userTapped() {
-    this.nav.push(UserPage);
+    this.nav.push(SettingsPage, this.user);
   }
   dashboardTapped(){
-    this.nav.push(DashboardPage);
+    this.nav.push(DashboardPage, this.user);
   }
   accountTapped(){
     this.nav.push(AccountPage);

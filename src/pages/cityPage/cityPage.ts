@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ModalController, Platform, ViewController, ToastController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 
 import { PropertiesPage } from '../../pages/pages'
 
@@ -31,7 +31,6 @@ export class CityPage {
     public navParams: NavParams,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private modalController: ModalController,
     private datePicker: DatePicker,
     private databaseService: DatabaseService
   ) {

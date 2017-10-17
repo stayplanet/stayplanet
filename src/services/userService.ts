@@ -33,6 +33,9 @@ export class UserService {
                             this.events.publish('user:changed');
                         });
                         return user;
+                    }else{
+                        this.events.publish('user:changed', user);
+                        return user;
                     }
                 } else {
                     console.log("Something went wrong!");

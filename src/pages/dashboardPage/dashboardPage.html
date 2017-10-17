@@ -1,12 +1,52 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>dashboard</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content>
 
-<ion-content padding>
+  <ion-card>
+    <ion-card-header>Alerts</ion-card-header>
+    <ion-card-content>
+      <div>
+        <a (click)="goToAccountPage()">Please tell us how to pay you.
+          <ion-icon name="help-circle"></ion-icon>
+        </a>
+      </div>
+      <div>
+        <p *ngIf="user?.is_verified=='Yes'">Please confirm your email address by clicking on the link we have emailed you. If you cannot find the email, you
+          can <a (click)="sendNewConfirmationEmail()">request a new confirmation email</a> or <a (click)="goToProfile()">change your email address</a>.</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>New Messages {{newMessages}}</ion-card-header>
+    <ion-card-content>
+      <p *ngIf="newMessages==0">No new messages to show</p>
+      
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>Verifications</ion-card-header>
+    <ion-card-content>
+      <h3>Email Address Verification.</h3>
+      <p>Please verify your email address by clicking the link in the message we just sent to: {{ user?.email }}</p>
+      <p>Cant find our message? Check your spam folder or resend the confirmation email.</p>
+      <p>No verifications yet. <a>Add Verification</a></p>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>

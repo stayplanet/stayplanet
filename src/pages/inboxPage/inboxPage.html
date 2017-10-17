@@ -1,12 +1,43 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>inbox</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content>
 
-<ion-content padding>
+  <ion-card>
+    <ion-card-header>Messages</ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col>Number</ion-col>
+        <ion-col>Date</ion-col>
+        <ion-col>Sender</ion-col>
+        <ion-col>Subject</ion-col>
+        <ion-col>Action</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>74</ion-col>
+        <ion-col>17/10/2017 16:05</ion-col>
+        <ion-col>Jon Bon Jovi</ion-col>
+        <ion-col>Livin' on a Prayer</ion-col>
+        <ion-col>
+          <button ion-button (click)="viewMessage()">View Message 
+            <ion-icon name="mail-open"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
