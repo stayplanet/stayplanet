@@ -6,6 +6,8 @@ export * from './propertiesPage/propertiesPage';
 export * from './propertyPage/propertyPage';
 export * from './settingsPage/settingsPage';
 export * from './userPage/userPage';
+export * from './trustAndVerificationPage/trustAndVerificationPage';
+export * from './reviewsPage/reviewsPage';
 export * from './profilePhotoPage/profilePhotoPage';
 export * from './accountPage/accountPage';
 export * from './dashboardPage/dashboardPage';

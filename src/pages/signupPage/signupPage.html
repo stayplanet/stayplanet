@@ -19,6 +19,14 @@
           <ion-slide>
               <ion-item><ion-input type="text" placeholder="Name" [(ngModel)]="name"></ion-input></ion-item>
               <ion-item><ion-input type="text" placeholder="Surname" [(ngModel)]="surname"></ion-input></ion-item>
+              <ion-item>
+                  <ion-label>Gender</ion-label>
+                  <ion-select [(ngModel)]="gender">
+                      <ion-option [value]="Unspecified">Unspecified</ion-option>
+                      <ion-option [value]="Female">Female</ion-option>
+                    <ion-option [value]="Male">Male</ion-option>
+                  </ion-select>
+                </ion-item>
               <ion-item><ion-input type="email" placeholder="Your email" [(ngModel)]="email"></ion-input></ion-item>
               <ion-item><ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input></ion-item>
               <ion-item><ion-input type="password" placeholder="Confirm password" [(ngModel)]="confirmPassword"></ion-input></ion-item>

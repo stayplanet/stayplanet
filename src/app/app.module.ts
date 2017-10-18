@@ -5,11 +5,12 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
 import { DatePicker } from '../Component/date-picker';
+import { FileChooser } from '@ionic-native/file-chooser';
 
 import { MyApp } from './app.component';
 import {
   HomePage, LoginPage, SignupPage, AccountPage, DashboardPage, InboxPage, ListingsPage, PartnersPage, TripsPage, TermsAndConditions, PrivacyPolicy,
-  CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, SettingsPage, UserPage, ProfilePhotoPage
+  CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, SettingsPage, UserPage, ProfilePhotoPage, TrustAndVerificationPage, ReviewsPage
 } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
@@ -39,7 +40,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ImagesModal,
     SettingsPage,
     UserPage,
-    ProfilePhotoPage
+    ProfilePhotoPage,
+    TrustAndVerificationPage,
+    ReviewsPage
   ],
   imports: [
     BrowserModule,
@@ -69,7 +72,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ImagesModal,
     SettingsPage,
     UserPage,
-    ProfilePhotoPage
+    ProfilePhotoPage,
+    TrustAndVerificationPage,
+    ReviewsPage
   ],
   providers: [
     StatusBar,
@@ -77,6 +82,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     NativeStorage,
     DatabaseService,
     UserService,
+    FileChooser,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

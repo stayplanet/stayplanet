@@ -26,7 +26,6 @@ export class UserPage {
 
   ionViewDidLoad() {
     this.user = this.navParams.data;
-    console.log("user in user: ", this.user);
     this.userGender = this.user.gender;
     this.userCountry = this.user.country;
     this.userBirthday = this.user.birthday;
@@ -36,7 +35,7 @@ export class UserPage {
     });
   }
   selectPhoneNumberCode() {
-    //this.userPhoneNumberCode = _.find(this.countries, ['name', this.userCountry]).country_mobile_code;
+    this.userPhoneNumberCode = _.find(this.countries, ['name', this.userCountry]).country_mobile_code;
   }
 
 }

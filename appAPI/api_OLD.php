@@ -405,6 +405,7 @@ class API extends Database {
     private function appSignUp(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $gender = filter_var($_REQUEST['gender'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $membershipType = filter_var($_REQUEST['membershipType'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
@@ -420,8 +421,8 @@ class API extends Database {
         $address = filter_var($_REQUEST['address'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         //$informAboutLatestNews = filter_var($_REQUEST['informAboutLatestNews'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         try {
-            $query = mysql_query("INSERT INTO fc_users (user_name, firstname, lastname, email, `password`, `group`, country, city, postal_code, address)
-                                  VALUES ('$name', '$name', '$surname', '$email', '$password', '$membershipType', '$country', '$city', '$postCode', '$address')");
+            $query = mysql_query("INSERT INTO fc_users (user_name, firstname, lastname, gender, email, `password`, `group`, country, city, postal_code, address)
+                                  VALUES ('$name', '$name', '$surname', '$gender', '$email', '$password', '$membershipType', '$country', '$city', '$postCode', '$address')");
             if($query){
                 print_r(json_encode($city));
             }else{

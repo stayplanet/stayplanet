@@ -55,8 +55,8 @@ export class UserService {
             });
     }
 
-    signup(name, surname, email, password, membershipType, country, region, city, postCode, address, informAboutLatestNews): Observable<any> {
-        let url: string = this.api_url + '/appSignUp?name=' + name + '&surname=' + surname + '&email=' + email + '&password=' + password
+    signup(name, surname, gender, email, password, membershipType, country, region, city, postCode, address, informAboutLatestNews): Observable<any> {
+        let url: string = this.api_url + '/appSignUp?name=' + name + '&surname=' + surname + '&gender=' + gender + '&email=' + email + '&password=' + password
             + '&membershipType=' + membershipType + '&country=' + country + '&region=' + region + '&city=' + city
             + '&postCode=' + postCode + '&address=' + address + '&informAboutLatestNews=' + informAboutLatestNews;
         console.log(url);

@@ -8,7 +8,8 @@
 <ion-content>
 
   <ion-row>
-    <ion-col col-12><h2>Profile</h2></ion-col>
+    <ion-col col-6><h2>Profile</h2></ion-col>
+    <ion-col col-6><button ion-button full (click)="saveInfo()" icon-end>Save <ion-icon name="checkmark-circle-outline"></ion-icon></button></ion-col>
   </ion-row>
 
   <ion-list>
@@ -70,8 +71,5 @@
     </ion-item>
 
   </ion-list>
-
-  <button ion-button full (click)="saveInfo()" icon-end>Save <ion-icon name="checkmark-circle-outline"></ion-icon>
-  </button>
 
 </ion-content>

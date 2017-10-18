@@ -16,6 +16,7 @@ export class SignupPage {
 
 	name: string = '';
 	surname: string = '';
+	gender: string = 'Unspecified';
 	email: string;
 	password: string = '';
 	confirmPassword: string = '';
@@ -64,6 +65,15 @@ export class SignupPage {
 		if (this.surname.length < 1) {
 			let toast = this.toastController.create({
 				message: 'You must provide a surname',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+		if (this.gender == 'Unspecified') {
+			let toast = this.toastController.create({
+				message: 'You must select a gender',
 				duration: 1500,
 				position: 'bottom'
 			});
@@ -230,7 +240,7 @@ export class SignupPage {
 				loader.dismiss();
 				if (data.exist) {
 					this.userService.signup(
-						this.name,this.surname, this.email, Md5.hashStr(this.password),
+						this.name,this.surname, this.gender, this.email, Md5.hashStr(this.password),
 						this.membershipType, this.country, this.region, this.city, this.postCode, this.address, this.informAboutLatestNews
 					).subscribe(data => {
 						if(data){
