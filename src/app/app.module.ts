@@ -5,7 +5,11 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
 import { DatePicker } from '../Component/date-picker';
-import { FileChooser } from '@ionic-native/file-chooser';
+import { ImagePicker } from '@ionic-native/image-picker';
+
+import { File } from '@ionic-native/file';
+import { Transfer, TransferObject } from '@ionic-native/transfer';
+import { FilePath } from '@ionic-native/file-path';
 
 import { MyApp } from './app.component';
 import {
@@ -82,7 +86,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     NativeStorage,
     DatabaseService,
     UserService,
-    FileChooser,
+    ImagePicker,
+    File,
+    Transfer,
+    FilePath,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

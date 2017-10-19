@@ -3,6 +3,7 @@ import { Events, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Transfer, TransferObject } from '@ionic-native/transfer';
 import 'rxjs';
 import 'rxjs/add/operator/map'
 import * as _ from 'lodash';
@@ -16,7 +17,8 @@ export class UserService {
         private http: Http,
         private nativeStorage: NativeStorage,
         private events: Events,
-        private platform: Platform
+        private platform: Platform,
+        private transfer: Transfer,
     ) {
     }
 
@@ -33,7 +35,7 @@ export class UserService {
                             this.events.publish('user:changed');
                         });
                         return user;
-                    }else{
+                    } else {
                         this.events.publish('user:changed', user);
                         return user;
                     }
@@ -43,7 +45,7 @@ export class UserService {
             });
     }
 
-    compareEmail(email) {
+    compareEmail(email): Observable<boolean> {
         let url: string = this.api_url + '/compareEmail?email=' + email;
         return this.http.get(url)
             .map(res => {
@@ -71,5 +73,26 @@ export class UserService {
             });
     }
 
+    uploadImage(fullImagePath, uploadUrl, options, userEmail): Promise<boolean> {
+        console.log(userEmail);
+        console.log(options.fileName);
+
+        const fileTransfer: TransferObject = this.transfer.create();
+        return fileTransfer.upload(fullImagePath, uploadUrl, options).then(data => {
+            let url: string = this.api_url + '/updateUserImage?userEmail=' + userEmail + '&imageName=' + options.fileName;
+            this.http.get(url)
+                .map(res => {
+                    if (res.json().length > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            return true;
+        }, error => {
+            return false;
+        });
+
+    }
 }
 

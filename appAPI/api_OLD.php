@@ -433,6 +433,33 @@ class API extends Database {
         }
     }
 
+    private function uploadImage(){
+        $target_path = "../images/users/";
+
+        $target_path = $target_path . basename( $_FILES['file']['name']);
+
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+            echo "Upload and move success";
+        } else {
+            echo $target_path;
+            echo "There was an error uploading the file, please try again!";
+        }
+    }
+    private function updateUserImage(){
+        $imageName = filter_var($_REQUEST['imageName'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $userEmail = filter_var($_REQUEST['userEmail'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query("UPDATE fc_users set image = '" .$imageName. "' WHERE email = '" .$userEmail. "'");
+            if($query){
+                echo("Success");
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
+
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
