@@ -20,6 +20,7 @@ export class ProfilePhotoPage {
   userImage: string = undefined;
   imagePath: string;
   imageName: string;
+  loader: any;
 
   constructor(
     public navCtrl: NavController,
@@ -30,6 +31,7 @@ export class ProfilePhotoPage {
     private file: File,
     private filePath: FilePath,
     private userService: UserService
+    
   ) {
     this.user = this.navParams.data;
     this.userGender = this.user.gender;
@@ -39,6 +41,17 @@ export class ProfilePhotoPage {
   }
 
   ionViewDidLoad() {
+    this.loader = this.loadingController.create({
+      content: 'Please wait...',
+    });
+    this.loader.present();
+    setTimeout(() => {
+      this.loader.dismiss();
+    }, 7500);
+  }
+
+  imageLoaded(){
+    this.loader.dismissAll();
   }
 
   openImageChooser() {
@@ -81,16 +94,18 @@ export class ProfilePhotoPage {
 
   uploadImage() {
     if(!this.imagePath || !this.imageName){
-      let loading = this.loadingController.create({
-        content: 'You must select an image'
+      let toast = this.toastController.create({
+        message: 'You must select an image to save',
+        duration: 1500,
+        position: 'bottom'
       });
-      loading.present();
+      toast.present();
       return false;
     }
-    let loading = this.loadingController.create({
+    this.loader = this.loadingController.create({
       content: 'Uploading image...',
     });
-    loading.present();
+    this.loader.present();
 
     var options = {
       fileKey: "file",
@@ -101,7 +116,7 @@ export class ProfilePhotoPage {
     };
 
     this.userService.uploadImage(this.imagePath + this.imageName, this.uploadUrl, options, this.user.email).then(boolean => {
-      loading.dismissAll();
+      this.loader.dismissAll();
       if (boolean) {
         let toast = this.toastController.create({
           message: 'Image succesful uploaded',

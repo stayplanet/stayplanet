@@ -12,7 +12,6 @@ import { DatabaseService } from '../../services/databaseService';
   templateUrl: 'propertiesPage.html',
 })
 export class PropertiesPage {
-  //npm install -g ionic@3.12.0
   city: string;
   priceRange: any = {};
   guests: number;
@@ -104,7 +103,7 @@ export class PropertiesPage {
   }
 
   goToProperty(property) {
-    this.navCtrl.push(PropertyPage, property);
+    this.navCtrl.push(PropertyPage, {property: property, filters: this.filters, guests: this.guests});
   }
 
   goHome() {

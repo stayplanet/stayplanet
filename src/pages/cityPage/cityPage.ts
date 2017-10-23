@@ -25,6 +25,7 @@ export class CityPage {
   }
   roomTypesSelected: any[];
   map: any = {};
+  loader: any;
 
   constructor(
     public navCtrl: NavController,
@@ -38,12 +39,12 @@ export class CityPage {
   }
 
   ionViewDidLoad() {
-    let loader = this.loadingController.create({
+    this.loader = this.loadingController.create({
       content: 'Please wait...',
       spinner: 'bubbles',
       cssClass: 'loadingController'
     });
-    loader.present().then(() => {
+    this.loader.present().then(() => {
       this.databaseService.getCity(this.idCity).subscribe(city => {
         this.city = city;
         this.map = {
@@ -51,9 +52,12 @@ export class CityPage {
           long: parseFloat(this.city.longitude),
           zoom: 10,
         };
-        loader.dismiss();
       });
     });
+  }
+
+  imageLoaded() {
+    this.loader.dismiss();
   }
 
   showCalendar(inout) {

@@ -1,9 +1,15 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-    <ion-title><img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()"></ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -12,14 +18,70 @@
 <ion-content class="card-background-page">
 
   <ion-card>
-    <ion-icon name="eye" id="eyeIcon" (click)="openImagesModal()"></ion-icon>
+    <ion-icon name="expand" id="eyeIcon" (click)="openImagesModal()"></ion-icon>
     <img [src]="property.mainImage">
   </ion-card>
+
   <ion-row>
-    <ion-col>
-      <h2>{{ property.product_name }}</h2>
+    <ion-col id="colBookNow">
+      <button id="buttonBookNow" ion-button full (click)="book()" icon-end>Book Now
+        <ion-icon name="cart"></ion-icon>
+      </button>
     </ion-col>
   </ion-row>
 
+  <ion-row>
+    <ion-col>
+      <h5 id="h5ProductName">{{ property.product_name }}</h5>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <table style="text-align: center">
+      <tr>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Guests</th>
+      </tr>
+      <tr>
+        <td>{{ filters?.checkInDate.day }}/{{ filters?.checkInDate.month }}/{{ filters?.checkInDate.year }}</td>
+        <td>{{ filters?.checkOutDate.day }}/{{ filters?.checkOutDate.month }}/{{ filters?.checkOutDate.year }}</td>
+        <td>{{ guests }}</td>
+      </tr>
+      <tr>
+        <th>Guests</th>
+        <th>Nights</th>
+        <th>Price/night</th>
+        <th>Total price</th>
+      </tr>
+      <tr>
+        <td>{{ guests }}</td>
+        <td>{{ nights }}</td>
+        <td>€{{ property.price | number:'2.2-2' }}</td>
+        <td>€{{ property.price * nights | number:'2.2-2' }}</td>
+      </tr>
+    </table>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      + show more
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col *ngIf="!reviews">
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col *ngIf="reviews && reviews.length">
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+    </ion-col>
+  </ion-row>
 
 </ion-content>

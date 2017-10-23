@@ -15,3 +15,4 @@ export * from './inboxPage/inboxPage';
 export * from './listingsPage/listingsPage';
 export * from './partnersPage/partnersPage';
 export * from './tripsPage/tripsPage';
+export * from './bookingPage/bookingPage';

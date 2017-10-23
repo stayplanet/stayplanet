@@ -166,5 +166,29 @@ export class DatabaseService {
             });
     }
 
+    getReviews(product_id){
+        let url: string = this.api_url + '/getReviews?product_id=' + product_id;
+        return this.http.get(url)
+            .map(data => {
+                if (data.status === 200) {
+                    return data.json();
+                } else {
+                    console.log("Something went wrong!");
+                }
+            });
+    }
+
+    getSeller(id): Observable<any> {
+        let url: string = this.api_url + '/getSeller?id=' + id;
+        return this.http.get(url)
+            .map(data => {
+                if (data.status === 200) {
+                    return JSON.parse(data["_body"])[0];
+                } else {
+                    console.log("Something went wrong!");
+                }
+            });
+    }
+
 
 }

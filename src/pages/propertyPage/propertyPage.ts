@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, NavParams, Slides, ViewController } from 'ionic-angular';
+import { NavController, ModalController, NavParams, Slides, ViewController, LoadingController } from 'ionic-angular';
 
+import { BookingPage } from '../../pages/pages';
+
+import { DatabaseService } from '../../services/databaseService';
 
 @Component({
   selector: 'propertyPage',
@@ -9,17 +12,51 @@ import { NavController, ModalController, NavParams, Slides, ViewController } fro
 export class PropertyPage {
 
   property: any = {}
+  filters: any;
+  guests: number;
+  nights: number = 0;
+  reviews: any = [];
+  seller: any = {};
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private loadingController: LoadingController,
+    private databaseService: DatabaseService
   ) {
   }
 
   ionViewDidLoad() {
-    this.property = this.navParams.data;
+    let loader =  this.loadingController.create({
+      content: 'Please wait...',
+    });
+    loader.present();
+
+    this.property = this.navParams.data.property;
+    this.filters = this.navParams.data.filters;
+    this.guests = this.navParams.data.guests;
+    
+    let oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+    let checkInDate = new Date(this.filters.checkInDate.year, this.filters.checkInDate.month, this.filters.checkInDate.day);
+    let checkOutDate = new Date(this.filters.checkOutDate.year, this.filters.checkOutDate.month, this.filters.checkOutDate.day);
+    this.nights = Math.round(Math.abs((checkInDate.getTime() - checkOutDate.getTime())/(oneDay)));
+
     console.log(this.property);
+    console.log(this.filters);
+    console.log(this.guests);
+
+    this.databaseService.getReviews(this.property.id).subscribe(reviews => {
+      this.reviews = reviews;
+      this.databaseService.getSeller(this.property.seller_product_id).subscribe(seller => {
+        this.seller = seller;
+        loader.dismiss();
+      });
+    });
+
+    setTimeout(() => {
+      loader.dismiss();
+    }, 7500);
   }
 
   openImagesModal() {
@@ -27,6 +64,9 @@ export class PropertyPage {
     imagesModal.present();
   }
 
+  book(){
+    this.navCtrl.push(BookingPage);
+  }
 
   goHome() {
     this.navCtrl.popToRoot();

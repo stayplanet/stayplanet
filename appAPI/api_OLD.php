@@ -465,6 +465,42 @@ class API extends Database {
         }
     }
 
+    private function getReviews(){
+        $product_id = filter_var($_REQUEST['product_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query("SELECT * FROM fc_review WHERE product_id = " .$product_id);
+            if($query){
+                $reviews = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($reviews, $result);
+                }
+                print_r(json_encode($reviews));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
+
+    private function getSeller(){
+        $id = filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+            $query = mysql_query("SELECT * FROM fc_users WHERE id = " .$id);
+            if($query){
+                $user = array();
+                while($result = mysql_fetch_assoc($query)){
+                    array_push($user, $result);
+                }
+                print_r(json_encode($user));
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
+
 /*
     private function createCity(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

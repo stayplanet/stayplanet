@@ -11,9 +11,9 @@
     </ion-row>
 
     <ion-card>
-        <img class="profilePhoto" *ngIf="userImage" [src]="userImage"/>
-        <img class="profilePhoto" *ngIf="!userImage && userGender=='Male'" src="assets/male.png"/>
-        <img class="profilePhoto" *ngIf="!userImage && userGender=='Female'" src="assets/female.png"/>
+        <img class="profilePhoto" *ngIf="userImage" [src]="userImage" (load)="imageLoaded()"/>
+        <img class="profilePhoto" *ngIf="!userImage && userGender=='Male'" src="assets/male.png" (load)="imageLoaded()"/>
+        <img class="profilePhoto" *ngIf="!userImage && userGender=='Female'" src="assets/female.png" (load)="imageLoaded()"/>
         <ion-card-content>
           <ion-card-title>
             {{ user?.firstname }} {{ user?.lastname }}

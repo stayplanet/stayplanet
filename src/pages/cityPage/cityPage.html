@@ -11,7 +11,7 @@
 <ion-content class="card-background-page">
 
   <ion-card>
-    <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}" />
+    <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}" (load)="imageLoaded()"/>
     <div class="card-title">{{ city?.name }}</div>
   </ion-card>
 
