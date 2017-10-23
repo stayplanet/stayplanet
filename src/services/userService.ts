@@ -25,7 +25,7 @@ export class UserService {
     login(email, password): Observable<any> {
         let url: string = this.api_url + '/appLogin?email=' + email + '&password=' + password;
         return this.http.get(url)
-            .map((data) => {
+            .map(data => {
                 if (data.status === 200) {
                     let user = JSON.parse(data["_body"]);
                     if (!user) {
@@ -74,22 +74,15 @@ export class UserService {
     }
 
     uploadImage(fullImagePath, uploadUrl, options, userEmail): Promise<boolean> {
-        console.log(userEmail);
-        console.log(options.fileName);
-
         const fileTransfer: TransferObject = this.transfer.create();
+        uploadUrl += userEmail;
         return fileTransfer.upload(fullImagePath, uploadUrl, options).then(data => {
-            let url: string = this.api_url + '/updateUserImage?userEmail=' + userEmail + '&imageName=' + options.fileName;
-            this.http.get(url)
-                .map(res => {
-                    if (res.json().length > 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
+            let url: string = this.api_url + '/updateUserImage?imageName=' + options.fileName + '&userEmail=' + userEmail;
+            this.http.get(url).subscribe(data => {
+            });
             return true;
         }, error => {
+            console.log("error: ", error);
             return false;
         });
 

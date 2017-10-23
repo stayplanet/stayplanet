@@ -14,4 +14,9 @@ export class InboxPage {
     console.log('ionViewDidLoad InboxPage');
   }
 
+  goHome(){
+    this.navCtrl.popToRoot();
+  }
+
+
 }

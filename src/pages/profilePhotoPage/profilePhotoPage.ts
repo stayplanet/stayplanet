@@ -16,7 +16,7 @@ export class ProfilePhotoPage {
 
   user: any;
   userGender: string;
-  uploadUrl: string = 'http://francisco.stayplanet.ie/api/uploadImage';
+  uploadUrl: string = 'http://francisco.stayplanet.ie/api/uploadImage?email=';
   userImage: string = undefined;
   imagePath: string;
   imageName: string;
@@ -31,11 +31,14 @@ export class ProfilePhotoPage {
     private filePath: FilePath,
     private userService: UserService
   ) {
+    this.user = this.navParams.data;
+    this.userGender = this.user.gender;
+    if (this.user.image) {
+      this.userImage = 'http://www.francisco.stayplanet.ie/images/users/' + this.user.image;
+    }
   }
 
   ionViewDidLoad() {
-    this.user = this.navParams.data;
-    this.userGender = this.user.gender;
   }
 
   openImageChooser() {
@@ -43,21 +46,47 @@ export class ProfilePhotoPage {
       maximumImagesCount: 1,
       quality: 99,
     }
+
     this.imagePicker.getPictures(imagePickerOptions).then(result => {
-      this.imagePath = result[0];
-      this.userImage = this.imagePath;
-      this.filePath.resolveNativePath(this.imagePath)
-        .then(filePath => {
-          this.imagePath = filePath.substr(0, filePath.lastIndexOf('/') + 1);
-          this.imageName = filePath.substring(filePath.lastIndexOf('/') + 1);
-          console.log("imageName: ", this.imageName);
-        });
+      if (result.length > 0) {
+        if (this.imagePath && this.imageName) {
+          this.file.removeFile(this.imagePath, this.imageName).then(remove => {
+            this.userImage = result[0];
+            this.resolveNativePath(result[0]);
+          }, error => {
+            console.log("remove error: ", error);
+          });
+        } else {
+          this.userImage = result[0];
+          this.resolveNativePath(result[0]);
+        }
+      } else {
+        return false; //cancel button
+      }
     }, error => {
-      console.log(error);
+      console.log("getPictures error: ", error);
+    });
+  }
+
+  resolveNativePath(path) {
+    this.filePath.resolveNativePath(path).then(filePath => {
+      this.imagePath = filePath.substring(0, filePath.lastIndexOf('/') + 1);
+      this.imageName = filePath.substring(filePath.lastIndexOf('/') + 1);
+      let extension = this.imageName.substring(this.imageName.lastIndexOf('.'));
+      this.file.moveFile(this.imagePath, this.imageName, this.imagePath, this.user.email + extension).then(data => {
+        this.imageName = this.user.email + extension;
+      });
     });
   }
 
   uploadImage() {
+    if(!this.imagePath || !this.imageName){
+      let loading = this.loadingController.create({
+        content: 'You must select an image'
+      });
+      loading.present();
+      return false;
+    }
     let loading = this.loadingController.create({
       content: 'Uploading image...',
     });
@@ -70,8 +99,8 @@ export class ProfilePhotoPage {
       mimeType: "multipart/form-data",
       params: { 'fileName': this.imageName }
     };
-    let fullImagePath = this.imagePath + this.imageName;
-    this.userService.uploadImage(fullImagePath, this.uploadUrl, options, this.user.email).then(boolean => {
+
+    this.userService.uploadImage(this.imagePath + this.imageName, this.uploadUrl, options, this.user.email).then(boolean => {
       loading.dismissAll();
       if (boolean) {
         let toast = this.toastController.create({

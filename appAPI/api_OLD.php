@@ -434,24 +434,29 @@ class API extends Database {
     }
 
     private function uploadImage(){
-        $target_path = "../images/users/";
+        $path = "../images/users/";
+        $target_path = $path . basename( $_FILES['file']['name']);
+        $oldTargetPath =  $path . filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-        $target_path = $target_path . basename( $_FILES['file']['name']);
-
+        print_r('$userEmail: ' .$oldTargetPath);
+        foreach (glob($oldTargetPath . '.*') as $filename) {
+            print_r('$filename: ' .$filename);
+            unlink($filename);
+        }
         if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
             echo "Upload and move success";
         } else {
-            echo $target_path;
             echo "There was an error uploading the file, please try again!";
         }
     }
+
     private function updateUserImage(){
         $imageName = filter_var($_REQUEST['imageName'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $userEmail = filter_var($_REQUEST['userEmail'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         try {
             $query = mysql_query("UPDATE fc_users set image = '" .$imageName. "' WHERE email = '" .$userEmail. "'");
             if($query){
-                echo("Success");
+                print_r("UPDATE fc_users set image = '" .$imageName. "' WHERE email = '" .$userEmail. "'");
             }else{
                 echo "Something went wrong";
             }
