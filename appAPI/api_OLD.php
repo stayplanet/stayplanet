@@ -277,7 +277,7 @@ class API extends Database {
             $query = mysql_query(
                 "SELECT p.id, p.seller_product_id, p.created, p.product_name, p.product_title, p.price,
                         p.price_range, p.price_perweek, p.price_permonth, p.image, p.home_type, p.room_type,
-                        p.accommodates, p.bedrooms,p.beds, p.bed_type, p.bathrooms, p.listings, p.datefrom, p.dateto, p.minimum_stay
+                        p.accommodates, p.bedrooms, p.beds, p.bed_type, p.bathrooms, p.listings, p.datefrom, p.dateto, p.minimum_stay
                 FROM fc_product as p INNER JOIN fc_product_address_new as pan ON p.id = pan.productId
                 WHERE pan.city = '" .$city. "' AND p.accommodates >= " .$guests. ";");
             if($query){
