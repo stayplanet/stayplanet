@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, ToastController, Content } from 'ionic-angular';
 
-import { CityPage, PropertiesPage } from '../../pages/pages';
+import { PropertiesPage, PropertyPage } from '../../pages/pages';
 
 import { DatabaseService } from '../../services/databaseService';
 
@@ -16,14 +16,21 @@ import { DatePicker } from '../../Component/date-picker';
 
 export class HomePage {
 
+  @ViewChild(Content) content: Content;
+
   splash: boolean = false;
-  cities: any = [];
-  TDcities: any = [];
-  TDcitiesToShow: any;
-  cityName: string;
-  searchedCities: any = [];
+  location: any = {};
+  locations: any = [];
+  searchedLocations: any = [];
+  accommodation: any = {};
+  accommodations: any = [];
+  searchedAcco: any = [];
+
+  featuredAcco = [];
+  featuredAccoToShow = [];
+
   begin: boolean = true;
-  logoPath: string = "assets/logo.png";
+  //logoPath: string = "assets/logo.png";
   loadedImages: number = 0;
   guests: number = 1;
   filters: any = {
@@ -44,9 +51,12 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.databaseService.getCities().subscribe(cities => {
-      this.cities = cities;
-      this.getTopDestinationCities();
+    this.databaseService.getLocations().subscribe(locations => {
+      this.locations = locations;
+    });
+    this.databaseService.getAccommodations().subscribe(accommodations => {
+      this.accommodations = accommodations;
+      this.getFeaturedAccommodations();
     });
     setTimeout(() => {
       this.splash = false;
@@ -55,47 +65,77 @@ export class HomePage {
 
   ionViewWillEnter() {
     if (!this.begin) {
-      this.getTopDestinationCities();
+      this.getFeaturedAccommodations();
     }
   }
 
   imageLoaded() {
     this.loadedImages++;
-    if (this.loadedImages = this.getTopDestinationCities.length) {
+    if (this.loadedImages = this.featuredAccoToShow.length) {
       this.splash = false;
     }
   }
-
-  getTopDestinationCities() {
+  
+  getFeaturedAccommodations() {
     this.begin = false;
-    this.TDcities = _.filter(this.cities, { 'top_destination': '1' });
-    this.TDcitiesToShow = [];
-    let aux = this.TDcities;
+    this.featuredAcco = _.filter(this.accommodations, { 'hotel_is_featured': 'yes' });
+    this.featuredAccoToShow = [];
+    let aux = this.featuredAcco;
     for (var i = 0; i < 10; i++) {
       let random = Math.floor(Math.random() * aux.length);
-      this.TDcitiesToShow.push(aux.splice(random, 1)[0]);
+      if(!aux[random].hotel_stars){
+        aux[random].hotel_stars = 0;
+      }
+      if(!aux[random].thumbnail_image.includes('http://')){
+        aux[random].thumbnail_image = 'http://www.stayplanet.net/uploads/images/hotels/slider/' + aux[random].thumbnail_image;
+      }
+      this.featuredAccoToShow.push(aux.splice(random, 1)[0]);
     }
   }
 
-  searchCities(searchBar) {
+  search(searchBar) {
     let pattern = searchBar.value;
 
     if (pattern && pattern.length > 3) {
-      this.searchedCities = _.filter(this.cities, city => {
-        let cityNameLower = city.name.toLowerCase();
-        if (cityNameLower.includes(pattern.toLowerCase())) {
-          return city;
+      this.searchedAcco = _.filter(this.accommodations, acco => {
+        let accoTitleLower = acco.hotel_title.toLowerCase();
+        if (accoTitleLower.includes(pattern.toLowerCase())) {
+          return acco;
+        }
+      });
+      this.searchedLocations = _.filter(this.locations, location => {
+        let locationNameLower = location.location.toLowerCase();
+        if (locationNameLower.includes(pattern.toLowerCase())) {
+          return location;
         }
       });
     } else {
-      this.searchedCities = [];
+      this.searchedLocations = [];
+      this.searchedAcco = [];
     }
   }
 
-  cityTapped(city, searchBar) {
-    this.cityName = city.name;
-    searchBar.value = city.name;
-    this.searchedCities = [];
+  accommodationTapped(accommodation, searchBar) {
+    searchBar.value = accommodation.hotel_title;
+    this.accommodation = accommodation;
+    this.location = undefined;
+    this.searchedLocations = [];
+    this.searchedAcco = [];
+  }
+  locationTapped(location, searchBar) {
+    searchBar.value = location.location;
+    this.accommodation = undefined;
+    this.location = location;
+    this.searchedLocations = [];
+    this.searchedAcco = [];
+  }
+  featuredAccoTapped(accommodation, searchBar){
+    searchBar.value = accommodation.hotel_title;
+    this.accommodation = accommodation;
+    this.location = undefined;
+    this.searchedLocations = [];
+    this.searchedAcco = [];
+    this.content.scrollToTop();
   }
 
   showCalendar(inout) {
@@ -109,17 +149,18 @@ export class HomePage {
       inout = '';
     });
   }
-
+  
   searchProperties() {
-    if (!this.cityName || this.cityName == ''){
+    if ((!this.location || this.location.location == '') && (!this.accommodation || this.accommodation.hotel_title == '')){
       let toast = this.toastController.create({
-        message: 'You must select a city',
+        message: 'You must select a location or an accommodation',
         duration: 1500,
         position: 'bottom'
       });
       toast.present();
       return false;
     }
+
     if (!this.filters.checkInDate){
       let toast = this.toastController.create({
         message: 'You must select a Check In date',
@@ -138,11 +179,17 @@ export class HomePage {
       toast.present();
       return false;
     }
-    this.navCtrl.push(PropertiesPage, { "city": this.cityName, "filters": this.filters, "guests": this.guests });
+
+    if(this.location){
+      this.navCtrl.push(PropertiesPage, { "location": this.location.location, "filters": this.filters, "guests": this.guests });
+    }else{
+      this.navCtrl.push(PropertyPage, { "property": this.accommodation, "filters": this.filters, "guests": this.guests });
+    }
+    
   }
 
   goToCity(idCity) {
-    this.navCtrl.push(CityPage, idCity);
+    //this.navCtrl.push(CityPage, idCity);
+    console.log(idCity);
   }
-
 }

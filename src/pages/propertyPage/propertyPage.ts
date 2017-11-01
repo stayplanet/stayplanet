@@ -11,12 +11,14 @@ import { DatabaseService } from '../../services/databaseService';
 })
 export class PropertyPage {
 
-  property: any = {}
-  filters: any;
-  guests: number;
-  nights: number = 0;
+  property: any = {};
+  images: string[] = [];
+  filters: any = {};
+  guests: number = 1;
+  nights: number = 1;
   reviews: any = [];
   seller: any = {};
+  rooms: any = [];
 
   constructor(
     public navCtrl: NavController,
@@ -42,14 +44,23 @@ export class PropertyPage {
     let checkOutDate = new Date(this.filters.checkOutDate.year, this.filters.checkOutDate.month, this.filters.checkOutDate.day);
     this.nights = Math.round(Math.abs((checkInDate.getTime() - checkOutDate.getTime())/(oneDay)));
 
-    console.log(this.property);
-    console.log(this.filters);
-    console.log(this.guests);
+    this.databaseService.getPropertyImages(this.property.hotel_id).subscribe(images => {
+      images.forEach(image => {
+        this.images.push(image.himg_image);
+      });
+    });
 
-    this.databaseService.getReviews(this.property.id).subscribe(reviews => {
+    this.databaseService.getReviews(this.property.hotel_id).subscribe(reviews => {
       this.reviews = reviews;
-      this.databaseService.getSeller(this.property.seller_product_id).subscribe(seller => {
-        this.seller = seller;
+      this.databaseService.getRooms(this.property.hotel_id, this.nights, this.filters.checkInDate, this.filters.checkOutDate).subscribe(rooms => {
+        rooms.forEach(room => {
+          if(room.thumbnail_image == 'blank.jpg'){
+            room.thumbnail_image = this.property.thumbnail_image;
+          }else if(!room.thumbnail_image.includes('http://')){
+            room.thumbnail_image = 'http://www.stayplanet.net/uploads/images/slider/' + room.thumbnail_image;
+          }
+        });
+        this.rooms = rooms;
         loader.dismiss();
       });
     });
@@ -60,12 +71,13 @@ export class PropertyPage {
   }
 
   openImagesModal() {
-    let imagesModal = this.modalCtrl.create(ImagesModal, { images: this.property.image });
+    let imagesModal = this.modalCtrl.create(ImagesModal, { images: this.images });
     imagesModal.present();
   }
 
-  book(){
-    this.navCtrl.push(BookingPage);
+  book(room){
+    console.log(room);
+    //this.navCtrl.push(BookingPage);
   }
 
   goHome() {

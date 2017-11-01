@@ -21,9 +21,19 @@
   <div class="card-checkInOut">
     <ion-row>
       <ion-col>
-        <ion-searchbar placeholder="Where do you want to go?" (ionInput)="searchCities(searchBar)" #searchBar></ion-searchbar>
-        <ion-list>
+        <ion-searchbar placeholder="Where do you want to go?" (ionInput)="search(searchBar)" #searchBar></ion-searchbar>
+        <!--
+          <ion-list>
           <ion-item *ngFor="let city of searchedCities" (click)="cityTapped(city, searchBar)">{{ city.name }}, {{ city.country_name }}</ion-item>
+        </ion-list>
+        -->
+        <ion-list *ngIf="searchedLocations && searchedLocations.length > 0">
+          <ion-list-header color="light">Locations</ion-list-header>
+          <ion-item *ngFor="let location of searchedLocations" (click)="locationTapped(location, searchBar)">{{ location.location }}, {{ location.country }}</ion-item>
+        </ion-list>
+        <ion-list *ngIf="searchedAcco && searchedAcco.length > 0">
+            <ion-list-header color="light">Accomodations</ion-list-header>
+            <ion-item *ngFor="let accommodation of searchedAcco" (click)="accommodationTapped(accommodation, searchBar)">{{ accommodation.hotel_title }}</ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
@@ -79,12 +89,14 @@
   </div>
 
   <ion-list>
-    <ion-item *ngFor="let city of TDcitiesToShow" (click)="goToCity(city.id)">
+    <ion-item *ngFor="let accommodation of featuredAccoToShow" (click)="featuredAccoTapped(accommodation, searchBar)">
       <ion-thumbnail item-start>
-        <img src="http://francisco.stayplanet.ie/images/city/{{city?.citythumb}}" (load)="imageLoaded()">
+        <img src="{{accommodation?.thumbnail_image}}" (load)="imageLoaded()">
       </ion-thumbnail>
-      <h2>{{ city?.name }}</h2>
-      <h3>{{ city?.country_name }}</h3>
+      <h2>€{{ accommodation?.hotel_basic_price }}</h2>
+      <h3>{{ accommodation?.hotel_title }}</h3>
+      <h3><ion-icon name="ios-navigate-outline"></ion-icon> {{ accommodation?.hotel_map_city }}, {{ accommodation?.hotel_map_country }}</h3>
+      <h3>{{ accommodation?.hotel_stars }}</h3>
       <button ion-button clear item-end>View</button>
     </ion-item>
   </ion-list>

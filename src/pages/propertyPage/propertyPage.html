@@ -19,9 +19,10 @@
 
   <ion-card>
     <ion-icon name="expand" id="eyeIcon" (click)="openImagesModal()"></ion-icon>
-    <img [src]="property.mainImage">
+    <img [src]="property.thumbnail_image">
   </ion-card>
 
+<!--
   <ion-row>
     <ion-col id="colBookNow">
       <button id="buttonBookNow" ion-button full (click)="book()" icon-end>Book Now
@@ -29,45 +30,43 @@
       </button>
     </ion-col>
   </ion-row>
-
-  <ion-row>
+-->
+  <ion-row padding>
     <ion-col>
-      <h5 id="h5ProductName">{{ property.product_name }}</h5>
+      <h5 id="h5ProductName">{{ property.hotel_title }}</h5>
     </ion-col>
   </ion-row>
 
   <ion-row>
-    <table style="text-align: center">
-      <tr>
-        <th>Check In</th>
-        <th>Check Out</th>
-        <th>Guests</th>
-      </tr>
-      <tr>
-        <td>{{ filters?.checkInDate.day }}/{{ filters?.checkInDate.month }}/{{ filters?.checkInDate.year }}</td>
-        <td>{{ filters?.checkOutDate.day }}/{{ filters?.checkOutDate.month }}/{{ filters?.checkOutDate.year }}</td>
-        <td>{{ guests }}</td>
-      </tr>
-      <tr>
-        <th>Guests</th>
-        <th>Nights</th>
-        <th>Price/night</th>
-        <th>Total price</th>
-      </tr>
-      <tr>
-        <td>{{ guests }}</td>
-        <td>{{ nights }}</td>
-        <td>€{{ property.price | number:'2.2-2' }}</td>
-        <td>€{{ property.price * nights | number:'2.2-2' }}</td>
-      </tr>
-    </table>
+    <ion-col col-3>Check In <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
+    <ion-col col-3>Check Out <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
+    <ion-col col-3>Nights <ion-icon name="moon"></ion-icon></ion-col>
+    <ion-col col-3>Guests <ion-icon name="people"></ion-icon></ion-col>
   </ion-row>
 
   <ion-row>
-    <ion-col>
-      + show more
-    </ion-col>
+      <ion-col col-3>{{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month }}/{{ filters?.checkInDate?.year }}</ion-col>
+      <ion-col col-3>{{ filters?.checkOutDate?.day }}/{{ filters?.checkOutDate?.month }}/{{ filters?.checkOutDate?.year }}</ion-col>
+      <ion-col col-3>{{ nights }}</ion-col>
+      <ion-col col-3>{{ guests }}</ion-col>
   </ion-row>
+
+  <ion-list *ngIf="rooms && rooms.length > 0">
+    <ion-item *ngFor="let room of rooms">
+        <ion-thumbnail item-start><img src="{{ room.thumbnail_image }}"></ion-thumbnail>
+        <p>{{ room.title }}</p>
+        <p>Price/night: €{{ room.room_basic_price | number:'2.2-2'}}</p>
+        <p>Total price: €{{ room.room_basic_price * nights | number:'2.2-2'}}</p>
+        <button ion-button item-end (click)="book(room)">Book</button>
+    </ion-item>
+  </ion-list>
+
+  <p padding *ngIf="!rooms || rooms.length <= 0">No rooms availables for {{ property.hotel_title }} between
+    {{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month }}/{{ filters?.checkInDate?.year }} and 
+    {{ filters?.checkOutDate?.day }}/{{ filters?.checkOutDate?.month }}/{{ filters?.checkOutDate?.year }}.
+    <br>
+    Try selecting different dates.
+  </p>
 
   <ion-row>
     <ion-col *ngIf="!reviews">
@@ -76,11 +75,6 @@
 
   <ion-row>
     <ion-col *ngIf="reviews && reviews.length">
-    </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col>
     </ion-col>
   </ion-row>
 
