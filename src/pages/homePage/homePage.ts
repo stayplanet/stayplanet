@@ -19,10 +19,10 @@ export class HomePage {
   @ViewChild(Content) content: Content;
 
   splash: boolean = false;
-  location: any = {};
+  location: any;
   locations: any = [];
   searchedLocations: any = [];
-  accommodation: any = {};
+  accommodation: any;
   accommodations: any = [];
   searchedAcco: any = [];
 
@@ -136,6 +136,7 @@ export class HomePage {
     this.searchedLocations = [];
     this.searchedAcco = [];
     this.content.scrollToTop();
+    this.showCalendar('IN');
   }
 
   showCalendar(inout) {

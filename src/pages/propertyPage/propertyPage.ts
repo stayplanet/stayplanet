@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, NavParams, Slides, ViewController, LoadingController } from 'ionic-angular';
+import { NavController, ModalController, NavParams, Slides, ViewController, LoadingController, AlertController } from 'ionic-angular';
 
 import { BookingPage } from '../../pages/pages';
 
@@ -19,13 +19,16 @@ export class PropertyPage {
   reviews: any = [];
   seller: any = {};
   rooms: any = [];
+  roomsQuantity: number = 1;
+  extraBeds: number = 0;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private loadingController: LoadingController,
-    private databaseService: DatabaseService
+    private alertCtrl: AlertController,
+    private databaseService: DatabaseService,
   ) {
   }
 
@@ -61,6 +64,8 @@ export class PropertyPage {
           }
         });
         this.rooms = rooms;
+        console.log("property: ", this.property);
+        console.log("rooms: ", this.rooms);
         loader.dismiss();
       });
     });
@@ -73,6 +78,79 @@ export class PropertyPage {
   openImagesModal() {
     let imagesModal = this.modalCtrl.create(ImagesModal, { images: this.images });
     imagesModal.present();
+  }
+
+  selectNumberOfRooms(room_quantity) {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Number of rooms');
+
+    for (let i = 1; i <= room_quantity; i++) {
+      if(i == 1){
+        alert.addInput({
+          type: 'radio',
+          label: '1 room',
+          value: i.toString(),
+          checked: true
+        });
+      }else{
+        alert.addInput({
+          type: 'radio',
+          label: i.toString() + ' rooms',
+          value: i.toString(),
+          checked: false
+        });
+      }
+    }
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        this.roomsQuantity = Number(data);
+        console.log(this.roomsQuantity);
+      }
+    });
+    alert.present();
+  }
+
+  selectExtraBeds(extra_beds, extra_bed_charges){
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Extra beds');
+
+    for (let i = 0; i <= extra_beds; i++) {
+      if(i == 0){
+        alert.addInput({
+          type: 'radio',
+          label: i.toString() + ' beds €' + i*extra_bed_charges,
+          value: i.toString(),
+          checked: false
+        });
+      }else if(i == 1){
+        alert.addInput({
+          type: 'radio',
+          label: '1 bed €' + extra_bed_charges,
+          value: i.toString(),
+          checked: true
+        });
+      }else{
+        alert.addInput({
+          type: 'radio',
+          label: i.toString() + ' beds €' + i*extra_bed_charges,
+          value: i.toString(),
+          checked: false
+        });
+      }
+    }
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        this.extraBeds = Number(data);
+        console.log(this.extraBeds);
+      }
+    });
+    alert.present();
   }
 
   book(room){

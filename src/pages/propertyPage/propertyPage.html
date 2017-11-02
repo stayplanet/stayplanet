@@ -38,8 +38,8 @@
   </ion-row>
 
   <ion-row>
-    <ion-col col-3>Check In <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
-    <ion-col col-3>Check Out <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
+    <ion-col col-3>CheckIn <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
+    <ion-col col-3>CheckOut <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon></ion-col>
     <ion-col col-3>Nights <ion-icon name="moon"></ion-icon></ion-col>
     <ion-col col-3>Guests <ion-icon name="people"></ion-icon></ion-col>
   </ion-row>
@@ -51,15 +51,31 @@
       <ion-col col-3>{{ guests }}</ion-col>
   </ion-row>
 
-  <ion-list *ngIf="rooms && rooms.length > 0">
-    <ion-item *ngFor="let room of rooms">
-        <ion-thumbnail item-start><img src="{{ room.thumbnail_image }}"></ion-thumbnail>
-        <p>{{ room.title }}</p>
-        <p>Price/night: €{{ room.room_basic_price | number:'2.2-2'}}</p>
-        <p>Total price: €{{ room.room_basic_price * nights | number:'2.2-2'}}</p>
-        <button ion-button item-end (click)="book(room)">Book</button>
-    </ion-item>
-  </ion-list>
+  <ion-row *ngFor="let room of rooms">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-6><ion-thumbnail item-start><img src="{{ room.thumbnail_image }}"></ion-thumbnail></ion-col>
+        <ion-col col-6>
+          <ion-row>
+            <ion-col><button ion-button full (click)="selectNumberOfRooms(room.room_quantity)">No. Rooms</button></ion-col>
+            <ion-col><span style="font-size: 2em">{{ roomsQuantity }}</span></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><button ion-button full (click)="selectExtraBeds(room.extra_bed, room.extra_bed_charges)">Extra beds</button></ion-col>
+            <ion-col><span style="font-size: 2em">{{ extraBeds }}</span></ion-col>
+          </ion-row>
+        </ion-col>
+
+      </ion-row>
+      <ion-row>
+        <ion-col>
+            <p>Price/night: €{{ room.room_basic_price | number:'2.2-2'}}</p>
+            <p>Total price: €{{ room.room_basic_price * nights | number:'2.2-2'}}</p>
+        </ion-col>
+        <ion-col><button ion-button (click)="book(room)" full>Book</button></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-row>
 
   <p padding *ngIf="!rooms || rooms.length <= 0">No rooms availables for {{ property.hotel_title }} between
     {{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month }}/{{ filters?.checkInDate?.year }} and 
