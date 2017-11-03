@@ -81,9 +81,9 @@ class AppAPI extends REST_Controller {
 	function getRooms_get(){
 		$room_hotel = filter_var($_REQUEST['room_hotel'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$room_min_stay = filter_var($_REQUEST['room_min_stay'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		//print_r("SELECT * FROM pt_rooms WHERE room_hotel  = " .$room_hotel. "and room_min_stay = " .$room_min_stay);
+		print_r("SELECT * FROM pt_rooms WHERE room_hotel  = " .$room_hotel. "and room_min_stay = " .$room_min_stay);
 		try{
-		    $result = $this->db->query("SELECT * FROM pt_rooms WHERE room_hotel = " .$room_hotel. " and room_min_stay <=" .$room_min_stay)->result();
+		    $result = $this->db->query("SELECT * FROM pt_rooms WHERE room_hotel  = " .$room_hotel. "and room_min_stay <=" .$room_min_stay)->result();
 		    if($result){
 		        print_r(json_encode($result));
 		    }
@@ -91,35 +91,60 @@ class AppAPI extends REST_Controller {
 		    echo $e->getMessage();
 		}
 	}
-
+	
 	function getRoomAvailability_get(){
-		$day1 =  filter_var($_REQUEST['day1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		$month1 = filter_var($_REQUEST['month1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) + 1;
-		$year1 = filter_var($_REQUEST['year1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) - 2017;
-		$day2 = filter_var($_REQUEST['day2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		$month2 = filter_var($_REQUEST['month2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) + 1;
-		$year2 = filter_var($_REQUEST['year2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) - 2017;
+		$day1 = 6;
+		$month1 = 11;
+		$year1 = 0;
+		$day2 = 10;
+		$month2 = 1;
+		$year2 = 1;
 		$days = array();
 
+		$m = $month1;
+		$y = $year1;
+		while($y < $year2){
+			$days[$y][$m] = array();
+			$m++;
+			if($m == $month2){
+				break;
+			}else if($m == 13){
+				$m = 1;
+				$y++;
+				$days[$y] = [];
+			}
+		}
+		$days[$y][$m] = array();
+		
 		$d = $day1;
 		$m = $month1;
 		$y = $year1;
-		while(true){
-			$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = 125 AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
+		while($m < $month2){
+			$days[$y][$m][$d] = "aqui";
 			$d++;
-			if($d > cal_days_in_month(CAL_GREGORIAN, $m, $y+2017)){
-				$d = 1;
-				$m++;
-				if($m > 12){
-					$m = 1;
-					$y++;
-				}
-			}
-			if($d == $day2 && $m == $month2 && $y == $year2){
+			if($d == $day2 && $m == $month2){
 				break;
+			}else if($m == 13){
+				$m = 1;
+				$y++;
+				$days[$y] = [];
 			}
 		}
-		$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = 125 AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
-		print_r(json_encode($days));
+		$days[$y][$m][$d] = "aqui";
+
+		print_r($days);
+
+		/*
+		try{
+			print_r("SELECT * FROM pt_rooms_availabilities WHERE room_id = 125 AND y IN (" .$inYears. ") AND m IN (" .$inMonths. ")");
+			//$result = $this->db->query("SELECT * FROM pt_rooms_availabilities WHERE room_id = 125 AND y IN (" .$inYears. ") AND m IN (" .$inMonths. ")")->result();
+			for
+		    if($result){
+		        print_r(json_encode($result));
+		    }
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+		*/
 	}
 }

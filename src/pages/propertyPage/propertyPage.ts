@@ -62,8 +62,12 @@ export class PropertyPage {
           }else if(!room.thumbnail_image.includes('http://')){
             room.thumbnail_image = 'http://www.stayplanet.net/uploads/images/slider/' + room.thumbnail_image;
           }
+          this.databaseService.getRoomAvailability(room.room_id, this.filters.checkInDate, this.filters.checkOutDate).subscribe(res => {
+            console.log("res", res);
+          });
         });
         this.rooms = rooms;
+
         console.log("property: ", this.property);
         console.log("rooms: ", this.rooms);
         loader.dismiss();
@@ -107,7 +111,6 @@ export class PropertyPage {
       text: 'OK',
       handler: data => {
         this.roomsQuantity = Number(data);
-        console.log(this.roomsQuantity);
       }
     });
     alert.present();
@@ -147,7 +150,6 @@ export class PropertyPage {
       text: 'OK',
       handler: data => {
         this.extraBeds = Number(data);
-        console.log(this.extraBeds);
       }
     });
     alert.present();

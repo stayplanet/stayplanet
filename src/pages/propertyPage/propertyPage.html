@@ -45,8 +45,8 @@
   </ion-row>
 
   <ion-row>
-      <ion-col col-3>{{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month }}/{{ filters?.checkInDate?.year }}</ion-col>
-      <ion-col col-3>{{ filters?.checkOutDate?.day }}/{{ filters?.checkOutDate?.month }}/{{ filters?.checkOutDate?.year }}</ion-col>
+      <ion-col col-3>{{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month + 1 }}/{{ filters?.checkInDate?.year }}</ion-col>
+      <ion-col col-3>{{ filters?.checkOutDate?.day }}/{{ filters?.checkOutDate?.month + 1 }}/{{ filters?.checkOutDate?.year }}</ion-col>
       <ion-col col-3>{{ nights }}</ion-col>
       <ion-col col-3>{{ guests }}</ion-col>
   </ion-row>
@@ -57,11 +57,11 @@
         <ion-col col-6><ion-thumbnail item-start><img src="{{ room.thumbnail_image }}"></ion-thumbnail></ion-col>
         <ion-col col-6>
           <ion-row>
-            <ion-col><button ion-button full (click)="selectNumberOfRooms(room.room_quantity)">No. Rooms</button></ion-col>
+            <ion-col><button ion-button color="secondary" full (click)="selectNumberOfRooms(room.room_quantity)">No. Rooms</button></ion-col>
             <ion-col><span style="font-size: 2em">{{ roomsQuantity }}</span></ion-col>
           </ion-row>
           <ion-row>
-            <ion-col><button ion-button full (click)="selectExtraBeds(room.extra_bed, room.extra_bed_charges)">Extra beds</button></ion-col>
+            <ion-col><button ion-button color="secondary" full (click)="selectExtraBeds(room.extra_bed, room.extra_bed_charges)">Extra beds</button></ion-col>
             <ion-col><span style="font-size: 2em">{{ extraBeds }}</span></ion-col>
           </ion-row>
         </ion-col>
