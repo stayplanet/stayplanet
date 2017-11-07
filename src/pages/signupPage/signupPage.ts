@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, Slides, ToastController, ModalController, ViewController, LoadingController } from 'ionic-angular';
 
-import {Md5} from 'ts-md5/dist/md5';
+import * as sha1 from 'js-sha1';
 
 import { DatabaseService } from '../../services/databaseService';
 import { UserService } from '../../services/userService';
@@ -24,10 +24,13 @@ export class SignupPage {
 	membershipType: string;
 	countries: any[];
 	country: string;
+	/*
 	regions: any[];
 	region: string;
 	cities: any[];
 	city: string;
+	*/
+	phoneNumber = '';
 	postCode: string = '';
 	address: string = '';
 	captchaCode: string = '';
@@ -80,6 +83,16 @@ export class SignupPage {
 			toast.present();
 			return false;
 		}
+		if (this.phoneNumber.length < 6) {
+			let toast = this.toastController.create({
+				message: 'You must provide a phone number',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return false;
+		}
+		
 		var regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (!regExp.test(this.email)) {
 			let toast = this.toastController.create({
@@ -134,11 +147,11 @@ export class SignupPage {
 		}
 
 		this.userService.compareEmail(this.email).subscribe(exist => {
-			if(!exist){
+			if (!exist) {
 				this.slides.lockSwipes(false);
 				this.slides.slideNext();
 				this.slides.lockSwipes(true);
-			}else{
+			} else {
 				let toast = this.toastController.create({
 					message: 'Email already in use',
 					duration: 1500,
@@ -149,13 +162,13 @@ export class SignupPage {
 			}
 		});
 	}
-
+/*
 	getCountryRegions() {
 		this.databaseService.getCountryRegions(this.country).subscribe(regions => {
 			this.regions = regions;
 		});
 	}
-
+*/
 	openTaCModel() {
 		let checkInModal = this.modalController.create(TermsAndConditions);
 		checkInModal.present();
@@ -180,6 +193,7 @@ export class SignupPage {
 			toast.present();
 			return false;
 		}
+		/*
 		if (!this.region) {
 			let toast = this.toastController.create({
 				message: 'Please select your region',
@@ -198,6 +212,7 @@ export class SignupPage {
 			toast.present();
 			return false;
 		}
+		*/
 
 		if (this.postCode == '') {
 			let toast = this.toastController.create({
@@ -236,27 +251,16 @@ export class SignupPage {
 		});
 
 		loader.present().then(() => {
-			this.databaseService.compareCityName(this.city, this.region).subscribe(data => {
+			this.userService.signup(
+				this.name, this.surname, this.gender, this.phoneNumber, this.email, sha1(this.password),
+				this.membershipType, this.country, this.postCode, this.address, this.informAboutLatestNews
+			).subscribe(data => {
 				loader.dismiss();
-				if (data.exist) {
-					this.userService.signup(
-						this.name,this.surname, this.gender, this.email, Md5.hashStr(this.password),
-						this.membershipType, this.country, this.region, this.city, this.postCode, this.address, this.informAboutLatestNews
-					).subscribe(data => {
-						if(data){
-							this.navCtrl.popToRoot();
-						}						
-					});
-				} else {
-					let toast = this.toastController.create({
-						message: 'Not a valid city...',
-						duration: 1500,
-						position: 'bottom'
-					});
-					toast.present();
-					return false;
+				if (data) {
+					this.navCtrl.popToRoot();
 				}
 			});
+
 		});
 
 	}

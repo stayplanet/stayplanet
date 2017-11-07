@@ -12,7 +12,8 @@ import * as _ from 'lodash';
 
 export class UserService {
 
-    api_url: string = 'http://francisco.stayplanet.ie/api';
+    api_url: string = 'http://www.stayplanet.net/api/appapi/';
+    appKey = 'StayPlanet';
     constructor(
         private http: Http,
         private nativeStorage: NativeStorage,
@@ -23,21 +24,23 @@ export class UserService {
     }
 
     login(email, password): Observable<any> {
-        let url: string = this.api_url + '/appLogin?email=' + email + '&password=' + password;
+        let url: string = this.api_url + 'appLogin?appKey=' + this.appKey + '&email=' + email + '&password=' + password;
         return this.http.get(url)
             .map(data => {
+                console.log("data: ", data);
                 if (data.status === 200) {
-                    let user = JSON.parse(data["_body"]);
-                    if (!user) {
+                    let user = data["_body"];
+                    console.log("user: ", user);
+                    if (user == "") {
                         return false;
                     } else if (this.platform.is('cordova')) {
-                        this.nativeStorage.setItem("user", user).then(() => {
+                        this.nativeStorage.setItem("user", JSON.parse(user)).then(() => {
                             this.events.publish('user:changed');
                         });
-                        return user;
+                        return JSON.parse(user);
                     } else {
-                        this.events.publish('user:changed', user);
-                        return user;
+                        this.events.publish('user:changed', JSON.parse(user));
+                        return JSON.parse(user);
                     }
                 } else {
                     console.log("Something went wrong!");
@@ -46,21 +49,20 @@ export class UserService {
     }
 
     compareEmail(email): Observable<boolean> {
-        let url: string = this.api_url + '/compareEmail?email=' + email;
+        let url: string = this.api_url + 'compareEmail?appKey=' + this.appKey + '&email=' + email;
         return this.http.get(url)
             .map(res => {
-                if (res.json().length > 0) {
-                    return true;
-                } else {
+                if (res["_body"] != "") {
                     return false;
+                } else {
+                    return true;
                 }
             });
     }
 
-    signup(name, surname, gender, email, password, membershipType, country, region, city, postCode, address, informAboutLatestNews): Observable<any> {
-        let url: string = this.api_url + '/appSignUp?name=' + name + '&surname=' + surname + '&gender=' + gender + '&email=' + email + '&password=' + password
-            + '&membershipType=' + membershipType + '&country=' + country + '&region=' + region + '&city=' + city
-            + '&postCode=' + postCode + '&address=' + address + '&informAboutLatestNews=' + informAboutLatestNews;
+    signup(name, surname, gender, phoneNumber, email, password, membershipType, country, postCode, address, informAboutLatestNews): Observable<any> {
+        let url: string = this.api_url + 'appSignUp?appKey=' + this.appKey + '&name=' + name + '&surname=' + surname + '&gender=' + gender + '&phoneNumber=' + phoneNumber + '&email=' + email + '&password=' + password
+            + '&membershipType=' + membershipType + '&country=' + country + '&postCode=' + postCode + '&address=' + address + '&informAboutLatestNews=' + informAboutLatestNews;
         console.log(url);
         return this.http.get(url)
             .map((data) => {

@@ -96,7 +96,9 @@
       <h2>€{{ accommodation?.hotel_basic_price }}</h2>
       <h3>{{ accommodation?.hotel_title }}</h3>
       <h3><ion-icon name="ios-navigate-outline"></ion-icon> {{ accommodation?.hotel_map_city }}, {{ accommodation?.hotel_map_country }}</h3>
-      <h3>{{ accommodation?.hotel_stars }}</h3>
+      <!-- <h3>{{ accommodation?.hotel_stars }}</h3> -->
+      <ion-icon name="star" *ngFor="let star of accommodation?.stars"></ion-icon>
+      <ion-icon name="star-outline" *ngFor="let noStar of accommodation?.noStars"></ion-icon>
       <button ion-button clear item-end>View</button>
     </ion-item>
   </ion-list>

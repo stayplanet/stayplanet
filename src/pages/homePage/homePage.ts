@@ -56,6 +56,10 @@ export class HomePage {
     });
     this.databaseService.getAccommodations().subscribe(accommodations => {
       this.accommodations = accommodations;
+      _.forEach(this.accommodations, accommodation => {
+        accommodation['stars'] = Array(accommodation.hotel_stars);
+        accommodation['noStars'] = Array(5 - accommodation.hotel_stars);
+      });
       this.getFeaturedAccommodations();
     });
     setTimeout(() => {

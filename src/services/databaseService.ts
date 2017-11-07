@@ -122,10 +122,9 @@ export class DatabaseService {
             });
     }
 
-    getRooms(hotel_id, nights, checkInDate, checkOutDate): Observable<any> {
+    getRooms(hotel_id, nights): Observable<any> {
         return this.http.get(this.api_url + 'getRooms?appKey=' + this.appKey + '&room_hotel=' + hotel_id + '&room_min_stay=' + nights)
             .map(res => {
-                console.log(res);
                 if(res["_body"] != ""){
                     return res.json();
                 }else{
@@ -135,16 +134,12 @@ export class DatabaseService {
     }
 
     getRoomAvailability(room_id, checkInDate, checkOutDate){
-        console.log(checkInDate);
-        console.log(checkOutDate);
         return this.http.get(this.api_url + 'getRoomAvailability?appKey=' + this.appKey + '&room_id=' + room_id + '&day1=' + checkInDate.day + '&day2=' + checkOutDate.day
                             + '&month1=' + checkInDate.month + '&month2=' + checkOutDate.month + '&year1=' + checkInDate.year + '&year2=' + checkOutDate.year)
         .map(res => {
-            console.log(res);
             return res.json();
         });
     }
-
 /* *************************************************************************************** */
     getCity(idCity): Observable<any> {
         let url: string = this.api_url + '/getCity?id=' + idCity;

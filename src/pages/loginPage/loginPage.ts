@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
-import {Md5} from 'ts-md5/dist/md5';
+import * as sha1 from 'js-sha1';
 
 import { SignupPage } from '../pages';
 
@@ -46,7 +46,7 @@ export class LoginPage {
       return false;
     }
 
-    this.userService.login(email, Md5.hashStr(password)).subscribe(user => {
+    this.userService.login(email, sha1(password)).subscribe(user => {
       if(user){
         this.navCtrl.popToRoot();
       }else if (!user){

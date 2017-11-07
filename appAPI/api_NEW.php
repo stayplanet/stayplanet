@@ -122,4 +122,66 @@ class AppAPI extends REST_Controller {
 		$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = 125 AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
 		print_r(json_encode($days));
 	}
+
+	function compareEmail_get(){
+		$email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try{
+			$result = $this->db->query("SELECT accounts_id, accounts_email, ai_first_name FROM pt_accounts WHERE accounts_email = '" .$email. "'")->result();
+			print_r("SELECT accounts_id, accounts_email, ai_first_name FROM pt_accounts WHERE accounts_email = '" .$email. "'");
+            if(json_encode($result)){
+                print_r(json_encode($result));
+			}else{
+				echo "Something went wrong";
+			}
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+	}
+
+	function appLogin_get(){
+        $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+		    $user = $this->db->query("SELECT * FROM pt_accounts WHERE accounts_email = '" .$email. "' AND accounts_password ='" .$password. "'")->result();
+		    if($user){
+		        print_r(json_encode($user));
+		    }
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+	
+	function appSignUp_get(){
+        $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$gender = filter_var($_REQUEST['gender'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$phoneNumber = filter_var($_REQUEST['phoneNumber'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$membershipType = filter_var($_REQUEST['membershipType'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if($membershipType == 'Guest'){
+            $membershipType = 'guest';
+        }else if($membershipType == 'Host'){
+            $membershipType = 'customers';
+		}
+		$country = filter_var($_REQUEST['country'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        //$region = filter_var($_REQUEST['region'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        //$city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $postCode = filter_var($_REQUEST['postCode'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $address = filter_var($_REQUEST['address'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		//$informAboutLatestNews = filter_var($_REQUEST['informAboutLatestNews'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+			echo "nose1";
+			$result = $this->db->query("INSERT INTO pt_accounts (ai_first_name, ai_last_name, accounts_email, accounts_password, ai_country, ai_address_1, ai_mobile, ai_postal_code, accounts_type, is_stayplanet)
+			VALUES ('$name', '$surname', '$email', '$password', '$country', '$address', '$phoneNumber', '$postCode', '$membershipType', '1')");
+			echo "nose2";
+		    if($result){
+                echo "Ok";
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+    }
 }

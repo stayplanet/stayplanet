@@ -27,8 +27,9 @@
                       <ion-option [value]="Male">Male</ion-option>
                   </ion-select>
                 </ion-item>
+                <ion-item><ion-input type="text" placeholder="Your phone number" [(ngModel)]="phoneNumber"></ion-input></ion-item>
               <ion-item><ion-input type="email" placeholder="Your email" [(ngModel)]="email"></ion-input></ion-item>
-              <ion-item><ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input></ion-item>
+              <ion-item><ion-input type="password" placeholder="Your Password" [(ngModel)]="password"></ion-input></ion-item>
               <ion-item><ion-input type="password" placeholder="Confirm password" [(ngModel)]="confirmPassword"></ion-input></ion-item>
               <button color="secondary" ion-button full (click)="continueSignUp()" icon-end>Continue <ion-icon name="checkmark-circle-outline"></ion-icon></button>
           </ion-slide>
@@ -42,19 +43,22 @@
               
               <ion-item>
                 <ion-label>Country</ion-label>
-                <ion-select [(ngModel)]="country" (ionChange)="getCountryRegions()">
+                <!-- <ion-select [(ngModel)]="country" (ionChange)="getCountryRegions()"> -->
+                <ion-select [(ngModel)]="country">
                   <ion-option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</ion-option>
                 </ion-select>
               </ion-item>
-
+              <!--
               <ion-item *ngIf="regions">
                 <ion-label>Region</ion-label>
                 <ion-select [(ngModel)]="region">
                   <ion-option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</ion-option>
                 </ion-select>
               </ion-item>
-
+              -->
+              <!--
               <ion-item *ngIf="region"><ion-input type="text" [(ngModel)]="city" placeholder="City"></ion-input></ion-item>
+              -->
 
               <ion-item><ion-input type="text" placeholder="Post Code" [(ngModel)]="postCode"></ion-input></ion-item>
 
