@@ -49,6 +49,9 @@ export class PropertiesPage {
         this.properties = properties;
         console.log("this.properties: ", this.properties);
         this.properties = _.forEach(this.properties, p => {
+          if (!p.thumbnail_image.includes('http://')) {
+            p.thumbnail_image = 'http://www.stayplanet.net/uploads/images/slider/' + p.thumbnail_image;
+          }
           p.hotel_basic_price = parseFloat(p.hotel_basic_price);
           if (!p.hotel_stars) {
             p.hotel_stars = 0;

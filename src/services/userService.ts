@@ -30,7 +30,6 @@ export class UserService {
                 console.log("data: ", data);
                 if (data.status === 200) {
                     let user = data["_body"];
-                    console.log("user: ", user);
                     if (user == "") {
                         return false;
                     } else if (this.platform.is('cordova')) {

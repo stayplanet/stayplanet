@@ -21,7 +21,7 @@
   <div class="card-checkInOut">
     <ion-row>
       <ion-col>
-        <ion-searchbar placeholder="Where do you want to go?" (ionInput)="search(searchBar)" #searchBar></ion-searchbar>
+        <ion-searchbar placeholder="Where do you want to go?" (ionInput)="search(searchBar)" (ionClear)="clearSearchBar(searchBar)" #searchBar></ion-searchbar>
         <!--
           <ion-list>
           <ion-item *ngFor="let city of searchedCities" (click)="cityTapped(city, searchBar)">{{ city.name }}, {{ city.country_name }}</ion-item>

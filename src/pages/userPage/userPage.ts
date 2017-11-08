@@ -26,12 +26,13 @@ export class UserPage {
 
   ionViewDidLoad() {
     this.user = this.navParams.data;
+    console.log("user: ", this.user);
     this.userGender = this.user.gender;
-    this.userCountry = this.user.country;
+    this.userCountry = this.user.ai_country;
     this.userBirthday = this.user.birthday;
     this.databaseService.getCountries().subscribe(countries => {
       this.countries = countries;
-      this.selectPhoneNumberCode();
+      //this.selectPhoneNumberCode();
     });
   }
   selectPhoneNumberCode() {

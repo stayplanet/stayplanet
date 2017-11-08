@@ -120,6 +120,13 @@ export class HomePage {
       this.searchedAcco = [];
     }
   }
+  clearSearchBar(searchBar){
+    searchBar.value = '';
+    this.accommodation = undefined;
+    this.location = undefined;
+    this.searchedLocations = [];
+    this.searchedAcco = [];
+  }
 
   accommodationTapped(accommodation, searchBar) {
     searchBar.value = accommodation.hotel_title;

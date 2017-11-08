@@ -151,7 +151,9 @@ export class DatabaseService {
                 return res.json();
             });
     }
+    
     /* *************************************************************************************** */
+
     getCity(idCity): Observable<any> {
         let url: string = this.api_url + '/getCity?id=' + idCity;
         return this.http.get(url)

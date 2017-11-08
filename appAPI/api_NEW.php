@@ -167,7 +167,7 @@ class AppAPI extends REST_Controller {
 	function appSignUp_get(){
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		$gender = filter_var($_REQUEST['gender'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		//$gender = filter_var($_REQUEST['gender'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$phoneNumber = filter_var($_REQUEST['phoneNumber'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
