@@ -95,14 +95,25 @@ export class DatabaseService {
             .map(res => {
                 return res.json();
             });
-    }  
+    }
 
     getAccommodations(): Observable<any> {
         return this.http.get(this.api_url + 'getAccommodations?appKey=' + this.appKey)
             .map(res => {
                 return res.json();
             });
-    }  
+    }
+
+    getLocationAccommodations(location): Observable<any> {
+        return this.http.get(this.api_url + 'getLocationAccommodations?appKey=' + this.appKey + '&location=' + location.location + '&country=' + location.country)
+        .map(res => {
+            if (res["_body"] != "") {
+                return res.json();
+            } else {
+                return [];
+            }
+        });
+    }
 
     getPropertyImages(hotel_id): Observable<any> {
         return this.http.get(this.api_url + 'getPropertyImages?appKey=' + this.appKey + '&himg_hotel_id=' + hotel_id)
@@ -114,9 +125,9 @@ export class DatabaseService {
     getReviews(hotel_id): Observable<any> {
         return this.http.get(this.api_url + 'getReviews?appKey=' + this.appKey + '&review_itemid=' + hotel_id)
             .map(res => {
-                if(res["_body"] != ""){
+                if (res["_body"] != "") {
                     return res.json();
-                }else{
+                } else {
                     return [];
                 }
             });
@@ -125,22 +136,22 @@ export class DatabaseService {
     getRooms(hotel_id, nights): Observable<any> {
         return this.http.get(this.api_url + 'getRooms?appKey=' + this.appKey + '&room_hotel=' + hotel_id + '&room_min_stay=' + nights)
             .map(res => {
-                if(res["_body"] != ""){
+                if (res["_body"] != "") {
                     return res.json();
-                }else{
+                } else {
                     return [];
                 }
             });
     }
 
-    getRoomAvailability(room_id, checkInDate, checkOutDate){
+    getRoomAvailability(room_id, checkInDate, checkOutDate) {
         return this.http.get(this.api_url + 'getRoomAvailability?appKey=' + this.appKey + '&room_id=' + room_id + '&day1=' + checkInDate.day + '&day2=' + checkOutDate.day
-                            + '&month1=' + checkInDate.month + '&month2=' + checkOutDate.month + '&year1=' + checkInDate.year + '&year2=' + checkOutDate.year)
-        .map(res => {
-            return res.json();
-        });
+            + '&month1=' + checkInDate.month + '&month2=' + checkOutDate.month + '&year1=' + checkInDate.year + '&year2=' + checkOutDate.year)
+            .map(res => {
+                return res.json();
+            });
     }
-/* *************************************************************************************** */
+    /* *************************************************************************************** */
     getCity(idCity): Observable<any> {
         let url: string = this.api_url + '/getCity?id=' + idCity;
         return this.http.get(url)
@@ -165,10 +176,7 @@ export class DatabaseService {
             });
     }
 
-    searchCityProperties(city, filters, guests): Observable<any> {
-        //let checkInDate = filters.checkInDate;
-        //let checkOutDate = filters.checkOutDate;
-        //let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city + '&checkInDate=' + checkInDate + '&checkOutDate=' + checkOutDate + '&guest=' + guests;
+    searchCityProperties_OLD(city, filters, guests): Observable<any> {
         let url: string = 'http://francisco.stayplanet.ie/api/searchCityProperties?city=' + city + '&guests=' + guests;
         return this.http.get(url)
             .map(data => {
@@ -196,7 +204,7 @@ export class DatabaseService {
         let url: string = this.api_url + '/compareCityName?name=' + name + '&region_id=' + region_id;
         return this.http.get(url)
             .map(res => {
-                if (res.json().length > 0){
+                if (res.json().length > 0) {
                     return ({
                         "exist": true,
                         "city": res.json()[0]
@@ -210,7 +218,7 @@ export class DatabaseService {
             });
     }
 
-    getReviews_OLD(product_id){
+    getReviews_OLD(product_id) {
         let url: string = this.api_url + '/getReviews?product_id=' + product_id;
         return this.http.get(url)
             .map(data => {

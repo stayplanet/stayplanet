@@ -44,6 +44,8 @@ export class PropertyPage {
     });
     loader.present();
 
+    console.log('navParams.data: ', this.navParams.data);
+
     this.property = this.navParams.data.property;
     this.filters = this.navParams.data.filters;
     this.guests = this.navParams.data.guests;

@@ -56,10 +56,6 @@ export class HomePage {
     });
     this.databaseService.getAccommodations().subscribe(accommodations => {
       this.accommodations = accommodations;
-      _.forEach(this.accommodations, accommodation => {
-        accommodation['stars'] = Array(accommodation.hotel_stars);
-        accommodation['noStars'] = Array(5 - accommodation.hotel_stars);
-      });
       this.getFeaturedAccommodations();
     });
     setTimeout(() => {
@@ -79,21 +75,27 @@ export class HomePage {
       this.splash = false;
     }
   }
-  
+
   getFeaturedAccommodations() {
     this.begin = false;
     this.featuredAcco = _.filter(this.accommodations, { 'hotel_is_featured': 'yes' });
     this.featuredAccoToShow = [];
-    let aux = this.featuredAcco;
     for (var i = 0; i < 10; i++) {
-      let random = Math.floor(Math.random() * aux.length);
-      if(!aux[random].hotel_stars){
-        aux[random].hotel_stars = 0;
+      let random = Math.floor(Math.random() * this.featuredAcco.length);
+
+      if (!this.featuredAcco[random].thumbnail_image.includes('http://')) {
+        this.featuredAcco[random].thumbnail_image = 'http://www.stayplanet.net/uploads/images/hotels/slider/' + this.featuredAcco[random].thumbnail_image;
       }
-      if(!aux[random].thumbnail_image.includes('http://')){
-        aux[random].thumbnail_image = 'http://www.stayplanet.net/uploads/images/hotels/slider/' + aux[random].thumbnail_image;
+
+      if (!this.featuredAcco[random].hotel_stars) {
+        this.featuredAcco[random].hotel_stars = 0;
+      } else {
+        this.featuredAcco[random].hotel_stars = parseInt(this.featuredAcco[random].hotel_stars);
       }
-      this.featuredAccoToShow.push(aux.splice(random, 1)[0]);
+      this.featuredAcco[random]['stars'] = Array(this.featuredAcco[random].hotel_stars);
+      this.featuredAcco[random]['noStars'] = Array(5 - this.featuredAcco[random].hotel_stars);
+
+      this.featuredAccoToShow.push(this.featuredAcco[random]);
     }
   }
 
@@ -133,7 +135,7 @@ export class HomePage {
     this.searchedLocations = [];
     this.searchedAcco = [];
   }
-  featuredAccoTapped(accommodation, searchBar){
+  featuredAccoTapped(accommodation, searchBar) {
     searchBar.value = accommodation.hotel_title;
     this.accommodation = accommodation;
     this.location = undefined;
@@ -144,19 +146,19 @@ export class HomePage {
   }
 
   showCalendar(inout) {
-    if(!this.filters.checkInDate && inout == 'OUT'){
+    if (!this.filters.checkInDate && inout == 'OUT') {
       inout = 'IN';
     }
-    this.datePicker.showCalendar( {checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout} );
+    this.datePicker.showCalendar({ checkInDate: this.filters.checkInDate, checkOutDate: this.filters.checkOutDate, inout: inout });
     this.datePicker.onDateSelected.subscribe(data => {
       this.filters.checkInDate = data.checkInDate;
       this.filters.checkOutDate = data.checkOutDate;
       inout = '';
     });
   }
-  
+
   searchProperties() {
-    if ((!this.location || this.location.location == '') && (!this.accommodation || this.accommodation.hotel_title == '')){
+    if ((!this.location || this.location.location == '') && (!this.accommodation || this.accommodation.hotel_title == '')) {
       let toast = this.toastController.create({
         message: 'You must select a location or an accommodation',
         duration: 1500,
@@ -166,7 +168,7 @@ export class HomePage {
       return false;
     }
 
-    if (!this.filters.checkInDate){
+    if (!this.filters.checkInDate) {
       let toast = this.toastController.create({
         message: 'You must select a Check In date',
         duration: 1500,
@@ -175,7 +177,7 @@ export class HomePage {
       toast.present();
       return false;
     }
-    if (!this.filters.checkOutDate){
+    if (!this.filters.checkOutDate) {
       let toast = this.toastController.create({
         message: 'You must select a Check Out date',
         duration: 1500,
@@ -185,12 +187,12 @@ export class HomePage {
       return false;
     }
 
-    if(this.location){
-      this.navCtrl.push(PropertiesPage, { "location": this.location.location, "filters": this.filters, "guests": this.guests });
-    }else{
+    if (this.location) {
+      this.navCtrl.push(PropertiesPage, { "location": this.location, "filters": this.filters, "guests": this.guests });
+    } else {
       this.navCtrl.push(PropertyPage, { "property": this.accommodation, "filters": this.filters, "guests": this.guests });
     }
-    
+
   }
 
   goToCity(idCity) {

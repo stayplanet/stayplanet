@@ -3,6 +3,7 @@ propertiesPage {
         position: relative;
         text-align: center;
     }
+
     .card-md {
         margin: 0;
         width: 100%;
@@ -61,6 +62,13 @@ propertiesPage {
         margin-top: 0;
     }
     */
+    #locationsFoundRow{
+        padding-top: 1%;
+        padding-right: 1%;
+        padding-bottom: 1%;
+        padding-left: 5%;
+    }
+
     #propertieColumn {
         padding: 0.2%;
         padding-left: 0;
@@ -71,12 +79,16 @@ propertiesPage {
         margin-top: -10%;
     }
     #propertieContent{
-        padding: 3%;
+        padding-top: 0;
+        padding-right: 3%;
+        padding-bottom: 0;
+        padding-left: 3%;
+        
     }
     #propertieContent p {
         margin: 3%;
         text-align: justify;
-        font-size: 1.25rem;
+        font-size: 1.4rem;
         font-weight: normal;
         line-height: 1.25;
         color: #222;

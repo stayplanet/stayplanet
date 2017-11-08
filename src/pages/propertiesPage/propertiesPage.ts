@@ -12,7 +12,7 @@ import { DatabaseService } from '../../services/databaseService';
   templateUrl: 'propertiesPage.html',
 })
 export class PropertiesPage {
-  city: string;
+  location: {};
   priceRange: any = {};
   guests: number;
   filters: any = {};
@@ -30,7 +30,7 @@ export class PropertiesPage {
     private loadingController: LoadingController,
     private modalCtrl: ModalController,
     private dataBaseService: DatabaseService) {
-    this.city = this.navParams.data.city;
+    this.location = this.navParams.data.location;
     this.filters = this.navParams.data.filters;
     this.guests = this.navParams.data.guests;
   }
@@ -45,35 +45,50 @@ export class PropertiesPage {
     loader.present().then(() => {
       this.filters.propertyFeatures = this.dataBaseService.getPropertyFeatures();
 
-      this.dataBaseService.searchCityProperties(this.city, this.filters, this.guests).subscribe(properties => {
+      this.dataBaseService.getLocationAccommodations(this.location).subscribe(properties => {
         this.properties = properties;
+        console.log("this.properties: ", this.properties);
         this.properties = _.forEach(this.properties, p => {
-          let images = _.split(p.image, '"');
+          p.hotel_basic_price = parseFloat(p.hotel_basic_price);
+          if (!p.hotel_stars) {
+            p.hotel_stars = 0;
+          } else {
+            p.hotel_stars = parseInt(p.hotel_stars);
+          }
+          p['stars'] = Array(p.hotel_stars);
+          p['noStars'] = Array(5 - p.hotel_stars);
+          /*let images = _.split(p.image, '"');
           p.image = _.filter(images, i => {
-            if (/http*/.test(i)) { return i }
+          */
+          //  if (/http*/.test(i)) { return i }
+          /*
           });
           p["mainImage"] = p.image[0];
           p.price = parseFloat(p.price);
+          */
         });
-        this.properties = _.orderBy(this.properties, "price", "asc");
+        this.properties = _.orderBy(this.properties, "hotel_basic_price", "asc");
         if (this.properties.length > 0) {
           this.priceRange = {
-            upper: this.properties[this.properties.length - 1].price,
-            lower: this.properties[0].price
+            upper: this.properties[this.properties.length - 1].hotel_basic_price,
+            lower: this.properties[0].hotel_basic_price
           }
           this.filters.priceFilter = this.priceRange;
         }
         this.propertiesToShow = this.properties;
         loader.dismiss();
+        setTimeout(() => {
+          loader.dismiss();
+        }, 7500);
       });
     });
   }
 
   orderBy() {
     if (this.orderByOption == "lowestPrice") {
-      this.propertiesToShow = _.orderBy(this.propertiesToShow, "price", "asc");
+      this.propertiesToShow = _.orderBy(this.propertiesToShow, "hotel_basic_price", "asc");
     } else if (this.orderByOption == "highestPrice") {
-      this.propertiesToShow = _.orderBy(this.propertiesToShow, "price", "desc");
+      this.propertiesToShow = _.orderBy(this.propertiesToShow, "hotel_basic_price", "desc");
     }
   }
 
@@ -83,7 +98,7 @@ export class PropertiesPage {
       this.filters = filters;
       this.propertiesToShow = [];
       _.forEach(this.properties, p => {
-        if (this.filters.priceFilter.upper >= p.price && p.price >= this.filters.priceFilter.lower) {
+        if (this.filters.priceFilter.upper >= p.hotel_basic_price && p.hotel_basic_price >= this.filters.priceFilter.lower) {
 
           if (_.find(this.filters.propertyFeatures.propertyTypes, { value: true })) {
             if (_.find(this.filters.propertyFeatures.propertyTypes, { name: p.room_type, value: true })) {
@@ -103,7 +118,8 @@ export class PropertiesPage {
   }
 
   goToProperty(property) {
-    this.navCtrl.push(PropertyPage, {property: property, filters: this.filters, guests: this.guests});
+    console.log('property: ', property);
+    this.navCtrl.push(PropertyPage, { 'property': property, 'filters': this.filters, 'guests': this.guests });
   }
 
   goHome() {

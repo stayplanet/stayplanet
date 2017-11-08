@@ -54,6 +54,19 @@ class AppAPI extends REST_Controller {
 		}
 	}
 
+	function getLocationAccommodations_get(){
+		$location = filter_var($_REQUEST['location'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$country = filter_var($_REQUEST['country'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+		    $result = $this->db->query("SELECT * FROM pt_hotels WHERE hotel_city = (SELECT id FROM pt_locations WHERE location = '" .$location. "' and country = '" .$country. "')")->result();
+		    if($result){
+		        print_r(json_encode($result));
+		    }
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
 	function getPropertyImages_get(){
         $himg_hotel_id = filter_var($_REQUEST['himg_hotel_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		try{

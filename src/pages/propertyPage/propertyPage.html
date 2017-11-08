@@ -77,7 +77,8 @@
     </ion-grid>
   </ion-row>
 
-  <p padding *ngIf="!rooms || rooms.length <= 0">No rooms availables for {{ property.hotel_title }} between
+  <p padding *ngIf="!rooms || rooms.length <= 0">
+    No rooms availables for {{ property.hotel_title }} between
     {{ filters?.checkInDate?.day }}/{{ filters?.checkInDate?.month }}/{{ filters?.checkInDate?.year }} and 
     {{ filters?.checkOutDate?.day }}/{{ filters?.checkOutDate?.month }}/{{ filters?.checkOutDate?.year }}.
     <br>
