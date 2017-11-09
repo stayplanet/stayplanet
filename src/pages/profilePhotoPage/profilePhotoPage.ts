@@ -16,7 +16,6 @@ export class ProfilePhotoPage {
 
   user: any;
   userGender: string;
-  uploadUrl: string = 'http://francisco.stayplanet.ie/api/uploadImage?email=';
   userImage: string = undefined;
   imagePath: string;
   imageName: string;
@@ -36,8 +35,12 @@ export class ProfilePhotoPage {
     this.user = this.navParams.data;
     this.userGender = this.user.gender;
     if (this.user.image) {
-      this.userImage = 'http://www.francisco.stayplanet.ie/images/users/' + this.user.image;
+      this.userImage = 'http://www.stayplanet.net/uploads/images/users/' + this.user.ai_image;
+    }else{
+      this.userImage = 'http://www.stayplanet.net/uploads/global/default/user.png';
     }
+    console.log('this.user: ', this.user);
+    console.log('this.userImage: ', this.userImage);
   }
 
   ionViewDidLoad() {
@@ -86,8 +89,8 @@ export class ProfilePhotoPage {
       this.imagePath = filePath.substring(0, filePath.lastIndexOf('/') + 1);
       this.imageName = filePath.substring(filePath.lastIndexOf('/') + 1);
       let extension = this.imageName.substring(this.imageName.lastIndexOf('.'));
-      this.file.moveFile(this.imagePath, this.imageName, this.imagePath, this.user.email + extension).then(data => {
-        this.imageName = this.user.email + extension;
+      this.file.moveFile(this.imagePath, this.imageName, this.imagePath, this.user.accounts_email + extension).then(data => {
+        this.imageName = this.user.accounts_email + extension;
       });
     });
   }
@@ -115,7 +118,7 @@ export class ProfilePhotoPage {
       params: { 'fileName': this.imageName }
     };
 
-    this.userService.uploadImage(this.imagePath + this.imageName, this.uploadUrl, options, this.user.email).then(boolean => {
+    this.userService.uploadImage(this.imagePath + this.imageName, options, this.user.accounts_email).then(boolean => {
       this.loader.dismissAll();
       if (boolean) {
         let toast = this.toastController.create({

@@ -28,7 +28,7 @@
       <ion-label>Email address:</ion-label>
       <ion-input type="email" [placeholder]="user?.accounts_email"></ion-input>
     </ion-item>
-
+    <!--
     <ion-item>
       <ion-label>I am:</ion-label>
       <ion-select [(ngModel)]="userGender">
@@ -37,24 +37,25 @@
         <ion-option>Male</ion-option>
       </ion-select>
     </ion-item>
-
+    -->
+    <!--
     <ion-item>
       <ion-label>Birth date:</ion-label>
       <ion-datetime displayFormat="M/D/YYYY" pickerFormat="MMMM/D/YYYY" min="1920" max="2002" [(ngModel)]="userBirthday"></ion-datetime>
     </ion-item>
-
+  -->
     <ion-item>
       <ion-label>Country:</ion-label>
       <ion-select [(ngModel)]="userCountry" (ionChange)="selectPhoneNumberCode()">
         <ion-option *ngFor="let country of countries">{{ country.name }}</ion-option>
       </ion-select>
     </ion-item>
-
+<!--
     <ion-item>
       <ion-label>Phone number code:</ion-label>
       <ion-input disabled="true" [value]="userPhoneNumberCode"></ion-input>
     </ion-item>
-
+  -->
     <ion-item>
       <ion-label>Phone number:</ion-label>
       <ion-input type="number">{{ user?.phone_no }}</ion-input>

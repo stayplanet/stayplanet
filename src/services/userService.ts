@@ -27,7 +27,6 @@ export class UserService {
         let url: string = this.api_url + 'appLogin?appKey=' + this.appKey + '&email=' + email + '&password=' + password;
         return this.http.get(url)
             .map(data => {
-                console.log("data: ", data);
                 if (data.status === 200) {
                     let user = data["_body"];
                     if (user == "") {
@@ -74,12 +73,16 @@ export class UserService {
             });
     }
 
-    uploadImage(fullImagePath, uploadUrl, options, userEmail): Promise<boolean> {
+    uploadImage(fullImagePath, options, userEmail): Promise<boolean> {
         const fileTransfer: TransferObject = this.transfer.create();
-        uploadUrl += userEmail;
-        return fileTransfer.upload(fullImagePath, uploadUrl, options).then(data => {
-            let url: string = this.api_url + '/updateUserImage?imageName=' + options.fileName + '&userEmail=' + userEmail;
+        let url: string = this.api_url + 'uploadImage?appKey=' + this.appKey + '&email=' + userEmail;
+        console.log('url1: ', url);
+        return fileTransfer.upload(fullImagePath, url, options).then(data => {
+            console.log('data1: ', data);
+            let url: string = this.api_url + 'updateUserImage?appKey=' + this.appKey + '&imageName=' + options.fileName + '&userEmail=' + userEmail;
+            console.log('url2: ', url);
             this.http.get(url).subscribe(data => {
+                console.log('data2: ', data);
             });
             return true;
         }, error => {

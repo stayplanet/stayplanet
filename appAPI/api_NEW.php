@@ -157,7 +157,7 @@ class AppAPI extends REST_Controller {
 		try{
 		    $user = $this->db->query("SELECT * FROM pt_accounts WHERE accounts_email = '" .$email. "' AND accounts_password ='" .$password. "'")->result();
 		    if($user){
-		        print_r(json_encode($user));
+		        print_r(json_encode($user[0]));
 		    }
 		}catch(PDOException $e){
 		    echo $e->getMessage();
@@ -184,12 +184,45 @@ class AppAPI extends REST_Controller {
         $address = filter_var($_REQUEST['address'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		//$informAboutLatestNews = filter_var($_REQUEST['informAboutLatestNews'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         try {
-			echo "nose1";
 			$result = $this->db->query("INSERT INTO pt_accounts (ai_first_name, ai_last_name, accounts_email, accounts_password, ai_country, ai_address_1, ai_mobile, ai_postal_code, accounts_type, is_stayplanet)
 			VALUES ('$name', '$surname', '$email', '$password', '$country', '$address', '$phoneNumber', '$postCode', '$membershipType', '1')");
-			echo "nose2";
 		    if($result){
                 echo "Ok";
+            }else{
+                echo "Something went wrong";
+            }
+        }catch(PDOException $e){
+           echo $e->getMessage();
+        }
+	}
+	
+	function uploadImage_post(){
+		$path = "./uploads/images/users/";
+        $target_path = $path . basename( $_FILES['file']['name']);
+		$oldTargetPath =  $path . filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		/*
+		print_r('$path: ' .$path);
+		print_r('$target_path: ' .$target_path);
+		print_r('$oldTargetPath: ' .$oldTargetPath);
+		*/
+        foreach (glob($oldTargetPath . '.*') as $filename) {
+            print_r('$filename: ' .$filename);
+            unlink($filename);
+        }
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+            echo "Upload and move success";
+        } else {
+            echo "There was an error uploading the file, please try again!";
+		}
+    }
+
+    function updateUserImage_get(){
+        $imageName = filter_var($_REQUEST['imageName'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $userEmail = filter_var($_REQUEST['userEmail'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        try {
+			$result = $this->db->query("UPDATE pt_accounts set ai_image = '" .$imageName. "' WHERE accounts_email = '" .$userEmail. "'");
+            if($result){
+                print_r("UPDATE pt_accounts set ai_image = '" .$imageName. "' WHERE accounts_email = '" .$userEmail. "'");
             }else{
                 echo "Something went wrong";
             }

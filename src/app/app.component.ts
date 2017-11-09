@@ -23,17 +23,6 @@ export class MyApp {
     private alertController: AlertController,
     private events: Events
   ) {
-
-    /*
-    firebase.initializeApp({
-      apiKey: "AIzaSyBSnwmbXM4CsbkObaSJmz4sETdjWcULnSw",
-      authDomain: "stayplanet-943d2.firebaseapp.com",
-      databaseURL: "https://stayplanet-943d2.firebaseio.com",
-      projectId: "stayplanet-943d2",
-      storageBucket: "stayplanet-943d2.appspot.com",
-      messagingSenderId: "286617130799"
-    });
-    */
     this.initializeApp();
   }
 
