@@ -140,7 +140,6 @@ class AppAPI extends REST_Controller {
 		$email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         try{
 			$result = $this->db->query("SELECT accounts_id, accounts_email, ai_first_name FROM pt_accounts WHERE accounts_email = '" .$email. "'")->result();
-			print_r("SELECT accounts_id, accounts_email, ai_first_name FROM pt_accounts WHERE accounts_email = '" .$email. "'");
             if(json_encode($result)){
                 print_r(json_encode($result));
 			}else{
@@ -194,6 +193,27 @@ class AppAPI extends REST_Controller {
         }catch(PDOException $e){
            echo $e->getMessage();
         }
+	}
+
+	function uploadUserInfo_get(){
+		//$id = filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$country = filter_var($_REQUEST['country'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$city = filter_var($_REQUEST['city'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$mobilePhone = filter_var($_REQUEST['mobilePhone'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			$result = $this->db->query("UPDATE pt_accounts SET ai_first_name = '" .$name. "', ai_last_name = '" .$surname. "', accounts_email = '" .$email. "', ai_country = '" .$country. "', ai_city = '" .$city. "', ai_mobile = '" .$mobilePhone. "' WHERE accounts_email = '" .$email. "'");
+            if($result){
+                echo 'true';
+			}else{
+				echo 'Something went wrong';
+			}
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+
 	}
 	
 	function uploadImage_post(){

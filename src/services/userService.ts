@@ -72,6 +72,20 @@ export class UserService {
                 }
             });
     }
+    
+    uploadUserInfo(name, surname, email, country, city, mobilePhone){
+        let url: string = this.api_url + 'uploadUserInfo?appKey=' + this.appKey + '&name=' + name +
+        '&surname=' + surname + '&email=' + email + '&country=' + country + '&mobilePhone=' + mobilePhone + '&city=' + city;
+        return this.http.get(url)
+            .map(res => {
+                console.log(res);
+                if (res["_body"] != "" || res["_body"] != "Something went wrong") {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+    }
 
     uploadImage(fullImagePath, options, userEmail): Promise<boolean> {
         const fileTransfer: TransferObject = this.transfer.create();
@@ -91,5 +105,6 @@ export class UserService {
         });
 
     }
+
 }
 

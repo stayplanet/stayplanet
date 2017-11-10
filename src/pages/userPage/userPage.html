@@ -16,17 +16,17 @@
 
     <ion-item>
       <ion-label>First name:</ion-label>
-      <ion-input type="text" [placeholder]="user?.ai_first_name"></ion-input>
+      <ion-input type="text" [(ngModel)]="userName" [placeholder]="user?.ai_first_name"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Last name:</ion-label>
-      <ion-input type="text" [placeholder]="user?.ai_last_name"></ion-input>
+      <ion-input type="text" [(ngModel)]="userSurname" [placeholder]="user?.ai_last_name"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Email address:</ion-label>
-      <ion-input type="email" [placeholder]="user?.accounts_email"></ion-input>
+      <ion-input type="email" [(ngModel)]="userEmail" [placeholder]="user?.accounts_email"></ion-input>
     </ion-item>
     <!--
     <ion-item>
@@ -46,7 +46,8 @@
   -->
     <ion-item>
       <ion-label>Country:</ion-label>
-      <ion-select [(ngModel)]="userCountry" (ionChange)="selectPhoneNumberCode()">
+      <!--<ion-select [(ngModel)]="userCountry" (ionChange)="selectPhoneNumberCode()">-->
+      <ion-select [(ngModel)]="userCountry">
         <ion-option *ngFor="let country of countries">{{ country.name }}</ion-option>
       </ion-select>
     </ion-item>
@@ -58,12 +59,12 @@
   -->
     <ion-item>
       <ion-label>Phone number:</ion-label>
-      <ion-input type="number">{{ user?.phone_no }}</ion-input>
+      <ion-input type="number" [(ngModel)]="userMobilePhone" [placeholder]="user?.ai_mobile">{{ user?.ai_mobile }}</ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Where you live:</ion-label>
-      <ion-input type="text" [placeholder]="user?.city"></ion-input>
+      <ion-input type="text" [(ngModel)]="userCity" [placeholder]="user?.ai_city"></ion-input>
     </ion-item>
 
     <ion-item>

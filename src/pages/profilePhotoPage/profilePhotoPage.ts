@@ -34,13 +34,11 @@ export class ProfilePhotoPage {
   ) {
     this.user = this.navParams.data;
     this.userGender = this.user.gender;
-    if (this.user.image) {
+    if (this.user.ai_image) {
       this.userImage = 'http://www.stayplanet.net/uploads/images/users/' + this.user.ai_image;
     }else{
       this.userImage = 'http://www.stayplanet.net/uploads/global/default/user.png';
     }
-    console.log('this.user: ', this.user);
-    console.log('this.userImage: ', this.userImage);
   }
 
   ionViewDidLoad() {
