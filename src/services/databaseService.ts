@@ -97,6 +97,13 @@ export class DatabaseService {
             });
     }
 
+    getAccommodation(hotel_id): Observable<any> {
+        return this.http.get(this.api_url + 'getAccommodation?appKey=' + this.appKey + '&hotel_id=' + hotel_id)
+            .map(res => {
+                return res.json();
+            });
+    }
+
     getAccommodations(): Observable<any> {
         return this.http.get(this.api_url + 'getAccommodations?appKey=' + this.appKey)
             .map(res => {

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <h5>Join our newsletter to keep updated.</h5>
+    <ion-item>
+        <ion-label>Newsletter:</ion-label>
+        <ion-toggle *ngIf="newsletter" #toggle [checked]="newsletter.length > 0" (ionChange)="setNewsletter(toggle)"></ion-toggle>
+    </ion-item>
+
+</ion-content>

@@ -15,7 +15,7 @@ import { MyApp } from './app.component';
 import {
   HomePage, LoginPage, SignupPage, AccountPage, DashboardPage, InboxPage, ListingsPage, PartnersPage, TripsPage, TermsAndConditions, PrivacyPolicy,
   CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, SettingsPage, UserPage, ProfilePhotoPage, TrustAndVerificationPage, ReviewsPage,
-  BookingPage
+  BookingPage, ConfirmationPage, NewsletterPage
 } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
@@ -48,7 +48,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ProfilePhotoPage,
     TrustAndVerificationPage,
     ReviewsPage,
-    BookingPage
+    BookingPage,
+    ConfirmationPage,
+    NewsletterPage
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ProfilePhotoPage,
     TrustAndVerificationPage,
     ReviewsPage,
-    BookingPage
+    BookingPage,
+    ConfirmationPage,
+    NewsletterPage
   ],
   providers: [
     StatusBar,

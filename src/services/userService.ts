@@ -106,5 +106,29 @@ export class UserService {
 
     }
 
+    getNewsLetter(email){
+        let url: string = this.api_url + 'getNewsLetter?appKey=' + this.appKey + '&email=' + email;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] != "") {
+                    return JSON.parse(res["_body"]);
+                } else {
+                    return [];
+                }
+            });
+    }
+
+    setNewsletter(email, value){
+        let url: string = this.api_url + 'setNewsletter?appKey=' + this.appKey + '&email=' + email + '&value=' + value;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] != "") {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+    }
+
 }
 

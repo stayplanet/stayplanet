@@ -41,7 +41,20 @@ class AppAPI extends REST_Controller {
 		}catch(PDOException $e){
 		    echo $e->getMessage();
 		}
-    }
+	}
+	
+	function getAccommodation_get(){
+		$hotel_id = filter_var($_REQUEST['hotel_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+		    $result = $this->db->query("SELECT * FROM pt_hotels WHERE hotel_id = " .$hotel_id)->result();
+		    if($result){
+		        print_r(json_encode($result));
+		    }
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
 	
 	function getAccommodations_get(){
 		try{
@@ -249,5 +262,39 @@ class AppAPI extends REST_Controller {
         }catch(PDOException $e){
            echo $e->getMessage();
         }
-    }
+	}
+	
+	function getNewsLetter_get(){
+		$email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+		    $result = $this->db->query("SELECT * FROM pt_newsletter WHERE newsletter_subscribers = '" .$email. "'")->result();
+		    if($result){
+		        print_r(json_encode($result));
+		    }
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
+	function setNewsLetter_get(){
+		$email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$value = filter_var($_REQUEST['value'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			if($value == 'true'){
+				$result = $this->db->query("INSERT INTO pt_newsletter(newsletter_subscribers, newsletter_type, newsletter_status) VALUES ('" .$email. "', 'subscribers', 'Yes');");
+				if($result){
+					print_r(json_encode($result));
+				}
+			}else if($value == 'false'){
+				$result = $this->db->query("DELETE FROM pt_newsletter WHERE newsletter_subscribers = '" .$email. "';");
+				if($result){
+					print_r(json_encode($result));
+				}
+			}
+
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+	
 }

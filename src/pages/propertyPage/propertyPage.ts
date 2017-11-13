@@ -44,8 +44,6 @@ export class PropertyPage {
     });
     loader.present();
 
-    console.log('navParams.data: ', this.navParams.data);
-
     this.property = this.navParams.data.property;
     this.filters = this.navParams.data.filters;
     this.guests = this.navParams.data.guests;
@@ -181,7 +179,6 @@ export class PropertyPage {
   }
 
   book(room) {
-    console.log(room);
     if (this.platform.is('cordova')) {
       this.nativeStorage.getItem("user").then(user => {
         this.navCtrl.push(
@@ -228,7 +225,7 @@ export class PropertyPage {
       this.navCtrl.push(
         BookingPage,
         {
-          "user": { 'name': 'Fran', 'surname': 'Sarmiento', 'phoneNumber': '+34608535848', 'id': 343 },
+          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com'},
           "room": room,
           "checkInDate": this.filters.checkInDate,
           "checkOutDate": this.filters.checkOutDate,

@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeStorage } from '@ionic-native/native-storage';
 
-import { HomePage, LoginPage, SignupPage, SettingsPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage } from '../pages/pages';
+import { HomePage, LoginPage, SignupPage, SettingsPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage, NewsletterPage } from '../pages/pages';
 
 @Component({
   templateUrl: 'app.html'
@@ -92,6 +92,9 @@ export class MyApp {
   }
   inboxTapped(){
     this.nav.push(InboxPage);
+  }
+  newsletterTapped(){
+    this.nav.push(NewsletterPage, this.user);
   }
   listingsTapped(){
     this.nav.push(ListingsPage);

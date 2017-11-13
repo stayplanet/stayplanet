@@ -16,3 +16,5 @@ export * from './listingsPage/listingsPage';
 export * from './partnersPage/partnersPage';
 export * from './tripsPage/tripsPage';
 export * from './bookingPage/bookingPage';
+export * from './confirmationPage/confirmationPage';
+export * from './newsletterPage/newsletterPage';
