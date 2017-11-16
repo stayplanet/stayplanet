@@ -8,6 +8,40 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+
+  <ion-card *ngFor="let booking of bookings">
+
+    <ion-row>
+        <ion-col>{{ booking.hotel_title }}</ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col col-6>
+            {{ booking.hotel_map_city }}
+        </ion-col>
+        <ion-col col-6>
+          Stars: 
+          <ion-icon name="star" *ngFor="let star of booking.stars"></ion-icon>
+          <ion-icon name="star-outline" *ngFor="let noStar of booking.noStars"></ion-icon>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col col-6>Booking ID: {{ booking.booking_id }}</ion-col>
+      <ion-col col-6>Booking Code: {{ booking.booking_ref_no }}</ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col col-6>EUR €{{ booking.booking_subitem.price }}</ion-col>
+        <ion-col col-6>Due date: {{ booking.booking_expiry }}</ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col col-6><button ion-button icon-end disabled>{{ booking.booking_status }}</button></ion-col>
+      <ion-col col-6><button ion-button icon-end (click)="goToInvoice(booking)">Invoice</button></ion-col>
+    </ion-row>
+   
+  </ion-card>
 
 </ion-content>

@@ -186,11 +186,12 @@ export class PropertyPage {
           {
             "user": user,
             "room": room,
+            "guests": this.guests,
             "checkIndate": this.filters.checkIndate,
             "checkOutDate": this.filters.checkOutDate,
             "nights": this.nights,
             "roomsQuantity": this.roomsQuantity,
-            "extraBeds": this.extraBeds
+            "extraBeds": this.extraBeds,
           });
       }).catch(error => {
         if (error.code == 2) { // ITEM NOT FOUND
@@ -225,8 +226,9 @@ export class PropertyPage {
       this.navCtrl.push(
         BookingPage,
         {
-          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com'},
+          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'accounts_id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com'},
           "room": room,
+          "guests": this.guests,
           "checkInDate": this.filters.checkInDate,
           "checkOutDate": this.filters.checkOutDate,
           "nights": this.nights,

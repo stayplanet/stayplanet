@@ -97,7 +97,7 @@ export class MyApp {
     this.nav.push(NewsletterPage, this.user);
   }
   listingsTapped(){
-    this.nav.push(ListingsPage);
+    this.nav.push(ListingsPage, this.user);
   }
   tripsTapped(){
     this.nav.push(TripsPage);

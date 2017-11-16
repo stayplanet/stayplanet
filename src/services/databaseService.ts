@@ -113,13 +113,13 @@ export class DatabaseService {
 
     getLocationAccommodations(location): Observable<any> {
         return this.http.get(this.api_url + 'getLocationAccommodations?appKey=' + this.appKey + '&location=' + location.location + '&country=' + location.country)
-        .map(res => {
-            if (res["_body"] != "") {
-                return res.json();
-            } else {
-                return [];
-            }
-        });
+            .map(res => {
+                if (res["_body"] != "") {
+                    return res.json();
+                } else {
+                    return [];
+                }
+            });
     }
 
     getPropertyImages(hotel_id): Observable<any> {
@@ -158,7 +158,36 @@ export class DatabaseService {
                 return res.json();
             });
     }
-    
+
+    registerBooking(booking_type, booking_item, booking_subitem, booking_user, booking_total, booking_amount_paid,
+        booking_checkin, booking_checkout, booking_nights, booking_adults, booking_extra_beds, booking_extra_beds_charges, booking_curr_code,
+        booking_curr_symbol): Observable<any> {
+            return this.http.get(this.api_url + 'registerBooking?appKey=' + this.appKey + '&booking_type=' + booking_type + '&booking_item=' + booking_item +
+            '&booking_subitem=' + booking_subitem.id+'+'+booking_subitem.price+'+'+booking_subitem.count + '&booking_user=' + booking_user + '&booking_total=' + booking_total + '&booking_amount_paid=' + booking_amount_paid +
+            '&booking_checkin=' + booking_checkin + '&booking_checkout=' + booking_checkout + '&booking_nights=' + booking_nights + '&booking_adults=' + booking_adults +
+            '&booking_extra_beds=' + booking_extra_beds + '&booking_extra_beds_charges=' + booking_extra_beds_charges + '&booking_curr_code=' + booking_curr_code +
+            '&booking_curr_symbol=' + booking_curr_symbol)
+            .map(res => {
+                console.log(res);
+                if (res["_body"] != "") {
+                    return res.json();
+                } else {
+                    return [];
+                }
+            });
+    }
+
+    getUserBookings(accounts_id){
+        return this.http.get(this.api_url + 'getUserBookings?appKey=' + this.appKey + '&accounts_id=' + accounts_id)
+        .map(res => {
+            if (res["_body"] != "") {
+                return res.json();
+            } else {
+                return [];
+            }
+        });
+    }
+
     /* *************************************************************************************** */
 
     getCity(idCity): Observable<any> {

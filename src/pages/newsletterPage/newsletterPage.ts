@@ -22,7 +22,6 @@ export class NewsletterPage {
   ionViewDidLoad() {
     this.user = this.navParams.data;
     this.userService.getNewsLetter(this.user.accounts_email).subscribe(result => {
-      console.log(result);
       if(result.length == 0){
         this.newsletter = {};
       }else{

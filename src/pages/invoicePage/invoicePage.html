@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-row>
+    <ion-col col-12>
+      <button ion-button icon-end (click)="openCreditCardModal()">Pay Now
+        <ion-icon name="card"></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+
+  <div>
+
+    <ion-row>
+      <ion-col col-4>Invoice</ion-col>
+      <ion-col col-4></ion-col>
+      <ion-col col-4>Custormer Details</ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col col-4>Invoice Date: {{ todayString }}</ion-col>
+        <ion-col col-4>Due Date: {{ tomorrowString }}</ion-col>
+        <ion-col col-4>{{ user?.ai_first_name }} {{ user?.ai_last_name }}</ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col col-4>Invoice Number: {{ booking?.booking_id }}</ion-col>
+        <ion-col col-4>Booking Code: 4545</ion-col>
+        <ion-col col-4>{{ user?.mobile }}</ion-col>
+    </ion-row>
+
+  </div>
+
+  <ion-row>
+    <ion-col>
+
+    </ion-col>
+  </ion-row>
+
+</ion-content>

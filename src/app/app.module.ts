@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
 import { DatePicker } from '../Component/date-picker';
 import { ImagePicker } from '@ionic-native/image-picker';
-
+import { Stripe } from '@ionic-native/stripe';
 import { File } from '@ionic-native/file';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
@@ -15,7 +15,7 @@ import { MyApp } from './app.component';
 import {
   HomePage, LoginPage, SignupPage, AccountPage, DashboardPage, InboxPage, ListingsPage, PartnersPage, TripsPage, TermsAndConditions, PrivacyPolicy,
   CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, SettingsPage, UserPage, ProfilePhotoPage, TrustAndVerificationPage, ReviewsPage,
-  BookingPage, ConfirmationPage, NewsletterPage
+  BookingPage, InvoicePage, CreditCardModal, NewsletterPage
 } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
@@ -49,7 +49,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TrustAndVerificationPage,
     ReviewsPage,
     BookingPage,
-    ConfirmationPage,
+    InvoicePage,
+    CreditCardModal,
     NewsletterPage
   ],
   imports: [
@@ -84,7 +85,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TrustAndVerificationPage,
     ReviewsPage,
     BookingPage,
-    ConfirmationPage,
+    InvoicePage,
+    CreditCardModal,
     NewsletterPage
   ],
   providers: [
@@ -97,6 +99,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     File,
     Transfer,
     FilePath,
+    Stripe,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

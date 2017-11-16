@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { ConfirmationPage } from '../pages';
+import { InvoicePage } from '../pages';
 
 import { DatabaseService } from '../../services/databaseService';
 
@@ -12,10 +12,12 @@ import { DatabaseService } from '../../services/databaseService';
 export class BookingPage {
 
   accommodation: any;
+  totalAmount: number;
   user: any;
   notes_addRequest: string = '';
   couponCode: string = '';
   room: any;
+  guests: number;
   checkInDate: any;
   checkOutDate: any;
   nights: number;
@@ -30,9 +32,9 @@ export class BookingPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BookingPage');
     this.user = this.navParams.data.user;
     this.room = this.navParams.data.room;
+    this.guests = this.navParams.data.guests;
     this.checkInDate = this.navParams.data.checkInDate;
     this.checkOutDate = this.navParams.data.checkOutDate;
     this.nights = this.navParams.data.nights;
@@ -47,7 +49,10 @@ export class BookingPage {
       }
       this.accommodation['stars'] = Array(this.accommodation.hotel_stars);
       this.accommodation['noStars'] = Array(5 - this.accommodation.hotel_stars);
+      this.totalAmount = this.room.room_basic_price * this.nights + parseInt(this.accommodation.booking_fee);
+      console.log("accommodation: ", this.accommodation);
     });
+
     console.log(this.navParams.data);
     console.log(this.user);
     console.log(this.room);
@@ -56,7 +61,6 @@ export class BookingPage {
     console.log(this.nights);
     console.log(this.roomsQuantity);
     console.log(this.extraBeds);
-    console.log(this.accommodation);
   }
 
   applyCoupon() {
@@ -64,7 +68,15 @@ export class BookingPage {
   }
 
   confirmBooking() {
-    this.navCtrl.push(ConfirmationPage, { 'room': this.room });
+    let booking_subitem_object = {id: this.room.room_id, price: this.accommodation.hotel_basic_price, count: this.roomsQuantity};
+    //let booking_subitem = JSON.stringify(booking_subitem_object);
+    //console.log(booking_subitem);
+    let checkInDate = this.checkInDate.year + '/' + this.checkInDate.month + '/' + this.checkInDate.day;
+    let checkOutDate = this.checkOutDate.year + '/' + this.checkOutDate.month + '/' + this.checkOutDate.day;
+    this.databaseService.registerBooking(this.accommodation.module, this.accommodation.hotel_id, booking_subitem_object, this.user.accounts_id, this.totalAmount, 0,
+      checkInDate, checkOutDate, this.nights, this.guests, this.extraBeds, this.room.extra_bed_charges, 'EUR', '€').subscribe(res => {
+        this.navCtrl.push(InvoicePage, { 'room': this.room, 'user': this.user, 'booking': res[0] });
+      });
   }
 
   goHome() {
