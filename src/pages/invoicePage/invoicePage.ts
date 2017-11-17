@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ModalController, ToastController } from 'ionic-angular';
+import { Header } from 'ionic-angular/components/toolbar/toolbar-header';
+
+import { UserService } from '../../services/userService';
 
 @Component({
   selector: 'invoicePage',
@@ -10,17 +13,18 @@ export class InvoicePage {
   //room: any;
   user: any;
   booking: any;
+  creditCardDetails: any;
   todayString: string;
   tomorrowString: string;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private userService: UserService
   ) {
   }
 
   ionViewDidLoad() {
-    //this.room = this.navParams.data.room;
     this.user = this.navParams.data.user;
     this.booking = this.navParams.data.booking;
     let date = new Date();
@@ -28,13 +32,20 @@ export class InvoicePage {
     this.todayString = today.getDate() + '/' + today.getMonth() + '/' + today.getFullYear();
     let tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     this.tomorrowString = tomorrow.getDate() + '/' + tomorrow.getMonth() + '/' + tomorrow.getFullYear();
-    //console.log("room: ", this.room);
-    console.log("user: ", this.user);
   }
 
   openCreditCardModal() {
     let creditCardModal = this.modalCtrl.create(CreditCardModal);
-    creditCardModal.onDidDismiss(filters => {
+    creditCardModal.onDidDismiss(creditCard => {
+      this.creditCardDetails = {
+        number: creditCard.number,
+        expMonth: creditCard.expMonth,
+        expYear: creditCard.expYear,
+        cvc: creditCard.cvc,
+      };
+      this.userService.createCardToken(this.creditCardDetails, this.booking.booking_subitem.price).then(result => {
+        console.log(result);
+      });
     });
     creditCardModal.present();
   }
@@ -85,7 +96,7 @@ export class InvoicePage {
 
       <ion-item>
         <ion-label>CCV</ion-label>
-        <ion-input type="number" [(ngModel)]="creditCardCCV"></ion-input>
+        <ion-input type="number" [(ngModel)]="creditCardCVC"></ion-input>
       </ion-item>
 
       <ion-item>
@@ -100,36 +111,49 @@ export class InvoicePage {
 
 export class CreditCardModal {
 
-  creditCardName: string;
-  creditCardSurname: string;
-  creditCardNumber: string;
-  creditCardExpirationDate: string;
-  creditCardCCV: string;
+  creditCardName: string = '';
+  creditCardSurname: string = '';
+  creditCardNumber: string = '';
+  creditCardExpirationDate: string = '';
+  creditCardCVC: string = '';
   minDate: string = '';
   maxDate: string = '';
 
   constructor(
     public params: NavParams,
-    public viewCtrl: ViewController) {
+    public viewCtrl: ViewController,
+    private toastController: ToastController
+  ) {
 
     let date = new Date();
     let aux = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
     this.minDate = aux.getFullYear() + '-' + aux.getMonth();
     aux = new Date(date.getFullYear() + 10, date.getMonth() + 1, date.getDate());
     this.maxDate = aux.getFullYear() + '-' + aux.getMonth();
-    console.log(this.minDate);
-    console.log(this.maxDate);
 
   }
 
 
   dismiss() {
-    console.log(this.creditCardName);
-    console.log(this.creditCardSurname);
-    console.log(this.creditCardNumber);
-    console.log(this.creditCardExpirationDate);
-    console.log(this.creditCardCCV);
-    //this.viewCtrl.dismiss();
+    this.creditCardName = 'Test';
+    this.creditCardSurname = 'Perez';
+    this.creditCardNumber = '4242424242424242';
+    this.creditCardExpirationDate = '2022-10';
+    this.creditCardCVC = '123';
+    if (this.creditCardName == '' || this.creditCardSurname == '' || this.creditCardNumber == '' || this.creditCardExpirationDate == '' || this.creditCardCVC == '') {
+      let toast = this.toastController.create({
+        message: 'You must fill in all fields',
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
+      return false;
+    } else {
+      let expYear = parseInt(this.creditCardExpirationDate.split("-")[0]);
+      let expMonth = parseInt(this.creditCardExpirationDate.split("-")[1]);
+      this.viewCtrl.dismiss({ 'number': this.creditCardNumber, 'expMonth': expMonth, 'expYear': expYear, 'cvc': this.creditCardCVC });
+    }
+
   }
   cancel() {
     this.viewCtrl.dismiss();

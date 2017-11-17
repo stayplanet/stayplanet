@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Events, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
+import { Stripe } from '@ionic-native/stripe';
 import 'rxjs';
 import 'rxjs/add/operator/map'
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
+import { RequestOptionsArgs } from '@angular/http/src/interfaces';
 
 @Injectable()
 
@@ -20,6 +23,7 @@ export class UserService {
         private events: Events,
         private platform: Platform,
         private transfer: Transfer,
+        private stripe: Stripe,
     ) {
     }
 
@@ -72,10 +76,10 @@ export class UserService {
                 }
             });
     }
-    
-    uploadUserInfo(name, surname, email, country, city, mobilePhone){
+
+    uploadUserInfo(name, surname, email, country, city, mobilePhone) {
         let url: string = this.api_url + 'uploadUserInfo?appKey=' + this.appKey + '&name=' + name +
-        '&surname=' + surname + '&email=' + email + '&country=' + country + '&mobilePhone=' + mobilePhone + '&city=' + city;
+            '&surname=' + surname + '&email=' + email + '&country=' + country + '&mobilePhone=' + mobilePhone + '&city=' + city;
         return this.http.get(url)
             .map(res => {
                 console.log(res);
@@ -106,7 +110,7 @@ export class UserService {
 
     }
 
-    getNewsLetter(email){
+    getNewsLetter(email) {
         let url: string = this.api_url + 'getNewsLetter?appKey=' + this.appKey + '&email=' + email;
         return this.http.get(url)
             .map(res => {
@@ -118,7 +122,7 @@ export class UserService {
             });
     }
 
-    setNewsletter(email, value){
+    setNewsletter(email, value) {
         let url: string = this.api_url + 'setNewsletter?appKey=' + this.appKey + '&email=' + email + '&value=' + value;
         return this.http.get(url)
             .map(res => {
@@ -128,6 +132,30 @@ export class UserService {
                     return false;
                 }
             });
+    }
+
+    createCardToken(creditCardDetails, price): Promise<any> {
+        return this.stripe.setPublishableKey('pk_test_wbCl3saZ8EX90oYDY3U6oipz').then(success => {
+            return this.stripe.createCardToken(creditCardDetails)
+                .then(token => {
+                    console.log('token: ', token);
+                    var data = 'stripeToken=' + JSON.stringify(token) + '&price=' + price;
+                    var headers = new Headers();
+                    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                    var options: RequestOptionsArgs = { 'headers': headers };
+                    return this.http.post(this.api_url + 'payInvoice?appKey=' + this.appKey, data, options).subscribe(res => {
+                        console.log(res);
+                        /*
+                        if (res.json().success) {
+                            console.log('res.json(): ', res.json());
+                        }
+                        */
+                    });
+                })
+                .catch(error => {
+                    console.log('error: ', error);
+                });
+        });
     }
 
 }

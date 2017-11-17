@@ -354,5 +354,16 @@ class AppAPI extends REST_Controller {
 		    echo $e->getMessage();
 		}
 	}
+
+	function payInvoice_post(){
+		//$accounts_id = filter_var($_REQUEST['accounts_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$data = file_get_contents("php://input");
+		//print_r($data);
+		$stripeToken = json_decode($_REQUEST['stripeToken']);
+		print_r($stripeToken->card->brand);
+		$price = json_decode($_REQUEST['price']);
+		print_r($price);
+	
+	}
 	
 }
