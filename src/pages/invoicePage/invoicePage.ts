@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController, ModalController, ToastController } from 'ionic-angular';
-import { Header } from 'ionic-angular/components/toolbar/toolbar-header';
 
 import { UserService } from '../../services/userService';
 
@@ -20,6 +19,7 @@ export class InvoicePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
+    private toastController: ToastController,
     private userService: UserService
   ) {
   }
@@ -27,6 +27,7 @@ export class InvoicePage {
   ionViewDidLoad() {
     this.user = this.navParams.data.user;
     this.booking = this.navParams.data.booking;
+    console.log('this.booking: ', this.booking);
     let date = new Date();
     let today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     this.todayString = today.getDate() + '/' + today.getMonth() + '/' + today.getFullYear();
@@ -43,8 +44,17 @@ export class InvoicePage {
         expYear: creditCard.expYear,
         cvc: creditCard.cvc,
       };
-      this.userService.createCardToken(this.creditCardDetails, this.booking.booking_subitem.price).then(result => {
-        console.log(result);
+      this.userService.createCardToken(
+        this.creditCardDetails, this.booking.booking_subitem.price, this.booking.booking_id, this.booking.booking_ref_no, this.user.ai_first_name, this.user.ai_last_name
+      ).then(result => {
+        if(result){
+          let toast = this.toastController.create({
+            message: 'Invoice paid',
+            duration: 1500,
+            position: 'bottom'
+          });
+          toast.present();
+        }
       });
     });
     creditCardModal.present();

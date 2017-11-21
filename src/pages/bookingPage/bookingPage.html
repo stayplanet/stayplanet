@@ -32,10 +32,10 @@
         <ion-icon name="star-outline" *ngFor="let noStar of accommodation?.noStars"></ion-icon>
       </ion-item>
       <ion-item>
-        <ion-label>CheckIn: {{ checkInDate?.day }}/{{ checkInDate?.month }}/{{ checkInDate?.year }}</ion-label>
+        <ion-label>CheckIn: {{ checkInDate?.day }}/{{ checkInDate?.month + 1 }}/{{ checkInDate?.year }}</ion-label>
       </ion-item>
       <ion-item>
-          <ion-label>CheckOut: {{ checkOutDate?.day }}/{{ checkOutDate?.month }}/{{ checkOutDate?.year }}</ion-label>
+          <ion-label>CheckOut: {{ checkOutDate?.day }}/{{ checkOutDate?.month + 1 }}/{{ checkOutDate?.year }}</ion-label>
         </ion-item>
       <ion-item>
         <ion-label>Total Stay: {{ nights }}</ion-label>

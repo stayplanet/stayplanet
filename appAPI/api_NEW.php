@@ -2,6 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH . 'modules/Api/libraries/REST_Controller.php';
+include("./application/modules/Creditcard/controllers/Creditcard.php");
 
 class AppAPI extends REST_Controller {
 
@@ -119,6 +120,7 @@ class AppAPI extends REST_Controller {
 	}
 
 	function getRoomAvailability_get(){
+		$room_id =  filter_var($_REQUEST['room_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$day1 =  filter_var($_REQUEST['day1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$month1 = filter_var($_REQUEST['month1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) + 1;
 		$year1 = filter_var($_REQUEST['year1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) - 2017;
@@ -131,7 +133,7 @@ class AppAPI extends REST_Controller {
 		$m = $month1;
 		$y = $year1;
 		while(true){
-			$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = 125 AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
+			$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
 			$d++;
 			if($d > cal_days_in_month(CAL_GREGORIAN, $m, $y+2017)){
 				$d = 1;
@@ -145,8 +147,39 @@ class AppAPI extends REST_Controller {
 				break;
 			}
 		}
-		$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = 125 AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
+		$days[$y][$m][$d] = $this->db->query("SELECT d" .$d. " as day FROM pt_rooms_availabilities WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. " ")->result()[0]->day;
 		print_r(json_encode($days));
+	}
+
+	function updateRoomAvailability_get(){
+		$room_id =  filter_var($_REQUEST['room_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$day1 =  filter_var($_REQUEST['day1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$month1 = filter_var($_REQUEST['month1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) + 1;
+		$year1 = filter_var($_REQUEST['year1'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) - 2017;
+		$day2 = filter_var($_REQUEST['day2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$month2 = filter_var($_REQUEST['month2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) + 1;
+		$year2 = filter_var($_REQUEST['year2'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) - 2017;
+		$quantity = filter_var($_REQUEST['quantity'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+	
+		$d = $day1;
+		$m = $month1;
+		$y = $year1;
+		while(true){
+			$this->db->query("UPDATE pt_rooms_availabilities SET d".$d. " = d".$d. " - ".$quantity." WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. ";");
+			$d++;
+			if($d > cal_days_in_month(CAL_GREGORIAN, $m, $y+2017)){
+				$d = 1;
+				$m++;
+				if($m > 12){
+					$m = 1;
+					$y++;
+				}
+			}
+			if($d == $day2 && $m == $month2 && $y == $year2){
+				break;
+			}
+		}
+		$this->db->query("UPDATE pt_rooms_availabilities SET d".$d. " = d".$d. " - ".$quantity." WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. ";");
 	}
 
 	function compareEmail_get(){
@@ -233,11 +266,6 @@ class AppAPI extends REST_Controller {
 		$path = "./uploads/images/users/";
         $target_path = $path . basename( $_FILES['file']['name']);
 		$oldTargetPath =  $path . filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		/*
-		print_r('$path: ' .$path);
-		print_r('$target_path: ' .$target_path);
-		print_r('$oldTargetPath: ' .$oldTargetPath);
-		*/
         foreach (glob($oldTargetPath . '.*') as $filename) {
             print_r('$filename: ' .$filename);
             unlink($filename);
@@ -333,7 +361,7 @@ class AppAPI extends REST_Controller {
 			$inserted_id = $this->db->conn_id->insert_id;
 			$result = $this->db->query("SELECT * FROM pt_bookings WHERE booking_id = " .$inserted_id)->result();
 			if($result){
-				print_r($booking_subitemString);
+				print_r(json_encode($result));
 			}
 		}catch(PDOException $e){
 		    echo $e->getMessage();
@@ -356,14 +384,63 @@ class AppAPI extends REST_Controller {
 	}
 
 	function payInvoice_post(){
-		//$accounts_id = filter_var($_REQUEST['accounts_id'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$data = file_get_contents("php://input");
-		//print_r($data);
 		$stripeToken = json_decode($_REQUEST['stripeToken']);
-		print_r($stripeToken->card->brand);
-		$price = json_decode($_REQUEST['price']);
-		print_r($price);
+		$paymethod = 'stripe';
+		$bookingid = $_REQUEST['booking_id'];
+		$refno = $_REQUEST['bookinf_ref_no'];
+		$firstname = $_REQUEST['firstname'];
+		$lastname = $_REQUEST['lastname'];
+		$cardnum = $stripeToken->card->number;
+		$expMonth = $stripeToken->card->exp_month;
+		$expYear = $stripeToken->card->exp_year;
+		$cvv = $stripeToken->card->cvv;
+		$price = $_REQUEST['price'];
+		
+		$creditCard = new Creditcard();
+		$result = $creditCard->index_API($paymethod, $bookingid, $refno, $firstname, $lastname, $cvv, $expMonth, $expYear, $cardnum);
+		print_r($result);
+	}
+
 	
+	function getWishlist_get(){
+		$wish_user = filter_var($_REQUEST['wish_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$wish_itemid = filter_var($_REQUEST['wish_itemid'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			$result = $this->db->query("SELECT wish_id FROM pt_wishlist WHERE wish_user = ".$wish_user." AND wish_itemid = ".$wish_itemid.";")->result();
+		    if($result){
+		        print_r(json_encode($result));
+			}
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
+	function addToWhishlist_get(){
+		$wish_user = filter_var($_REQUEST['wish_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$wish_itemid = filter_var($_REQUEST['wish_itemid'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$wish_module = filter_var($_REQUEST['wish_module'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			$result = $this->db->query("INSERT INTO pt_wishlist(wish_user, wish_itemid, wish_module) VALUES ('".$wish_user."', '".$wish_itemid."', '".$wish_module."');");
+		    if($this->db->conn_id->affected_rows == 1){
+		        print_r(json_encode($result));
+			}
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
+	function removeFromWhishlist_get(){
+		$wish_user = filter_var($_REQUEST['wish_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		$wish_itemid = filter_var($_REQUEST['wish_itemid'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			$result = $this->db->query("DELETE FROM pt_wishlist WHERE wish_user = ".$wish_user." AND wish_itemid = ".$wish_itemid.";");
+		    if($this->db->conn_id->affected_rows == 1){
+		        print_r(json_encode($result));
+			}
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
 	}
 	
 }

@@ -6,8 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { Stripe } from '@ionic-native/stripe';
 import 'rxjs';
-import 'rxjs/add/operator/map'
-import * as _ from 'lodash';
+import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
 import { RequestOptionsArgs } from '@angular/http/src/interfaces';
 
@@ -121,7 +120,6 @@ export class UserService {
                 }
             });
     }
-
     setNewsletter(email, value) {
         let url: string = this.api_url + 'setNewsletter?appKey=' + this.appKey + '&email=' + email + '&value=' + value;
         return this.http.get(url)
@@ -134,22 +132,23 @@ export class UserService {
             });
     }
 
-    createCardToken(creditCardDetails, price): Promise<any> {
+    createCardToken(creditCardDetails, price, booking_id, bookinf_ref_no, firstname, lastname): Promise<any> {
         return this.stripe.setPublishableKey('pk_test_wbCl3saZ8EX90oYDY3U6oipz').then(success => {
             return this.stripe.createCardToken(creditCardDetails)
                 .then(token => {
-                    console.log('token: ', token);
-                    var data = 'stripeToken=' + JSON.stringify(token) + '&price=' + price;
+                    token.card['number'] = creditCardDetails.number;
+                    token.card['cvv'] = creditCardDetails.cvc;
+                    var data = 'stripeToken=' + JSON.stringify(token) + '&price=' + price + '&booking_id=' + booking_id + '&bookinf_ref_no=' + bookinf_ref_no
+                    + '&firstname=' + firstname + '&lastname=' + lastname;
                     var headers = new Headers();
                     headers.append('Content-Type', 'application/x-www-form-urlencoded');
                     var options: RequestOptionsArgs = { 'headers': headers };
                     return this.http.post(this.api_url + 'payInvoice?appKey=' + this.appKey, data, options).subscribe(res => {
-                        console.log(res);
-                        /*
-                        if (res.json().success) {
-                            console.log('res.json(): ', res.json());
+                        if(res['_body'] == 'true'){
+                            return true;
+                        }else{
+                            return false;
                         }
-                        */
                     });
                 })
                 .catch(error => {
@@ -158,5 +157,40 @@ export class UserService {
         });
     }
 
-}
+    getWishlist(wish_user, wish_itemid): Observable<boolean> {
+        let url: string = this.api_url + 'getWishlist?appKey=' + this.appKey + '&wish_user=' + wish_user + '&wish_itemid=' + wish_itemid;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] == "") {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+    }
 
+    addToWhishlist(wish_user, wish_itemid, wish_module): Observable<boolean> {
+        let url: string = this.api_url + 'addToWhishlist?appKey=' + this.appKey + '&wish_user=' + wish_user + '&wish_itemid=' + wish_itemid + '&wish_module=' + wish_module;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] == "") {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+    }
+
+    removeFromWhishlist(wish_user, wish_itemid): Observable<boolean> {
+        let url: string = this.api_url + 'removeFromWhishlist?appKey=' + this.appKey + '&wish_user=' + wish_user + '&wish_itemid=' + wish_itemid;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] == "") {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+    }
+
+}

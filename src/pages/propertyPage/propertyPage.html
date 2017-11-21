@@ -18,6 +18,8 @@
 <ion-content class="card-background-page">
 
   <ion-card>
+    <ion-icon *ngIf="!isWishList" name="heart-outline" id="heart" (click)="addToWhishlist()"></ion-icon>
+    <ion-icon *ngIf="isWishList" name="heart" id="heart" (click)="removeFromWishlist()"></ion-icon>
     <ion-icon name="expand" id="eyeIcon" (click)="openImagesModal()"></ion-icon>
     <img [src]="property.thumbnail_image">
   </ion-card>

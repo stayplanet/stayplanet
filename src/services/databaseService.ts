@@ -177,6 +177,14 @@ export class DatabaseService {
             });
     }
 
+    updateRoomAvailability(room_id, checkInDate, checkOutDate, quantity){
+        return this.http.get(this.api_url + 'updateRoomAvailability?appKey=' + this.appKey + '&room_id=' + room_id + '&day1=' + checkInDate.day + '&day2=' + checkOutDate.day
+        + '&month1=' + checkInDate.month + '&month2=' + checkOutDate.month + '&year1=' + checkInDate.year + '&year2=' + checkOutDate.year + '&quantity=' + quantity)
+        .map(res => {
+            return res.json();
+        });
+    }
+
     getUserBookings(accounts_id){
         return this.http.get(this.api_url + 'getUserBookings?appKey=' + this.appKey + '&accounts_id=' + accounts_id)
         .map(res => {

@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, NavParams, Slides, ViewController, LoadingController, AlertController, Platform } from 'ionic-angular';
+import { NavController, ModalController, NavParams, Slides, ViewController, LoadingController, AlertController, Platform, ToastController } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 
 import { BookingPage, SignupPage, LoginPage } from '../../pages/pages';
 
 import { DatabaseService } from '../../services/databaseService';
+import { UserService } from '../../services/userService';
 
 import * as _ from 'lodash';
 
@@ -14,6 +15,8 @@ import * as _ from 'lodash';
 })
 export class PropertyPage {
 
+  user: any;
+  isWishList: boolean;
   property: any = {};
   images: string[] = [];
   filters: any = {};
@@ -32,9 +35,11 @@ export class PropertyPage {
     private modalCtrl: ModalController,
     private loadingController: LoadingController,
     private alertCtrl: AlertController,
+    private toastController: ToastController,
     private platform: Platform,
     private nativeStorage: NativeStorage,
     private databaseService: DatabaseService,
+    private userService: UserService
   ) {
   }
 
@@ -52,6 +57,19 @@ export class PropertyPage {
     let checkInDate = new Date(this.filters.checkInDate.year, this.filters.checkInDate.month, this.filters.checkInDate.day);
     let checkOutDate = new Date(this.filters.checkOutDate.year, this.filters.checkOutDate.month, this.filters.checkOutDate.day);
     this.nights = Math.round(Math.abs((checkInDate.getTime() - checkOutDate.getTime()) / (oneDay)));
+
+    if (this.platform.is('cordova')) {
+      this.nativeStorage.getItem("user").then(user => {
+        this.user = user;
+        this.userService.getWishlist(this.user.accounts_id, this.property.hotel_id).subscribe(res => {
+          this.isWishList = res;
+        });
+      }).catch(error => {
+        if (error.code == 2) { // ITEM NOT FOUND
+          this.user = void 0;
+        }
+      });
+    }
 
     this.databaseService.getPropertyImages(this.property.hotel_id).subscribe(images => {
       images.forEach(image => {
@@ -93,7 +111,7 @@ export class PropertyPage {
         _.forEach(month, day => {
           if (parseInt(day) - this.roomsQuantity < 0) {
             return 0;
-          }else if(parseInt(day) < roomNumber){
+          } else if (parseInt(day) < roomNumber) {
             roomNumber = parseInt(day);
           }
         });
@@ -187,7 +205,7 @@ export class PropertyPage {
             "user": user,
             "room": room,
             "guests": this.guests,
-            "checkIndate": this.filters.checkIndate,
+            "checkInDate": this.filters.checkInDate,
             "checkOutDate": this.filters.checkOutDate,
             "nights": this.nights,
             "roomsQuantity": this.roomsQuantity,
@@ -226,7 +244,7 @@ export class PropertyPage {
       this.navCtrl.push(
         BookingPage,
         {
-          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'accounts_id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com'},
+          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'accounts_id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com' },
           "room": room,
           "guests": this.guests,
           "checkInDate": this.filters.checkInDate,
@@ -236,6 +254,64 @@ export class PropertyPage {
           "extraBeds": this.extraBeds
         });
     }
+  }
+
+  addToWhishlist() {
+    if (this.user) {
+      this.userService.addToWhishlist(this.user.accounts_id, this.property.hotel_id, this.property.module).subscribe(res => {
+        this.isWishList = res;
+        if (this.isWishList) {
+          let toast = this.toastController.create({
+            message: 'Accommodation added to wishlist',
+            duration: 1500,
+            position: 'bottom'
+          });
+          toast.present();
+        }
+      });
+    } else {
+      let confirm = this.alertCtrl.create({
+        title: 'You are not logged in...',
+        message: 'If you\'re not logged into the app you can\'t add this property to your wishlist. Go LogIn or SignUp if you don\'t have any aacount yet.',
+        buttons: [
+          {
+            text: 'Cancel',
+            handler: () => {
+              console.log('Cancel pressed');
+            }
+          },
+          {
+            text: 'SignUp',
+            handler: () => {
+              this.navCtrl.push(SignupPage);
+            }
+          },
+          {
+            text: 'LogIn',
+            handler: () => {
+              this.navCtrl.push(LoginPage);
+            }
+          }
+        ]
+      });
+      confirm.present();
+    }
+
+  }
+
+  removeFromWishlist() {
+    this.userService.removeFromWhishlist(this.user.accounts_id, this.property.hotel_id).subscribe(res => {
+      this.isWishList = !res;
+      console.log('this.isWishList: ', this.isWishList);
+      if (res) {
+        let toast = this.toastController.create({
+          message: 'Accommodation removed from wishlist',
+          duration: 1500,
+          position: 'bottom'
+        });
+        toast.present();
+      }
+    });
   }
 
   goHome() {

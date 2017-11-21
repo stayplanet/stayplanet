@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import * as _ from 'lodash';
+//import * as _ from 'lodash';
 
 import { DatabaseService } from '../../services/databaseService';
 import { UserService } from '../../services/userService';

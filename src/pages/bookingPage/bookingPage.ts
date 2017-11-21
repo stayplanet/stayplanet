@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { InvoicePage } from '../pages';
@@ -50,17 +50,7 @@ export class BookingPage {
       this.accommodation['stars'] = Array(this.accommodation.hotel_stars);
       this.accommodation['noStars'] = Array(5 - this.accommodation.hotel_stars);
       this.totalAmount = this.room.room_basic_price * this.nights + parseInt(this.accommodation.booking_fee);
-      console.log("accommodation: ", this.accommodation);
     });
-
-    console.log(this.navParams.data);
-    console.log(this.user);
-    console.log(this.room);
-    console.log(this.checkInDate);
-    console.log(this.checkOutDate);
-    console.log(this.nights);
-    console.log(this.roomsQuantity);
-    console.log(this.extraBeds);
   }
 
   applyCoupon() {
@@ -68,14 +58,16 @@ export class BookingPage {
   }
 
   confirmBooking() {
-    let booking_subitem_object = {id: this.room.room_id, price: this.accommodation.hotel_basic_price, count: this.roomsQuantity};
-    //let booking_subitem = JSON.stringify(booking_subitem_object);
-    //console.log(booking_subitem);
+    let booking_subitem_object = { id: this.room.room_id, price: this.accommodation.hotel_basic_price * this.roomsQuantity, count: this.roomsQuantity };
     let checkInDate = this.checkInDate.year + '/' + this.checkInDate.month + '/' + this.checkInDate.day;
     let checkOutDate = this.checkOutDate.year + '/' + this.checkOutDate.month + '/' + this.checkOutDate.day;
     this.databaseService.registerBooking(this.accommodation.module, this.accommodation.hotel_id, booking_subitem_object, this.user.accounts_id, this.totalAmount, 0,
       checkInDate, checkOutDate, this.nights, this.guests, this.extraBeds, this.room.extra_bed_charges, 'EUR', '€').subscribe(res => {
-        this.navCtrl.push(InvoicePage, { 'room': this.room, 'user': this.user, 'booking': res[0] });
+        if (res.length > 0) {
+          this.navCtrl.push(InvoicePage, { 'user': this.user, 'booking': res[0] });
+          this.databaseService.updateRoomAvailability(this.room.room_id, this.checkInDate, this.checkOutDate, this.roomsQuantity);
+        }
+
       });
   }
 
