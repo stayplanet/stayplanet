@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 import { UserService } from '../../services/userService';
 
@@ -14,29 +14,33 @@ export class NewsletterPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private toastController: ToastController,
     private userService: UserService
   ) {
-    
+
   }
 
   ionViewDidLoad() {
     this.user = this.navParams.data;
     this.userService.getNewsLetter(this.user.accounts_email).subscribe(result => {
-      if(result.length == 0){
+      if (result.length == 0) {
         this.newsletter = {};
-      }else{
+      } else {
         this.newsletter = result;
       }
-      
+
     });
   }
 
-  setNewsletter(toggle){
+  setNewsletter(toggle) {
     this.userService.setNewsletter(this.user.accounts_email, toggle.value).subscribe(result => {
-      if(result){
-        console.log('cambia');
-      }else{
-        console.log('no lo hizo');
+      if (result) {
+        let toast = this.toastController.create({
+          message: 'You have joined our newsletters',
+          duration: 1500,
+          position: 'bottom'
+        });
+        toast.present();
       }
     });
   }

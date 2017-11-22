@@ -165,7 +165,7 @@ class AppAPI extends REST_Controller {
 		$m = $month1;
 		$y = $year1;
 		while(true){
-			$this->db->query("UPDATE pt_rooms_availabilities SET d".$d. " = d".$d. " - ".$quantity." WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. ";");
+			$this->db->query("UPDATE pt_rooms_availabilities SET d".$d. " = cast(d".$d." as SIGNED) - ".$quantity." WHERE room_id = ".$room_id." AND y = " .$y. " AND m = " .$m. ";");
 			$d++;
 			if($d > cal_days_in_month(CAL_GREGORIAN, $m, $y+2017)){
 				$d = 1;

@@ -16,6 +16,7 @@ import * as _ from 'lodash';
 export class PropertyPage {
 
   user: any;
+  showIcons: boolean = false;
   isWishList: boolean;
   property: any = {};
   images: string[] = [];
@@ -102,6 +103,10 @@ export class PropertyPage {
     setTimeout(() => {
       loader.dismiss();
     }, 7500);
+  }
+
+  imageLoaded(){
+    this.showIcons = true;
   }
 
   roomIsAvailable(availability) {

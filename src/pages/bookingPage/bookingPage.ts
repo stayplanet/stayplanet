@@ -52,7 +52,7 @@ export class BookingPage {
       this.totalAmount = this.room.room_basic_price * this.nights + parseInt(this.accommodation.booking_fee);
     });
   }
-
+  
   applyCoupon() {
     console.log(this.couponCode);
   }
@@ -65,7 +65,8 @@ export class BookingPage {
       checkInDate, checkOutDate, this.nights, this.guests, this.extraBeds, this.room.extra_bed_charges, 'EUR', '€').subscribe(res => {
         if (res.length > 0) {
           this.navCtrl.push(InvoicePage, { 'user': this.user, 'booking': res[0] });
-          this.databaseService.updateRoomAvailability(this.room.room_id, this.checkInDate, this.checkOutDate, this.roomsQuantity);
+          this.databaseService.updateRoomAvailability(this.room.room_id, this.checkInDate, this.checkOutDate, this.roomsQuantity).subscribe(res => {
+          });
         }
 
       });

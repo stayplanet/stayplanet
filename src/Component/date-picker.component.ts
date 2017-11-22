@@ -17,19 +17,19 @@ export class DatePicker {
   @Output()
   public onCancelled: EventEmitter<any> = new EventEmitter<any>();
 
-  private inout: string;
-  private case: number = 0;
-  private checkInDay: any;
-  private checkOutDay: any;
-  private checkInDate: any = {};
-  private checkOutDate: any = {};
-  private currentMoment: moment.Moment;
-  private minLimit: moment.Moment;
-  private maxLimit: moment.Moment;
-  private daysGroupedByWeek = [];
-  private selectedDateItem: DateItem;
-  private daysOfMonth: DateItem[];
-  private calendarModal: Modal;
+  inout: string;
+  case: number = 0;
+  checkInDay: any;
+  checkOutDay: any;
+  checkInDate: any = {};
+  checkOutDate: any = {};
+  currentMoment: moment.Moment;
+  minLimit: moment.Moment;
+  maxLimit: moment.Moment;
+  daysGroupedByWeek = [];
+  selectedDateItem: DateItem;
+  daysOfMonth: DateItem[];
+  calendarModal: Modal;
 
   constructor(
     public modalCtrl: ModalController,
@@ -78,7 +78,7 @@ export class DatePicker {
     this.renderCalender();
   }
 
-  private renderCalender() {
+  renderCalender() {
     this.daysOfMonth = this.generateDaysOfMonth(this.currentMoment.year(), this.currentMoment.month() + 1, this.currentMoment.date());
     this.daysGroupedByWeek = this.groupByWeek(this.daysOfMonth);
 
@@ -91,7 +91,7 @@ export class DatePicker {
     this.setSelectedDate(this.currentMoment);
   }
 
-  private generateDaysOfMonth(year: number, month: number, day: number) {
+  generateDaysOfMonth(year: number, month: number, day: number) {
     let calendarMonth = moment(`${year}-${month}-${day}`, "YYYY-MM-DD");
 
     let startOfMonth = calendarMonth.clone().startOf("month").day("sunday");
@@ -115,7 +115,7 @@ export class DatePicker {
     return calendarDays;
   }
 
-  private groupByWeek(daysOfMonth: DateItem[]) {
+  groupByWeek(daysOfMonth: DateItem[]) {
     let groupedDaysOfMonth = new Array<DateItem[]>();
     daysOfMonth.forEach((item, index) => {
       let groupIndex = Math.floor((index / 7));
@@ -125,7 +125,7 @@ export class DatePicker {
     return groupedDaysOfMonth;
   }
 
-  private selectDate(day: DateItem) {
+  selectDate(day: DateItem) {
     if (!day.isEnabled) {
       if (day.momentDate.isBefore(this.minLimit)) {
         let toast = this.toastController.create({
@@ -164,7 +164,7 @@ export class DatePicker {
     this.currentMoment = day.momentDate.clone();
   }
 
-  private setSelectedDate(day) {
+  setSelectedDate(day) {
     let foundDates = this.daysOfMonth.filter((item: DateItem) => {
       if (day.isSame(item.momentDate)) {
         return item;
@@ -176,7 +176,7 @@ export class DatePicker {
     }
   }
 
-  private unSetSelectedDate(day) {
+  unSetSelectedDate(day) {
     let foundDates = this.daysOfMonth.filter((item: DateItem) => {
       if (day.isSame(item.momentDate)) {
         return item;
@@ -188,7 +188,7 @@ export class DatePicker {
     }
   }
 
-  private isBelongToThisMonth(momentDate: moment.Moment, month: number) {
+  isBelongToThisMonth(momentDate: moment.Moment, month: number) {
     return momentDate.month() + 1 === month;
   }
 
@@ -200,7 +200,7 @@ export class DatePicker {
     }
   }
 
-  private setMonthBack() {
+  setMonthBack() {
     this.currentMoment.subtract(1, "month");
     if (this.currentMoment.isBefore(this.minLimit)) {
       this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.minLimit} );
@@ -208,7 +208,7 @@ export class DatePicker {
     this.renderCalender();
   }
 
-  private setMonthForward() {
+  setMonthForward() {
     this.currentMoment.add(1, "month");
     if (this.currentMoment.isAfter(this.maxLimit)) {
       this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.maxLimit} );
@@ -216,7 +216,7 @@ export class DatePicker {
     this.renderCalender();
   }
 
-  private setYearBack() {
+  setYearBack() {
     this.currentMoment.subtract(1, "year");
     if (this.currentMoment.isBefore(this.minLimit)) {
       this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.minLimit} );
@@ -224,7 +224,7 @@ export class DatePicker {
     this.renderCalender();
   }
 
-  private setYearForward() {
+  setYearForward() {
     this.currentMoment.add(1, "year");
     if (this.currentMoment.isAfter(this.maxLimit)) {
       this.selectDate( {"isEnabled": true, "isSelected": false, momentDate: this.maxLimit} );
@@ -232,7 +232,7 @@ export class DatePicker {
     this.renderCalender();
   }
 
-  private confirmDateSelection() {
+  confirmDateSelection() {
     let data = {};
     let date = {
       day: this.selectedDateItem.momentDate.get('date'),
@@ -253,11 +253,11 @@ export class DatePicker {
     this.viewCtrl.dismiss(data);
   }
 
-  private cancel() {
+  cancel() {
     this.viewCtrl.dismiss();
   }
 
-  public showCalendar(data: any) {
+  showCalendar(data: any) {
     this.calendarModal = this.modalCtrl.create(DatePicker, data);
 
     this.calendarModal.onDidDismiss((data: any) => {

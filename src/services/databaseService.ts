@@ -181,7 +181,7 @@ export class DatabaseService {
         return this.http.get(this.api_url + 'updateRoomAvailability?appKey=' + this.appKey + '&room_id=' + room_id + '&day1=' + checkInDate.day + '&day2=' + checkOutDate.day
         + '&month1=' + checkInDate.month + '&month2=' + checkOutDate.month + '&year1=' + checkInDate.year + '&year2=' + checkOutDate.year + '&quantity=' + quantity)
         .map(res => {
-            return res.json();
+            return res;
         });
     }
 

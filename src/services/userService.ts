@@ -7,7 +7,6 @@ import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { Stripe } from '@ionic-native/stripe';
 import 'rxjs';
 import 'rxjs/add/operator/map';
-import { Subscription } from 'rxjs/Subscription';
 import { RequestOptionsArgs } from '@angular/http/src/interfaces';
 
 @Injectable()

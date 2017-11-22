@@ -20,7 +20,10 @@
         <ion-col>
           <ion-list inset>
             <ion-item><ion-input type="email" placeholder="Your email" name="userEmail" #email required></ion-input></ion-item>
-            <ion-item><ion-input type="password" placeholder="Your password" name="userPassword" #password required></ion-input></ion-item>
+            <ion-item>
+              <ion-input [type]="passwordType" placeholder="Your password" name="userPassword" #password required></ion-input>
+              <button ion-button icon-only clear (click)="changeShowPassword()" item-right><ion-icon [name]="iconName"></ion-icon></button>
+            </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>
