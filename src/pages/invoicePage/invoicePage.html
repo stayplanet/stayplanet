@@ -18,7 +18,8 @@
 
   <ion-row>
     <ion-col col-12>
-      <button ion-button icon-end (click)="openCreditCardModal()">Pay Now<ion-icon name="card"></ion-icon></button>
+      <button *ngIf="!expired" ion-button icon-end full (click)="openCreditCardModal()">Pay Now<ion-icon name="card"></ion-icon></button>
+      <button *ngIf="expired" ion-button icon-end full disabled color="danger">Your invoice is expired</button>
     </ion-col>
   </ion-row>
 
@@ -30,8 +31,8 @@
     </ion-row>
 
     <ion-row>
-        <ion-col col-4>Invoice Date: {{ todayString }}</ion-col>
-        <ion-col col-4>Due Date: {{ tomorrowString }}</ion-col>
+        <ion-col col-4>Invoice Date: {{ booking?.booking_date_date }}</ion-col>
+        <ion-col col-4>Due Date: {{ booking?.booking_expiry_date }}</ion-col>
         <ion-col col-4>{{ user?.ai_first_name }} {{ user?.ai_last_name }}</ion-col>
     </ion-row>
 

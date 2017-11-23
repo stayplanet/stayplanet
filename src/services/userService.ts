@@ -192,4 +192,16 @@ export class UserService {
             });
     }
 
+    getUserWishlist(wish_user): Observable<any>{
+        let url: string = this.api_url + 'getUserWishlist?appKey=' + this.appKey + '&wish_user=' + wish_user;
+        return this.http.get(url)
+            .map(res => {
+                if (res["_body"] == "") {
+                    return [];
+                } else {
+                    return JSON.parse(res["_body"]);
+                }
+            });
+    }
+
 }

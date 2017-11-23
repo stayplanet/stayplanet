@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let accommodation of accommodations" (click)="accommodationTapped(accommodation)">
+      <ion-thumbnail item-start>
+        <img src="{{accommodation?.thumbnail_image}}" (load)="imageLoaded()">
+      </ion-thumbnail>
+      <h2>€{{ accommodation?.hotel_basic_price }}</h2>
+      <h3>{{ accommodation?.hotel_title }}</h3>
+      <h3>
+        <ion-icon name="ios-navigate-outline"></ion-icon> {{ accommodation?.hotel_map_city }}, {{ accommodation?.hotel_map_country }}</h3>
+      <ion-icon name="star" *ngFor="let star of accommodation?.stars"></ion-icon>
+      <ion-icon name="star-outline" *ngFor="let noStar of accommodation?.noStars"></ion-icon>
+      <button ion-button clear item-end>View</button>
+    </ion-item>
+  </ion-list>
+</ion-content>

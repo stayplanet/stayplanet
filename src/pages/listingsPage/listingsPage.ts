@@ -15,6 +15,7 @@ export class ListingsPage {
 
   user: any;
   bookings: any[];
+  booking_expiry: string;
 
   constructor(
     public navCtrl: NavController,
@@ -36,17 +37,30 @@ export class ListingsPage {
         }
         booking['stars'] = Array(booking.hotel_stars);
         booking['noStars'] = Array(5 - booking.hotel_stars);
-      });
 
-      console.log(this.bookings);
+        let booking_date = new Date(parseInt(booking.booking_date) * 1000);
+        booking['booking_date_date'] = booking_date.getDate() + "/" + (booking_date.getMonth() + 1) + "/" + booking_date.getFullYear() + " "
+        + this.getTime(booking_date.getHours()) + ":" + this.getTime(booking_date.getMinutes());
+
+        let booking_expiry = new Date(parseInt(booking.booking_expiry) * 1000);
+        booking['booking_expiry_date'] = booking_expiry.getDate() + "/" + (booking_expiry.getMonth() + 1) + "/" + booking_expiry.getFullYear() + " "
+          + this.getTime(booking_expiry.getHours()) + ":" + this.getTime(booking_expiry.getMinutes());
+
+      });
     });
   }
 
-  goToInvoice(booking){
-    this.navCtrl.push(InvoicePage, {'user': this.user, 'booking': booking});
+  getTime(number) {
+    let result: string;
+    number < 10 ? result = "0" + number : result = number;
+    return result;
   }
 
-  goHome(){
+  goToInvoice(booking) {
+    this.navCtrl.push(InvoicePage, { 'user': this.user, 'booking': booking });
+  }
+
+  goHome() {
     this.navCtrl.popToRoot();
   }
 

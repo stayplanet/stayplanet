@@ -330,12 +330,12 @@ class AppAPI extends REST_Controller {
 		$booking_type = filter_var($_REQUEST['booking_type'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$booking_item = filter_var($_REQUEST['booking_item'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$booking_subitem = filter_var($_REQUEST['booking_subitem'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-		//$booking_subitemString = rawurldecode($booking_subitem);
 		$booking_subitem = explode(" ", $booking_subitem);
 		$booking_subitemString = '{"id":' .$booking_subitem[0]. ', "price":' .$booking_subitem[1]. ', "count":' .$booking_subitem[2]. '}';
-		$tomorrow = new DateTime();
-		$tomorrow->modify('+1 day');
-		$booking_expiry = $tomorrow->format('Y-m-d H:i:s');
+		date_default_timezone_set('UTC');
+		$booking_date = date_timestamp_get(date_create('now'));
+		$booking_expiry = date_create('now');
+		$booking_expiry = date_timestamp_get(date_add($booking_expiry, date_interval_create_from_date_string('1 days')));
 		$booking_user = filter_var($_REQUEST['booking_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$booking_total = filter_var($_REQUEST['booking_total'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$booking_amount_paid = filter_var($_REQUEST['booking_amount_paid'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
@@ -352,10 +352,10 @@ class AppAPI extends REST_Controller {
 		$booking_curr_code = filter_var($_REQUEST['booking_curr_code'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$booking_curr_symbol = filter_var($_REQUEST['booking_curr_symbol'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		try{
-			$this->db->query("INSERT INTO pt_bookings(booking_ref_no, booking_type, booking_item, booking_subitem, booking_expiry, booking_user, booking_status, booking_total,
+			$this->db->query("INSERT INTO pt_bookings(booking_ref_no, booking_type, booking_item, booking_subitem, booking_date, booking_expiry, booking_user, booking_status, booking_total,
 			booking_amount_paid, booking_remaining, booking_checkin, booking_checkout, booking_nights, booking_adults, booking_deposit, booking_tax, booking_paymethod_tax,
 			booking_extra_beds, booking_extra_beds_charges, booking_curr_code, booking_curr_symbol)
-			VALUES ('" .$booking_ref_no. "', '" .$booking_type. "', '" .$booking_item. "', '" .$booking_subitemString. "', '" .$booking_expiry. "', '" .$booking_user. "', 'unpaid', '" .$booking_total. "',
+			VALUES ('" .$booking_ref_no. "', '" .$booking_type. "', '" .$booking_item. "', '" .$booking_subitemString. "', '" .$booking_date. "', '" .$booking_expiry. "', '" .$booking_user. "', 'unpaid', '" .$booking_total. "',
 			'" .$booking_amount_paid. "', '" .$booking_remaining. "', '" .$booking_checkin. "', '" .$booking_checkout. "', '" .$booking_nights. "', '" .$booking_adults. "', '" .$booking_deposit. "',
 			'" .$booking_tax. "', '" .$booking_paymethod_tax. "', '" .$booking_extra_beds. "', '" .$booking_extra_beds_charges. "', '" .$booking_curr_code. "', '" .$booking_curr_symbol. "');");
 			$inserted_id = $this->db->conn_id->insert_id;
@@ -437,6 +437,18 @@ class AppAPI extends REST_Controller {
 			$result = $this->db->query("DELETE FROM pt_wishlist WHERE wish_user = ".$wish_user." AND wish_itemid = ".$wish_itemid.";");
 		    if($this->db->conn_id->affected_rows == 1){
 		        print_r(json_encode($result));
+			}
+		}catch(PDOException $e){
+		    echo $e->getMessage();
+		}
+	}
+
+	function getUserWishlist_get(){
+		$wish_user = filter_var($_REQUEST['wish_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+		try{
+			$result = $this->db->query("SELECT * FROM pt_wishlist WHERE wish_user = ".$wish_user.";")->result();
+			if($result){
+				print_r(json_encode($result));
 			}
 		}catch(PDOException $e){
 		    echo $e->getMessage();

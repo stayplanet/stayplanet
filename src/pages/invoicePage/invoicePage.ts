@@ -3,6 +3,8 @@ import { NavController, NavParams, ViewController, ModalController, ToastControl
 
 import { UserService } from '../../services/userService';
 
+import moment from 'moment/src/moment';
+
 @Component({
   selector: 'invoicePage',
   templateUrl: 'invoicePage.html',
@@ -12,6 +14,9 @@ export class InvoicePage {
   //room: any;
   user: any;
   booking: any;
+  booking_date: string;
+  booking_expiry: string;
+  expired: boolean;
   creditCardDetails: any;
   todayString: string;
   tomorrowString: string;
@@ -27,14 +32,12 @@ export class InvoicePage {
   ionViewDidLoad() {
     this.user = this.navParams.data.user;
     this.booking = this.navParams.data.booking;
-    console.log('this.booking: ', this.booking);
-    let date = new Date();
-    let today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    this.todayString = today.getDate() + '/' + today.getMonth() + '/' + today.getFullYear();
-    let tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-    this.tomorrowString = tomorrow.getDate() + '/' + tomorrow.getMonth() + '/' + tomorrow.getFullYear();
-  }
 
+    let date = new Date();
+    let now = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+    now >= parseInt(this.booking.booking_expiry) * 1000 ? this.expired = true : this.expired = false;
+  }
+  
   openCreditCardModal() {
     let creditCardModal = this.modalCtrl.create(CreditCardModal);
     creditCardModal.onDidDismiss(creditCard => {
@@ -47,7 +50,7 @@ export class InvoicePage {
       this.userService.createCardToken(
         this.creditCardDetails, this.booking.booking_subitem.price, this.booking.booking_id, this.booking.booking_ref_no, this.user.ai_first_name, this.user.ai_last_name
       ).then(result => {
-        if(result){
+        if (result) {
           let toast = this.toastController.create({
             message: 'Invoice paid',
             duration: 1500,

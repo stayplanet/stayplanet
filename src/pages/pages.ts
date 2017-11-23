@@ -12,6 +12,7 @@ export * from './profilePhotoPage/profilePhotoPage';
 export * from './accountPage/accountPage';
 export * from './dashboardPage/dashboardPage';
 export * from './inboxPage/inboxPage';
+export * from './wishlistPage/wishlistPage';
 export * from './listingsPage/listingsPage';
 export * from './partnersPage/partnersPage';
 export * from './tripsPage/tripsPage';

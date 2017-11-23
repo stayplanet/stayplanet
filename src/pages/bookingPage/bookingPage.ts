@@ -68,7 +68,6 @@ export class BookingPage {
           this.databaseService.updateRoomAvailability(this.room.room_id, this.checkInDate, this.checkOutDate, this.roomsQuantity).subscribe(res => {
           });
         }
-
       });
   }
 
