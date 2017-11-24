@@ -3,8 +3,6 @@ import { NavController, NavParams, ViewController, ModalController, ToastControl
 
 import { UserService } from '../../services/userService';
 
-import moment from 'moment/src/moment';
-
 @Component({
   selector: 'invoicePage',
   templateUrl: 'invoicePage.html',
@@ -32,7 +30,6 @@ export class InvoicePage {
   ionViewDidLoad() {
     this.user = this.navParams.data.user;
     this.booking = this.navParams.data.booking;
-
     let date = new Date();
     let now = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
     now >= parseInt(this.booking.booking_expiry) * 1000 ? this.expired = true : this.expired = false;

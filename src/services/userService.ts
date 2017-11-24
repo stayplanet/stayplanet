@@ -8,6 +8,7 @@ import { Stripe } from '@ionic-native/stripe';
 import 'rxjs';
 import 'rxjs/add/operator/map';
 import { RequestOptionsArgs } from '@angular/http/src/interfaces';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 @Injectable()
 
@@ -22,6 +23,7 @@ export class UserService {
         private platform: Platform,
         private transfer: Transfer,
         private stripe: Stripe,
+        private emailComposer: EmailComposer
     ) {
     }
 
@@ -138,14 +140,14 @@ export class UserService {
                     token.card['number'] = creditCardDetails.number;
                     token.card['cvv'] = creditCardDetails.cvc;
                     var data = 'stripeToken=' + JSON.stringify(token) + '&price=' + price + '&booking_id=' + booking_id + '&bookinf_ref_no=' + bookinf_ref_no
-                    + '&firstname=' + firstname + '&lastname=' + lastname;
+                        + '&firstname=' + firstname + '&lastname=' + lastname;
                     var headers = new Headers();
                     headers.append('Content-Type', 'application/x-www-form-urlencoded');
                     var options: RequestOptionsArgs = { 'headers': headers };
                     return this.http.post(this.api_url + 'payInvoice?appKey=' + this.appKey, data, options).subscribe(res => {
-                        if(res['_body'] == 'true'){
+                        if (res['_body'] == 'true') {
                             return true;
-                        }else{
+                        } else {
                             return false;
                         }
                     });
@@ -192,7 +194,7 @@ export class UserService {
             });
     }
 
-    getUserWishlist(wish_user): Observable<any>{
+    getUserWishlist(wish_user): Observable<any> {
         let url: string = this.api_url + 'getUserWishlist?appKey=' + this.appKey + '&wish_user=' + wish_user;
         return this.http.get(url)
             .map(res => {
@@ -202,6 +204,23 @@ export class UserService {
                     return JSON.parse(res["_body"]);
                 }
             });
+    }
+
+    sendContactMessage(message): Promise<boolean> {
+        let email = {
+            to: 'info@stayplanet.com',
+            cc: message.email,
+            subject: message.subject,
+            body: "CC Name: " + message.name + ". " + message.message,
+            isHtml: true
+        };
+        return this.emailComposer.open(email).then(result => {
+            if (result == 'OK') {
+                return true;
+            }else{
+                return false;
+            }
+        });
     }
 
 }

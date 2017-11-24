@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeStorage } from '@ionic-native/native-storage';
 
-import { HomePage, LoginPage, SignupPage, SettingsPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage, NewsletterPage, WishlistPage } from '../pages/pages';
+import { HomePage, LoginPage, SignupPage, SettingsPage, DashboardPage, AccountPage, InboxPage, ListingsPage, TripsPage, PartnersPage, NewsletterPage, WishlistPage, ContactPage } from '../pages/pages';
 
 @Component({
   templateUrl: 'app.html'
@@ -107,6 +107,9 @@ export class MyApp {
   }
   partnersTapped(){
     this.nav.push(PartnersPage);
+  }
+  contactTapped(){
+    this.nav.push(ContactPage, this.user);
   }
 
 }

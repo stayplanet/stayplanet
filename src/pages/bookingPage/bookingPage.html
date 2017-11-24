@@ -17,7 +17,7 @@
 
 <ion-content>
 
-  <button ion-button full padding icon-end (click)="confirmBooking()">Confirm Booking
+  <button ion-button block icon-end (click)="confirmBooking()">Confirm Booking
     <ion-icon name="basket"></ion-icon>
   </button>
   <p style="margin-top: 1%; margin-left: 5%; margin-right: 2%;">By clicking to complete this booking I acknowledge that I have read and accept the Rules & Restrictions.</p>
@@ -71,7 +71,7 @@
       </ion-item>
       <ion-item>
         <ion-label>Email</ion-label>
-        <ion-input disabled type="text" [value]="user?.ai_accounts_email"></ion-input>
+        <ion-input disabled type="text" [value]="user?.accounts_email"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label stacked>Notes/Additional Request</ion-label>

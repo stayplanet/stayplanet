@@ -18,7 +18,10 @@
 <ion-content padding>
     <h5>Join our newsletter to keep updated.</h5>
     <ion-item>
-        <ion-label>Newsletter:</ion-label>
+        <ion-label>
+          <ion-icon *ngIf="bell" name="notifications"></ion-icon>
+          <ion-icon *ngIf="!bell" name="notifications-off"></ion-icon> Newsletter:</ion-label>
+        
         <ion-toggle *ngIf="newsletter" #toggle [checked]="newsletter.length > 0" (ionChange)="setNewsletter(toggle)"></ion-toggle>
     </ion-item>
 

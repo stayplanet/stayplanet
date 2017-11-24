@@ -10,12 +10,13 @@ import { Stripe } from '@ionic-native/stripe';
 import { File } from '@ionic-native/file';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 import { MyApp } from './app.component';
 import {
   HomePage, LoginPage, SignupPage, AccountPage, DashboardPage, InboxPage, ListingsPage, PartnersPage, TripsPage, TermsAndConditions, PrivacyPolicy,
   CityPage, PropertiesPage, FiltersModal, PropertyPage, ImagesModal, SettingsPage, UserPage, ProfilePhotoPage, TrustAndVerificationPage, ReviewsPage,
-  BookingPage, InvoicePage, CreditCardModal, NewsletterPage, WishlistPage
+  BookingPage, InvoicePage, CreditCardModal, NewsletterPage, WishlistPage, ContactPage
 } from '../pages/pages';
 import { DatabaseService } from '../services/databaseService';
 import { UserService } from '../services/userService';
@@ -52,7 +53,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     InvoicePage,
     CreditCardModal,
     NewsletterPage,
-    WishlistPage
+    WishlistPage,
+    ContactPage
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     InvoicePage,
     CreditCardModal,
     NewsletterPage,
-    WishlistPage
+    WishlistPage,
+    ContactPage
   ],
   providers: [
     StatusBar,
@@ -102,6 +105,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     Transfer,
     FilePath,
     Stripe,
+    EmailComposer,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

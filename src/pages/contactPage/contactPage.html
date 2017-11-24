@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <img src="assets/logo.png" alt="StayPlanet" class="logoHeader" (click)="goHome()">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <h5>Contact Us</h5>
+  <p>Please fill out the form below and we will get back to you as soon as possible. Need quicker answers? Call us at given numbers.
+    You can also visit our webpage: <a href="https://www.stayplanet.com">www.stayplanet.com</a>
+  </p>
+  <ion-list>
+    <ion-item>
+      <ion-label>Name</ion-label>
+      <ion-input *ngIf="user?.ai_first_name && user?.ai_last_name" [value]="user.ai_first_name + ' ' + user.ai_last_name" type="text" [(ngModel)]="name"></ion-input>
+      <ion-input *ngIf="!user" type="text" [(ngModel)]="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Email</ion-label>
+      <ion-input [value]="user?.accounts_email" type="text" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Subject</ion-label>
+      <ion-input type="text" [(ngModel)]="subject"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Message</ion-label>
+      <ion-textarea [(ngModel)]="message"></ion-textarea>
+    </ion-item>
+
+    <button ion-button block icon-end (click)="submitMessage()">Submit <ion-icon name="mail"></ion-icon></button>
+  </ion-list>
+
+  <ion-list>
+    <ion-item><ion-icon name="navigate" item-start></ion-icon>41 Lower Dominick Street Dublin 1, Ireland</ion-item>
+    <ion-item><ion-icon name="call" item-start></ion-icon>+353 1879 2363</ion-item>
+    <ion-item><ion-icon name="mail-open" item-start></ion-icon>info@stayplanet.com</ion-item>
+  </ion-list>
+
+</ion-content>

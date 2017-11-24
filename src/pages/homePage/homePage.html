@@ -30,10 +30,11 @@
         <ion-list *ngIf="searchedLocations && searchedLocations.length > 0">
           <ion-list-header color="light">Locations</ion-list-header>
           <ion-item *ngFor="let location of searchedLocations" (click)="locationTapped(location, searchBar)">{{ location.location }}, {{ location.country }}</ion-item>
+
         </ion-list>
         <ion-list *ngIf="searchedAcco && searchedAcco.length > 0">
             <ion-list-header color="light">Accomodations</ion-list-header>
-            <ion-item *ngFor="let accommodation of searchedAcco" (click)="accommodationTapped(accommodation, searchBar)">{{ accommodation.hotel_title }}</ion-item>
+            <ion-item *ngFor="let accommodation of searchedAcco" (click)="accommodationTapped(accommodation, searchBar)">{{ accommodation.hotel_title }} <ion-icon name="ios-key"></ion-icon></ion-item>
         </ion-list>
       </ion-col>
     </ion-row>

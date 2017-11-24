@@ -19,3 +19,4 @@ export * from './tripsPage/tripsPage';
 export * from './bookingPage/bookingPage';
 export * from './invoicePage/invoicePage';
 export * from './newsletterPage/newsletterPage';
+export * from './contactPage/contactPage';
