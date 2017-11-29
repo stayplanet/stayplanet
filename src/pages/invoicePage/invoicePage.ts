@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, ModalController, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, LoadingController, ModalController, ToastController } from 'ionic-angular';
 
 import { UserService } from '../../services/userService';
 
@@ -18,9 +18,11 @@ export class InvoicePage {
   creditCardDetails: any;
   todayString: string;
   tomorrowString: string;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private loadingController: LoadingController,
     private modalCtrl: ModalController,
     private toastController: ToastController,
     private userService: UserService
@@ -38,6 +40,10 @@ export class InvoicePage {
   openCreditCardModal() {
     let creditCardModal = this.modalCtrl.create(CreditCardModal);
     creditCardModal.onDidDismiss(creditCard => {
+      let loader = this.loadingController.create({
+        content: 'Please wait...',
+      });
+      loader.present();
       this.creditCardDetails = {
         number: creditCard.number,
         expMonth: creditCard.expMonth,
@@ -47,7 +53,9 @@ export class InvoicePage {
       this.userService.createCardToken(
         this.creditCardDetails, this.booking.booking_subitem.price, this.booking.booking_id, this.booking.booking_ref_no, this.user.ai_first_name, this.user.ai_last_name
       ).then(result => {
+        loader.dismiss();
         if (result) {
+          this.booking.booking_status = 'paid';
           let toast = this.toastController.create({
             message: 'Invoice paid',
             duration: 1500,

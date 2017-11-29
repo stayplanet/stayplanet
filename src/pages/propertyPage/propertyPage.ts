@@ -221,6 +221,7 @@ export class PropertyPage {
           let confirm = this.alertCtrl.create({
             title: 'You are not logged in...',
             message: 'If you\'re not logged into the app you can\'t book any property. Go LogIn or SignUp if you don\t have any aacount yet.',
+            cssClass: 'custom-alert',
             buttons: [
               {
                 text: 'Cancel',
@@ -245,19 +246,6 @@ export class PropertyPage {
           confirm.present();
         }
       });
-    } else {
-      this.navCtrl.push(
-        BookingPage,
-        {
-          "user": { 'ai_first_name': 'Francisco', 'ai_last_name': 'Sarmiento', 'ai_mobile': '+34608535848', 'accounts_id': 532, 'ai_accounts_email': 'fran.mss74@gmail.com' },
-          "room": room,
-          "guests": this.guests,
-          "checkInDate": this.filters.checkInDate,
-          "checkOutDate": this.filters.checkOutDate,
-          "nights": this.nights,
-          "roomsQuantity": this.roomsQuantity,
-          "extraBeds": this.extraBeds
-        });
     }
   }
 

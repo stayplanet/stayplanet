@@ -20,3 +20,13 @@
 .logoHeader{
     height: 45px;
 }
+
+.scroll-content{
+    background-color: whitesmoke;
+}
+
+.custom-alert .alert-button-group-vertical {
+    -webkit-flex-direction: row !important;
+    -ms-flex-direction: row !important;
+    flex-direction: row !important ;
+}

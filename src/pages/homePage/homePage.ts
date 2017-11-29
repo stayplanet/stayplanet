@@ -18,7 +18,7 @@ export class HomePage {
 
   @ViewChild(Content) content: Content;
 
-  splash: boolean = false;
+  splash: boolean = true;
   location: any;
   locations: any = [];
   searchedLocations: any = [];
@@ -71,7 +71,7 @@ export class HomePage {
 
   imageLoaded() {
     this.loadedImages++;
-    if (this.loadedImages = this.featuredAccoToShow.length) {
+    if (this.loadedImages >= this.featuredAccoToShow.length) {
       this.splash = false;
     }
   }

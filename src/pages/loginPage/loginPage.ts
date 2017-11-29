@@ -52,10 +52,16 @@ export class LoginPage {
     this.userService.login(email, sha1(password)).subscribe(user => {
       if(user){
         this.navCtrl.popToRoot();
+        let toast = this.toastController.create({
+          message: 'Welcome ' + user.ai_first_name,
+          duration: 2500,
+          position: 'bottom'
+        });
+        toast.present();
       }else if (!user){
         let toast = this.toastController.create({
           message: 'Invalid email or wrong password',
-          duration: 1500,
+          duration: 2500,
           position: 'bottom'
         });
         toast.present();

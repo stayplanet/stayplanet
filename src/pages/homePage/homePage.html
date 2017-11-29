@@ -43,16 +43,22 @@
       <ion-col>
         <ion-item (click)="showCalendar('IN')">
           <ion-label *ngIf="!filters.checkInDate">
-            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> Check In</ion-label><ion-label *ngIf="filters.checkInDate">
-            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> {{ filters.checkInDate.day }}/{{ filters.checkInDate.month + 1}}/{{ filters.checkInDate.year }}</ion-label>
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> Check In
+          </ion-label>
+          <ion-label *ngIf="filters.checkInDate">
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon><span style="color: black;"> {{ filters.checkInDate.day }}/{{ filters.checkInDate.month + 1}}/{{ filters.checkInDate.year }}</span>
+          </ion-label>
           <ion-input type="text" disabled></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item (click)="showCalendar('OUT')">
-          <ion-label *ngIf="!filters.checkOutDate"><ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> Check Out</ion-label>
+          <ion-label *ngIf="!filters.checkOutDate">
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> Check Out
+          </ion-label>
           <ion-label *ngIf="filters.checkOutDate">
-            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon> {{ filters.checkOutDate.day }}/{{ filters.checkOutDate.month + 1}}/{{ filters.checkOutDate.year }}</ion-label>
+            <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon><span style="color: black;"> {{ filters.checkOutDate.day }}/{{ filters.checkOutDate.month + 1}}/{{ filters.checkOutDate.year }}</span>
+          </ion-label>
           <ion-input type="text" disabled></ion-input>
         </ion-item>
       </ion-col>
@@ -87,8 +93,9 @@
 
   </div>
 
-  <ion-list>
-    <ion-item *ngFor="let accommodation of featuredAccoToShow" (click)="featuredAccoTapped(accommodation, searchBar)">
+  <ion-list no-lines>
+    <ion-list-header id="topAccoTitle">Top Accommodations</ion-list-header>
+    <ion-item class="topAcco" *ngFor="let accommodation of featuredAccoToShow" (click)="featuredAccoTapped(accommodation, searchBar)">
       <ion-thumbnail item-start>
         <img src="{{accommodation?.thumbnail_image}}" (load)="imageLoaded()">
       </ion-thumbnail>

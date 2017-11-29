@@ -28,9 +28,13 @@ export class UserService {
     }
 
     login(email, password): Observable<any> {
-        let url: string = this.api_url + 'appLogin?appKey=' + this.appKey + '&email=' + email + '&password=' + password;
-        return this.http.get(url)
+        var data = 'email=' + email + '&password=' + password;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        var options: RequestOptionsArgs = { 'headers': headers };
+        return this.http.post(this.api_url + 'appLogin?appKey=' + this.appKey, data, options)
             .map(data => {
+                console.log('data: ', data);
                 if (data.status === 200) {
                     let user = data["_body"];
                     if (user == "") {
@@ -39,9 +43,6 @@ export class UserService {
                         this.nativeStorage.setItem("user", JSON.parse(user)).then(() => {
                             this.events.publish('user:changed');
                         });
-                        return JSON.parse(user);
-                    } else {
-                        this.events.publish('user:changed', JSON.parse(user));
                         return JSON.parse(user);
                     }
                 } else {
@@ -63,10 +64,12 @@ export class UserService {
     }
 
     signup(name, surname, gender, phoneNumber, email, password, membershipType, country, postCode, address, informAboutLatestNews): Observable<any> {
-        let url: string = this.api_url + 'appSignUp?appKey=' + this.appKey + '&name=' + name + '&surname=' + surname + '&gender=' + gender + '&phoneNumber=' + phoneNumber + '&email=' + email + '&password=' + password
+        var data = 'name=' + name + '&surname=' + surname + '&gender=' + gender + '&phoneNumber=' + phoneNumber + '&email=' + email + '&password=' + password
             + '&membershipType=' + membershipType + '&country=' + country + '&postCode=' + postCode + '&address=' + address + '&informAboutLatestNews=' + informAboutLatestNews;
-        console.log(url);
-        return this.http.get(url)
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        var options: RequestOptionsArgs = { 'headers': headers };
+        return this.http.post(this.api_url + 'appSignUp?appKey=' + this.appKey, data, options)
             .map((data) => {
                 if (data.status === 200) {
                     return true;
@@ -82,8 +85,17 @@ export class UserService {
             '&surname=' + surname + '&email=' + email + '&country=' + country + '&mobilePhone=' + mobilePhone + '&city=' + city;
         return this.http.get(url)
             .map(res => {
-                console.log(res);
                 if (res["_body"] != "" || res["_body"] != "Something went wrong") {
+                    if (this.platform.is('cordova')) {
+                        this.nativeStorage.getItem('user').then(user => {
+                            user.ai_first_name = name;
+                            user.ai_last_name = surname;
+                            user.accounts_email = email;
+                            user.ai_country = country;
+                            user.ai_city = city;
+                            user.ai_mobile = mobilePhone;
+                        });
+                    }
                     return true;
                 } else {
                     return false;
@@ -94,13 +106,9 @@ export class UserService {
     uploadImage(fullImagePath, options, userEmail): Promise<boolean> {
         const fileTransfer: TransferObject = this.transfer.create();
         let url: string = this.api_url + 'uploadImage?appKey=' + this.appKey + '&email=' + userEmail;
-        console.log('url1: ', url);
         return fileTransfer.upload(fullImagePath, url, options).then(data => {
-            console.log('data1: ', data);
             let url: string = this.api_url + 'updateUserImage?appKey=' + this.appKey + '&imageName=' + options.fileName + '&userEmail=' + userEmail;
-            console.log('url2: ', url);
             this.http.get(url).subscribe(data => {
-                console.log('data2: ', data);
             });
             return true;
         }, error => {
@@ -209,7 +217,6 @@ export class UserService {
     sendContactMessage(message): Promise<boolean> {
         let email = {
             to: 'info@stayplanet.com',
-            cc: message.email,
             subject: message.subject,
             body: "CC Name: " + message.name + ". " + message.message,
             isHtml: true
@@ -217,7 +224,7 @@ export class UserService {
         return this.emailComposer.open(email).then(result => {
             if (result == 'OK') {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         });

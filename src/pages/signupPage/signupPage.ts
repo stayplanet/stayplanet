@@ -92,7 +92,7 @@ export class SignupPage {
 			toast.present();
 			return false;
 		}
-		
+
 		var regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (!regExp.test(this.email)) {
 			let toast = this.toastController.create({
@@ -162,13 +162,13 @@ export class SignupPage {
 			}
 		});
 	}
-/*
-	getCountryRegions() {
-		this.databaseService.getCountryRegions(this.country).subscribe(regions => {
-			this.regions = regions;
-		});
-	}
-*/
+	/*
+		getCountryRegions() {
+			this.databaseService.getCountryRegions(this.country).subscribe(regions => {
+				this.regions = regions;
+			});
+		}
+	*/
 	openTaCModel() {
 		let checkInModal = this.modalController.create(TermsAndConditions);
 		checkInModal.present();
@@ -249,7 +249,9 @@ export class SignupPage {
 			spinner: 'bubbles',
 			cssClass: 'loadingController'
 		});
-
+		setTimeout(() => {
+			loader.dismiss();
+		  }, 7500);
 		loader.present().then(() => {
 			this.userService.signup(
 				this.name, this.surname, this.gender, this.phoneNumber, this.email, sha1(this.password),
@@ -257,6 +259,12 @@ export class SignupPage {
 			).subscribe(data => {
 				loader.dismiss();
 				if (data) {
+					let toast = this.toastController.create({
+						message: 'Welcome to StayPlanet',
+						duration: 1500,
+						position: 'bottom'
+					});
+					toast.present();
 					this.navCtrl.popToRoot();
 				}
 			});

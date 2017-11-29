@@ -31,15 +31,15 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
-    this.refreshUser(null);
-    this.events.subscribe('user:changed', user => this.refreshUser(user));
+    this.refreshUser();
+    this.events.subscribe('user:changed', () => this.refreshUser());
   }
 
   openPage(page) {
     this.nav.setRoot(page.component);
   }
 
-  refreshUser(user) {
+  refreshUser() {
     if (this.platform.is('cordova')) {
       this.nativeStorage.getItem("user").then(user => {
         this.user = user;
@@ -48,8 +48,6 @@ export class MyApp {
           this.user = void 0;
         }
       });
-    }else{
-      this.user = user;
     }
   }
 
@@ -58,8 +56,8 @@ export class MyApp {
   }
   logoutTapped() {
     const alert = this.alertController.create({
-      title: 'Do you really want to logout?',
-      message: 'some text here',
+      title: 'Do you want to logout?',
+      message: 'We hope you see you soon',
       buttons: [
         {
           text: 'Cancel',
@@ -71,7 +69,6 @@ export class MyApp {
             this.nativeStorage.remove("user").then(() => {
               this.events.publish('user:changed');
             });
-            //this.nav.popToRoot();
           }
         }
       ]

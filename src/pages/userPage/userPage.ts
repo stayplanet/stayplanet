@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 //import * as _ from 'lodash';
 
 import { DatabaseService } from '../../services/databaseService';
@@ -28,6 +28,7 @@ export class UserPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private databaseService: DatabaseService,
+    private toastController: ToastController,
     private userService: UserService
   ) {
   }
@@ -36,6 +37,9 @@ export class UserPage {
     this.user = this.navParams.data;
     //this.userGender = this.user.gender;
     this.userCountry = this.user.ai_country;
+    if(!this.user.ai_city || this.user.ai_city == 'undefined'){
+      this.user.ai_city = '';
+    }
     //this.userBirthday = this.user.birthday;
     this.databaseService.getCountries().subscribe(countries => {
       this.countries = countries;
@@ -68,12 +72,21 @@ export class UserPage {
     if(this.userMobilePhone && this.userMobilePhone != ''){
       this.user.ai_mobile = this.userMobilePhone;
     }
-    console.log(this.user);
     this.userService.uploadUserInfo(this.user.ai_first_name, this.user.ai_last_name, this.user.accounts_email, this.user.ai_country, this.user.ai_city, this.user.ai_mobile).subscribe(result => {
       if(result){
-        console.log("todo crema loco");
+        let toast = this.toastController.create({
+          message: 'Information uploaded',
+          duration: 2000,
+          position: 'bottom'
+        });
+        toast.present();
       }else{
-        console.log("pos va a ser que no");
+        let toast = this.toastController.create({
+          message: 'There was an error',
+          duration: 2000,
+          position: 'bottom'
+        });
+        toast.present();
       }
     });
   }

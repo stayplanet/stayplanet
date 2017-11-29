@@ -3,6 +3,21 @@ profilePhotoPage {
       text-align: justify;  
     }
 
+    #profileTitle{
+        padding: 0;
+        margin: 0;
+        font-size: 1.5em;
+        text-align: center;
+        color: #de075d;
+        background-color: whitesmoke;
+    }
+
+    #chooseImageButton{
+        width: 50%;
+        display: block;
+        margin: auto;
+    }
+
     .profilePhoto{
         width: 50%;
         height: auto;

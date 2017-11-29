@@ -8,25 +8,24 @@
 <ion-content>
 
   <ion-row>
-    <ion-col col-6><h2>Profile</h2></ion-col>
-    <ion-col col-6><button ion-button full (click)="saveInfo()" icon-end>Save <ion-icon name="checkmark-circle-outline"></ion-icon></button></ion-col>
+    <ion-col col-12 id="profileTitle"><h2>Profile</h2></ion-col>
   </ion-row>
 
   <ion-list>
 
     <ion-item>
-      <ion-label>First name:</ion-label>
-      <ion-input type="text" [(ngModel)]="userName" [placeholder]="user?.ai_first_name"></ion-input>
+      <ion-label style="color: black;">First name:</ion-label>
+      <ion-input type="text" [(ngModel)]="userName" [value]="user?.ai_first_name"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Last name:</ion-label>
-      <ion-input type="text" [(ngModel)]="userSurname" [placeholder]="user?.ai_last_name"></ion-input>
+      <ion-label style="color: black;">Last name:</ion-label>
+      <ion-input type="text" [(ngModel)]="userSurname" [value]="user?.ai_last_name"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Email address:</ion-label>
-      <ion-input type="email" [(ngModel)]="userEmail" [placeholder]="user?.accounts_email"></ion-input>
+      <ion-label style="color: black;">Email address:</ion-label>
+      <ion-input type="email" [(ngModel)]="userEmail" [value]="user?.accounts_email"></ion-input>
     </ion-item>
     <!--
     <ion-item>
@@ -45,9 +44,9 @@
     </ion-item>
   -->
     <ion-item>
-      <ion-label>Country:</ion-label>
+      <ion-label style="color: black; max-width: 20%;">Country:</ion-label>
       <!--<ion-select [(ngModel)]="userCountry" (ionChange)="selectPhoneNumberCode()">-->
-      <ion-select [(ngModel)]="userCountry">
+      <ion-select [(ngModel)]="userCountry" style="max-width: 100%;">
         <ion-option *ngFor="let country of countries">{{ country.name }}</ion-option>
       </ion-select>
     </ion-item>
@@ -58,20 +57,25 @@
     </ion-item>
   -->
     <ion-item>
-      <ion-label>Phone number:</ion-label>
-      <ion-input type="number" [(ngModel)]="userMobilePhone" [placeholder]="user?.ai_mobile">{{ user?.ai_mobile }}</ion-input>
+      <ion-label style="color: black;">Phone number:</ion-label>
+      <ion-input type="number" [(ngModel)]="userMobilePhone" [value]="user?.ai_mobile">{{ user?.ai_mobile }}</ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Where you live:</ion-label>
-      <ion-input type="text" [(ngModel)]="userCity" [placeholder]="user?.ai_city"></ion-input>
+      <ion-label style="color: black;">Where you live:</ion-label>
+      <ion-input type="text" [(ngModel)]="userCity" [value]="user?.ai_city"></ion-input>
     </ion-item>
 
+    <!--
     <ion-item>
       <ion-label>Describe yourelf:</ion-label>
       <ion-textarea></ion-textarea>
     </ion-item>
-
+    -->
   </ion-list>
+  
+  <ion-row>
+      <ion-col col-12><button ion-button full (click)="saveInfo()" icon-end>Save <ion-icon name="checkmark-circle-outline"></ion-icon></button></ion-col>
+  </ion-row>
 
 </ion-content>

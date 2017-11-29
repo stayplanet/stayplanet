@@ -30,6 +30,11 @@ propertyPage {
     ion-col{
         text-align: center;
     }
+    
+    .optionButtons{
+        background-color: #5f295f;
+        //background-color: #488aff;
+    }
 
     #colBookNow, #buttonBookNow{
         margin: 0;
@@ -59,4 +64,5 @@ imagesModal{
         margin-top: 70%;
         margin-left: 40%;
     }
+    
 }

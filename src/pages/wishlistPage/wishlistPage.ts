@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, Events } from 'ionic-angular';
 
 import { PropertyPage } from '../pages'
 
@@ -16,10 +16,13 @@ export class WishlistPage {
   user: any;
   wishlist: any[];
   accommodations: any[] = [];
+  loadedImages: number = 0;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private loadingController: LoadingController,
+    private events: Events,
     private databaseService: DatabaseService,
     private userService: UserService
   ) {
@@ -27,12 +30,15 @@ export class WishlistPage {
 
   ionViewDidLoad() {
     this.user = this.navParams.data;
+    let loader = this.loadingController.create({
+      content: 'Please wait...',
+    });
+    loader.present();
     this.userService.getUserWishlist(this.user.accounts_id).subscribe(wishlist => {
       this.wishlist = wishlist;
       _.forEach(this.wishlist, wishlist => {
         this.databaseService.getAccommodation(wishlist.wish_itemid).subscribe(accommodation => {
           accommodation = accommodation[0];
-          console.log(accommodation);
           if (!accommodation.thumbnail_image.includes('http://')) {
             accommodation.thumbnail_image = 'http://www.stayplanet.net/uploads/images/hotels/slider/' + accommodation.thumbnail_image;
           }
@@ -47,16 +53,21 @@ export class WishlistPage {
           this.accommodations.push(accommodation);
         });
       });
-      console.log('this.accommodations: ', this.accommodations);
+    });
+    this.events.subscribe('imagesLoaded', () => {
+      loader.dismiss();
     });
   }
 
   imageLoaded(){
-    console.log("hacer el load de las imagenes");
+    this.loadedImages++;
+    if(this.loadedImages >= this.wishlist.length){
+      this.events.publish('imagesLoaded');
+    }
   }
 
   accommodationTapped(accommodation){
-    this.navCtrl.push(PropertyPage, { "property": accommodation });
+    //this.navCtrl.push(PropertyPage, { "property": accommodation });
   }
 
   goHome(){

@@ -18,8 +18,9 @@
 
   <ion-row>
     <ion-col col-12>
-      <button *ngIf="!expired" ion-button icon-end full (click)="openCreditCardModal()">Pay Now<ion-icon name="card"></ion-icon></button>
-      <button *ngIf="expired" ion-button icon-end full disabled color="danger">Your invoice is expired</button>
+      <button *ngIf="!expired && booking?.booking_status == 'unpaid'" ion-button icon-end full (click)="openCreditCardModal()">Pay Now<ion-icon name="card"></ion-icon></button>
+      <button *ngIf="expired && booking?.booking_status == 'unpaid'" ion-button icon-end full disabled color="unpaid">Your invoice is expired</button>
+      <button *ngIf="booking?.booking_status == 'paid'" ion-button icon-end full disabled color="paid">Your invoice is paid</button>
     </ion-col>
   </ion-row>
 

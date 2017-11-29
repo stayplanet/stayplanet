@@ -1,3 +1,12 @@
 bookingPage {
 
+    ion-label{
+        color: black !important;
+        margin: 0 !important;
+    }
+
+    .text-input[disabled]{
+        opacity: 1 !important;
+    }
+
 }

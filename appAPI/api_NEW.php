@@ -196,7 +196,8 @@ class AppAPI extends REST_Controller {
         }
 	}
 
-	function appLogin_get(){
+	function appLogin_post(){
+		$data = file_get_contents("php://input");
         $email = filter_var($_REQUEST['email'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $password = filter_var($_REQUEST['password'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		try{
@@ -209,7 +210,8 @@ class AppAPI extends REST_Controller {
 		}
 	}
 	
-	function appSignUp_get(){
+	function appSignUp_post(){
+		$data = file_get_contents("php://input");
         $name = filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         $surname = filter_var($_REQUEST['surname'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		//$gender = filter_var($_REQUEST['gender'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
@@ -402,7 +404,6 @@ class AppAPI extends REST_Controller {
 		print_r($result);
 	}
 
-	
 	function getWishlist_get(){
 		$wish_user = filter_var($_REQUEST['wish_user'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 		$wish_itemid = filter_var($_REQUEST['wish_itemid'], FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

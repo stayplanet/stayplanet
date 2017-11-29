@@ -17,20 +17,27 @@
 
 <ion-content>
 
-  <button ion-button block icon-end (click)="confirmBooking()">Confirm Booking
-    <ion-icon name="basket"></ion-icon>
-  </button>
-  <p style="margin-top: 1%; margin-left: 5%; margin-right: 2%;">By clicking to complete this booking I acknowledge that I have read and accept the Rules & Restrictions.</p>
+  <ion-row>
+    <ion-col>
+      <button ion-button block icon-end (click)="confirmBooking()">Confirm Booking<ion-icon name="basket"></ion-icon></button>
+       <p style="margin-top: 1%; margin-left: 5%; margin-right: 2%; margin-bottom: 0;">By clicking to complete this booking I acknowledge that I have read and accept the Rules & Restrictions.</p>
+    </ion-col>
+  </ion-row>
 
   <ion-card>
     <ion-card-header style="padding-top: 1%; padding-left: 5%;">Booking Summary</ion-card-header>
     <ion-card-content>
       <ion-item>
-        <p>{{ room?.room_title }}</p>
-        <p>{{ accommodation?.hotel_map_city }}, {{ accommodation?.hotel_map_country }}</p>
-        <ion-icon name="star" *ngFor="let star of accommodation?.stars"></ion-icon>
-        <ion-icon name="star-outline" *ngFor="let noStar of accommodation?.noStars"></ion-icon>
+        <ion-label style="color: black;">{{ room?.room_title }}</ion-label>
       </ion-item>
+      <ion-item>
+        <ion-label style="color: black;">
+          {{ accommodation?.hotel_map_city }}, {{ accommodation?.hotel_map_country }} 
+          <ion-icon name="star" *ngFor="let star of accommodation?.stars"></ion-icon>
+          <ion-icon name="star-outline" *ngFor="let noStar of accommodation?.noStars"></ion-icon>
+        </ion-label>
+      </ion-item>
+
       <ion-item>
         <ion-label>CheckIn: {{ checkInDate?.day }}/{{ checkInDate?.month + 1 }}/{{ checkInDate?.year }}</ion-label>
       </ion-item>
@@ -62,15 +69,15 @@
     <ion-card-header>Personal Information</ion-card-header>
     <ion-card-content>
       <ion-item>
-        <ion-label>Name</ion-label>
+        <ion-label>Name:</ion-label>
         <ion-input disabled type="text" [value]="user?.ai_first_name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Surname</ion-label>
+        <ion-label>Surname:</ion-label>
         <ion-input disabled type="text" [value]="user?.ai_last_name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Email</ion-label>
+        <ion-label>Email:</ion-label>
         <ion-input disabled type="text" [value]="user?.accounts_email"></ion-input>
       </ion-item>
       <ion-item>

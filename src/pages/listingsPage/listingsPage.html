@@ -38,8 +38,8 @@
     </ion-row>
 
     <ion-row>
-      <ion-col col-6><button ion-button icon-end disabled>{{ booking.booking_status }}</button></ion-col>
-      <ion-col col-6><button ion-button icon-end (click)="goToInvoice(booking)">Invoice</button></ion-col>
+        <ion-col col-6><button ion-button full icon-end disabled [color]="booking.buttonColor">{{ booking.booking_status }}</button></ion-col>
+      <ion-col col-6><button ion-button full icon-end (click)="goToInvoice(booking)">Invoice</button></ion-col>
     </ion-row>
    
   </ion-card>
